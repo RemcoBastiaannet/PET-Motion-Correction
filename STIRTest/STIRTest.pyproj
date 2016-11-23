@@ -6,7 +6,7 @@
     <ProjectGuid>bd49ba41-ee8f-4ca0-b57e-542889a48472</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>STIRTest.py</StartupFile>
-    <SearchPath>..\..\..\..\..\..\..\..\..\STIR\python\;..\..\..\..\..\PythonSearchPath\</SearchPath>
+    <SearchPath>..\pythonwrapper\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>STIRTest</Name>
