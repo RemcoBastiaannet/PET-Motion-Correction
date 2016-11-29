@@ -32,6 +32,8 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 # This is achieved by averaging a set of sinograms with adjacent values of the oblique polar angle. This sampling scheme achieves good results in the centre of the FOV. 
 # However, there is a loss in the radial, tangential and axial resolutions at off-centre positions, which is increased in scanners with large FOVs. 
 
+# CTI: www.cti-medical.co.uk ?
+
 #Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
 
@@ -50,24 +52,81 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 # Filling the stir data format with the original image 
 fillStirSpace(originalImageS, originalImageP)
 
-# Creating an instance for the sinogram 
-sinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-
-#Initialize the projection matrix (using ray-tracing)
+# Initialize the projection matrix (using ray-tracing)
 projmatrix = stir.ProjMatrixByBinUsingRayTracing()
 projmatrix.set_num_tangential_LORs(nLOR)
 projmatrix.set_up(projdata_info, originalImageS)
 
-#Create projectors
+# Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
-# Forward project originalImageS and store in sinogram 
-forwardprojector.forward_project(sinogram, originalImageS);  
+# Creating an instance for the sinogram (measurement), it is not yet filled 
+measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
+# Forward project originalImageS and store in measurement 
+forwardprojector.forward_project(measurement, originalImageS);  
 
 # Converting the stir sinogram to a numpy sinogram 
-sinogramNP = stirextra.to_numpy(sinogram.get_segment_by_sinogram(0))
+measurementS = measurement.get_segment_by_sinogram(0)
+measurementP = stirextra.to_numpy(measurementS)
 
 plt.figure(1)
-plt.imshow(sinogramNP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0)
-plt.show()
+plt.imshow(measurementP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
+
+# Backprojecting the sinogram to get an image 
+finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+backprojector.back_project(finalImageS, measurement) 
+finalImageP = stirextra.to_numpy(finalImageS)
+
+plt.figure(2)
+plt.imshow(finalImageP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
+
+
+# MLEM reconstructie 
+# guess *= backproject[ measured projection/(forward projection of current estimate) ] * normalization 
+
+# Initial guess 
+guess      = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
+guess.fill(1) 
+
+# Forward project initial guess 
+guessSinogram = stir.projdatainmemory(stir.examinfo(), projdata_info)
+forwardprojector.forward_project(guessSinogram, guess)
+
+sinocomp = guessSinogram.get_segment_by_sinogram(0)
+
+# Measurement 
+meascomp = measurement.get_segment_by_sinogram(0)
+
+reconspace  = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
+
+forwardprojector.forward_project(measurement, reconspace)
+
+# Compare initial guess to measurement (calculate error) 
+error = meascomp/sinocomp
+error[np.isnan(error)] = 0
+error[np.isinf(error)] = 0
+error[error > 1e10] = 0;
+error[error < 1e-10] = 0;
+
+errors = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] )))
+
+# Update guess using the error 
+
+guess *= backprojector.back_project(fillstirspace(errors, error))
+
+# Normalization
+#sinogram vult met 0, numpyarray uit extraheren (voor de size), zelfde numpyarray maken die bestaat uit alleen maar 1'en. 
+#Dan pak je stir fill volume ding van Remco. Die vult alleen binnen de grenzen vna het sinogram (dus anders dan wanneer je sinogram.fill(1) zou doen) 
