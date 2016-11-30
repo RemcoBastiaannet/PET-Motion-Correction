@@ -41,7 +41,7 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 originalImageP = np.zeros((1, 128, 128)) # matrix 128 x 128 gevuld met 0'en
 for i in range(128): 
     for j in range(128): 
-        if (i-30)*(i-30) + (j-30)*(j-30) < 30: 
+        if (i-40)*(i-40) + (j-40)*(j-40) + 10 < 30: 
             originalImageP[0, i, j] = 1 
 
 # Stir data format instance with the size of the original image in python (not yet filled!) 
@@ -71,9 +71,9 @@ forwardprojector.forward_project(measurement, originalImageS);
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
 
-plt.figure(1)
-plt.imshow(measurementP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-plt.show() # program pauses until the figure is closed!
+#plt.figure(1)
+#plt.imshow(measurementP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+#plt.show() # program pauses until the figure is closed!
 
 # Backprojecting the sinogram to get an image 
 finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -83,50 +83,94 @@ finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 backprojector.back_project(finalImageS, measurement) 
 finalImageP = stirextra.to_numpy(finalImageS)
 
-plt.figure(2)
-plt.imshow(finalImageP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-plt.show() # program pauses until the figure is closed!
+#plt.figure(2)
+#plt.imshow(finalImageP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+#plt.show() # program pauses until the figure is closed!
 
 
-# MLEM reconstructie 
+
+# MLEM reconstructie - poing 2 (werkt ook nog niet) 
 # guess *= backproject[ measured projection/(forward projection of current estimate) ] * normalization 
 
 # Initial guess 
-guess      = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
-                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
-                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
-guess.fill(1) 
+guessP = np.ones(np.shape(originalImageP))
+guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+fillStirSpace(guessS, guessP)
+
+plt.figure(3)
+plt.imshow(guessP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
 
 # Forward project initial guess 
-guessSinogram = stir.projdatainmemory(stir.examinfo(), projdata_info)
-forwardprojector.forward_project(guessSinogram, guess)
+guess_sinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+forwardprojector.forward_project(guess_sinogram, guessS); 
+guess_sinogramS = guess_sinogram.get_segment_by_sinogram(0)
+guess_sinogramP = stirextra.to_numpy(guess_sinogramS)
+# Ik heb het idee dat het sinogram niet klopt... 
 
-sinocomp = guessSinogram.get_segment_by_sinogram(0)
+plt.figure(4)
+plt.imshow(guess_sinogramP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
 
-# Measurement 
-meascomp = measurement.get_segment_by_sinogram(0)
 
-reconspace  = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
-                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
-                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
+# Measured projection is gewoon measurementS (of measurementP) 
 
-forwardprojector.forward_project(measurement, reconspace)
+# Compare guess to measurement 
+error = measurementP/guess_sinogramP
+# Dit vind ie niet leuk 
 
-# Compare initial guess to measurement (calculate error) 
-error = meascomp/sinocomp
-error[np.isnan(error)] = 0
-error[np.isinf(error)] = 0
-error[error > 1e10] = 0;
-error[error < 1e-10] = 0;
+# Normalization 
+# sinogram vult met 0, numpyarray uit extraheren (voor de size), zelfde numpyarray maken die bestaat uit alleen maar 1'en. 
+# Dan pak je stir fill volume ding van Remco. Die vult alleen binnen de grenzen vna het sinogram (dus anders dan wanneer je sinogram.fill(1) zou doen) 
 
-errors = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
-                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
-                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] )))
+# Update guess 
 
-# Update guess using the error 
 
-guess *= backprojector.back_project(fillstirspace(errors, error))
 
-# Normalization
-#sinogram vult met 0, numpyarray uit extraheren (voor de size), zelfde numpyarray maken die bestaat uit alleen maar 1'en. 
-#Dan pak je stir fill volume ding van Remco. Die vult alleen binnen de grenzen vna het sinogram (dus anders dan wanneer je sinogram.fill(1) zou doen) 
+
+##############################################################################################################################################################
+
+## MLEM reconstructie - poging 1 (werkt niet) 
+## guess *= backproject[ measured projection/(forward projection of current estimate) ] * normalization 
+
+## Initial guess 
+#guess      = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+#                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+#                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
+#guess.fill(1) 
+
+## Forward project initial guess 
+#guessSinogram = stir.projdatainmemory(stir.examinfo(), projdata_info)
+#forwardprojector.forward_project(guessSinogram, guess)
+
+#sinocomp = guessSinogram.get_segment_by_sinogram(0)
+
+## Measurement 
+#meascomp = measurement.get_segment_by_sinogram(0)
+
+#reconspace  = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+#                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+#                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] ))) 
+
+#forwardprojector.forward_project(measurement, reconspace)
+
+## Compare initial guess to measurement (calculate error) 
+#error = meascomp/sinocomp
+#error[np.isnan(error)] = 0
+#error[np.isinf(error)] = 0
+#error[error > 1e10] = 0;
+#error[error < 1e-10] = 0;
+
+#errors = stir.floatvoxelsoncartesiangrid(projdata_info, 1,
+#                stir.floatcartesiancoordinate3d(stir.make_floatcoordinate(0,0,0)),
+#                stir.intcartesiancoordinate3d(stir.make_intcoordinate(np.shape(originalimagep)[0],np.shape(originalimagep)[1],np.shape(originalimagep)[2] )))
+
+## Normalization
+##sinogram vult met 0, numpyarray uit extraheren (voor de size), zelfde numpyarray maken die bestaat uit alleen maar 1'en. 
+##Dan pak je stir fill volume ding van Remco. Die vult alleen binnen de grenzen vna het sinogram (dus anders dan wanneer je sinogram.fill(1) zou doen) 
+
+## Update guess using the error 
+
+#guess *= backprojector.back_project(fillstirspace(errors, error))
