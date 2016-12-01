@@ -19,7 +19,7 @@ nVoxelsXY = 256
 nRings = 1
 nLOR = 10
 nFrames = 15
-nIt = 3 # number of MLEM iterations 
+nIt = 5 # number of MLEM iterations 
 
 #Now we setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -44,6 +44,10 @@ for i in range(128):
     for j in range(128): 
         if (i-40)*(i-40) + (j-40)*(j-40) + 10 < 30: 
             originalImageP[0, i, j] = 1 
+
+plt.figure(1)
+plt.imshow(originalImageP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
 
 # Stir data format instance with the size of the original image in python (not yet filled!) 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -72,10 +76,6 @@ forwardprojector.forward_project(measurement, originalImageS);
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
 
-#plt.figure(1)
-#plt.imshow(measurementP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-#plt.show() # program pauses until the figure is closed!
-
 # Backprojecting the sinogram to get an image 
 finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -84,79 +84,62 @@ finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 backprojector.back_project(finalImageS, measurement) 
 finalImageP = stirextra.to_numpy(finalImageS)
 
-#plt.figure(2)
-#plt.imshow(finalImageP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-#plt.show() # program pauses until the figure is closed!
-
-
-
-# MLEM reconstructie - poing 2 (werkt ook nog niet) 
-# guess *= backproject[ measured projection/(forward projection of current estimate) ] * normalization 
+# MLEM reconstruction
 
 # Initial guess 
 guessP = np.ones(np.shape(originalImageP))
+guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
 for i in range(nIt): 
-    guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+    # update current guess 
     fillStirSpace(guessS, guessP)
 
-    #plt.figure(3)
-    #plt.imshow(guessP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-    #plt.show() # program pauses until the figure is closed!
-
     # Forward project initial guess 
-    guess_sinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    forwardprojector.forward_project(guess_sinogram, guessS); 
-    guess_sinogramS = guess_sinogram.get_segment_by_sinogram(0)
-    guess_sinogramP = stirextra.to_numpy(guess_sinogramS)
-
-    #plt.figure(4)
-    #plt.imshow(guess_sinogramP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-    #plt.show() # program pauses until the figure is closed!
-
-    # Measured projection is gewoon measurementS (of measurementP) 
+    guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    forwardprojector.forward_project(guessSinogram, guessS); 
+    guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
+    guessSinogramP = stirextra.to_numpy(guessSinogramS)
 
     # Compare guess to measurement 
-    errorP = measurementP/guess_sinogramP
+    errorP = measurementP/guessSinogramP
     errorP[np.isnan(errorP)] = 0
     errorP[np.isinf(errorP)] = 0
     errorP[errorP > 1E10] = 0;
     errorP[errorP < 1E-10] = 0;
 
-    # error moet uiteindelijk ProjData zijn  
-    # of: er wel eerst een discretised density van maken, vullen met fillStirSpace en daarna terug naar projdata
-    fillStirSpace(guess_sinogramS, errorP)
-    guess_sinogram.set_segment(guess_sinogramS)  
+    fillStirSpace(guessSinogramS, errorP)
+    guessSinogram.set_segment(guessSinogramS)  
 
     # Error terugprojecteren 
     errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-    backprojector.back_project(errorBackprS, guess_sinogram)
+    backprojector.back_project(errorBackprS, guessSinogram)
 
-    # Normalization 
-    # Vul sinogram met 0 
-    # Extraheer hier een numpyarray uit (voor de grootte) 
-    # Maak dezelfde numpyarray, maar vul deze met 1'en 
-    # Gebruik fillStirSpace (die vult alleen binnen de grenzen van het sinogram, met sinogram.fill(1) zou je iets anders krijgen) 
-    
-    #sinogram_tmpS = guess_sinogramS 
-    #sinogram_tmpP = stirextra.to_numpy(guess_sinogramS) 
-    #sinogram_tmpP2 = np.ones(np.shape(sinogram_tmpP)) 
-    #normalizationS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    #stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    #stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(guessP)[0],np.shape(guessP)[1],np.shape(guessP)[2] ))) 
-    #backprojector.back_project(normalizationS, sinogram_tmpP2) 
-    #fillStirSpace(normalizationS, sinogram_tmpP2) # hier gaat het fout! 
+    # Normalization - werkt nog niet correct! 
+    normalizationSinogramP = np.ones(np.shape(measurementP)) 
+    normalizationSinogramS = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    normalizationSinogram = normalizationSinogramS.get_segment_by_sinogram(0)
+    fillStirSpace(normalizationSinogram, normalizationSinogramP) 
+    normalizationSinogramS.set_segment(normalizationSinogram)
+
+    normalizationS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+    backprojector.back_project(normalizationS, normalizationSinogramS)
+
+    normalizationP = stirextra.to_numpy(normalizationS)
+    plt.figure(2), plt.imshow(normalizationP[0,:,:]), plt.show()
 
     # Update guess 
     guessP = stirextra.to_numpy(guessS)
     errorBackprP = stirextra.to_numpy(errorBackprS)
-    guessP *= errorBackprP
+    guessP *= errorBackprP/normalizationP
 
-    plt.figure(5)
-    plt.imshow(guessP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
-    plt.show() # program pauses until the figure is closed!
+plt.figure(5)
+plt.imshow(guessP[0,:,:], cmap = plt.cm.Greys_r, interpolation = None, vmin = 0)
+plt.show() # program pauses until the figure is closed!
