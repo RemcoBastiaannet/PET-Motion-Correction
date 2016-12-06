@@ -45,7 +45,7 @@ for i in range(128):
         if (i-40)*(i-40) + (j-40)*(j-40) + 10 < 30: 
             originalImageP[0, i, j] = 1 
 
-plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
+#plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
 
 # Stir data format instance with the size of the original image in python (not yet filled!) 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -74,7 +74,7 @@ forwardprojector.forward_project(measurement, originalImageS);
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
 
-plt.figure(2), plt.title('Sinogram original image'), plt.imshow(measurementP[0,:,:]), plt.show()
+#plt.figure(2), plt.title('Sinogram original image'), plt.imshow(measurementP[0,:,:]), plt.show()
 
 # Backprojecting the sinogram to get an image 
 finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -84,7 +84,7 @@ finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 backprojector.back_project(finalImageS, measurement) 
 finalImageP = stirextra.to_numpy(finalImageS)
 
-plt.figure(3), plt.title('Backprojection original image'), plt.imshow(finalImageP[0,:,:]), plt.show()
+#plt.figure(3), plt.title('Backprojection original image'), plt.imshow(finalImageP[0,:,:]), plt.show()
 
 # MLEM reconstruction
 
@@ -94,7 +94,7 @@ guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-plt.figure(4), plt.title('Initial guess MLEM'), plt.imshow(guessP[0,:,:]), plt.show()
+#plt.figure(4), plt.title('Initial guess MLEM'), plt.imshow(guessP[0,:,:]), plt.show()
 
 for i in range(nIt): 
     # update current guess 
@@ -106,7 +106,7 @@ for i in range(nIt):
     guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
     guessSinogramP = stirextra.to_numpy(guessSinogramS)
 
-    plt.figure(4), plt.title('Sinogram of current guess'), plt.imshow(guessSinogramP[0,:,:]), plt.show()    
+    #plt.figure(5), plt.title('Sinogram of current guess'), plt.imshow(guessSinogramP[0,:,:]), plt.show()    
 
     # Compare guess to measurement 
     errorP = measurementP/guessSinogramP
@@ -143,11 +143,16 @@ for i in range(nIt):
     backprojector.back_project(normalizationS, normalizationSinogramS)
 
     normalizationP = stirextra.to_numpy(normalizationS)
-    if i == 0: plt.figure(5), plt.title('MLEM normalization'), plt.imshow(normalizationP[0,:,:]), plt.show()
+    if i == 0: plt.figure(6), plt.title('MLEM normalization'), plt.imshow(normalizationP[0,:,:]), plt.show()
+
+    diagonalProfile = normalizationP[0,:,:].diagonal()
+    if i == 0: plt.figure(7), plt.title('MLEM normalization diagonal'), plt.plot(diagonalProfile), plt.show()
+    print diagonalProfile
 
     # Update guess 
     guessP = stirextra.to_numpy(guessS)
     errorBackprP = stirextra.to_numpy(errorBackprS)
     guessP *= errorBackprP/normalizationP
 
-    plt.figure(6), plt.title('Guess after {0} iteration(s)'.format(i)), plt.imshow(guessP[0,:,:]), plt.show()
+    countIt = i+1 # counts the number of iterations (for nIt iterations, i = 0, ..., nIt-1)
+    #plt.figure(8), plt.title('Guess after {0} iteration(s)'.format(i+1)), plt.imshow(guessP[0,:,:]), plt.show()
