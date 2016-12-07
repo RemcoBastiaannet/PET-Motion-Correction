@@ -1,0 +1,4 @@
+# CMake generation dependency list for this directory.
+D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/iterative/OSSPS/CMakeLists.txt
+D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/cmake/stir_lib_target.cmake
+D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/cmake/stir_exe_targets.cmake

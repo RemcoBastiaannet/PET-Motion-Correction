@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\numerics\test_integrate_discrete_function.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\numerics\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7CD09A8D-F1AC-307F-B7C0-5530196E71AD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

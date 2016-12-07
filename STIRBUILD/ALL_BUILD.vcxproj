@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{A17A128E-D17F-3387-9629-7A69E0300795}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInitialize.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCCompiler.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInitialize.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCCompiler.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInitialize.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCCompiler.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInitialize.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCCompiler.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;D:\STIRBUILD\CMakeFiles\3.7.0\CMakeRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/STIRBUILD/ZERO_CHECK.vcxproj">
+      <Project>30AD665A-FB55-355B-913E-7FEC12E50022</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP2D/FBP2D.vcxproj">
+      <Project>470EFE96-808E-3BE3-8F01-F0C04D6FF94F</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP3DRP/FBP3DRP.vcxproj">
+      <Project>1F77806C-57BE-3D02-B35D-027EFAAAB955</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/IO/IO.vcxproj">
+      <Project>2C701E2E-36AC-3044-8EC8-FDA3D1480AF3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSMAPOSL/OSMAPOSL.vcxproj">
+      <Project>E23853FD-A4A7-3317-A7D6-CC1AA137055E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSSPS/OSSPS.vcxproj">
+      <Project>613AD14A-B24E-3A06-B55B-0839FFD3B528</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/POSMAPOSL/POSMAPOSL.vcxproj">
+      <Project>F733EC6D-E941-3776-B048-7F83A73CCE65</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/POSSPS/POSSPS.vcxproj">
+      <Project>09338A3D-A193-3F79-A3B2-1D13B6F2C573</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/SSRB.vcxproj">
+      <Project>AA05D3CC-1FFC-3F6D-B675-A14E030B15FC</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/Shape_buildblock/Shape_buildblock.vcxproj">
+      <Project>D762B603-6199-34EB-94A1-2482AB2FAA87</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/swig/_stir.vcxproj">
+      <Project>D258B0AB-6765-3D42-A32C-D35FC4639D5E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/abs_image.vcxproj">
+      <Project>4F4E901A-C0F9-3F74-AB9A-3F92FFF9CF1A</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP2D/analytic_FBP2D.vcxproj">
+      <Project>24E9927F-F888-3E70-B08C-1379CC21F18B</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP3DRP/analytic_FBP3DRP.vcxproj">
+      <Project>4AA15D79-9AA2-3236-9016-37BD81E4CBEF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/apply_normfactors.vcxproj">
+      <Project>B0A07A57-0606-3717-867D-96CEED76B1C4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/apply_normfactors3D.vcxproj">
+      <Project>84762731-F5EA-3DA2-A4B5-8CAFDB2BFB03</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_utilities/apply_patlak_to_images.vcxproj">
+      <Project>15B65DF7-AFCA-3F3F-81B7-1561EB6C61C4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/attenuation_coefficients_to_projections.vcxproj">
+      <Project>A369A801-F240-3557-84E9-D8E8C43958E2</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/back_project.vcxproj">
+      <Project>D4597E54-20F0-35C2-AAD9-0A51D3B55432</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_test/bcktest.vcxproj">
+      <Project>49EA7D42-C745-3258-8783-012BDA43B945</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/buildblock/buildblock.vcxproj">
+      <Project>BFCA66E5-8112-3F26-8137-36936DC49EFD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/calculate_attenuation_coefficients.vcxproj">
+      <Project>17BC5684-4F28-33B2-A767-20F7E30C1386</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/compare_image.vcxproj">
+      <Project>07F56467-9B34-3D45-8982-5C7ADA8FC180</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/compare_projdata.vcxproj">
+      <Project>E86BA6F3-3FF6-362D-9135-386C91303196</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/construct_randoms_from_singles.vcxproj">
+      <Project>8BBBA6DB-04C7-3165-95AB-FF397E8C7843</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/conv_GATE_raw_ECAT_projdata_to_interfile.vcxproj">
+      <Project>AA03449B-9F5D-3026-97D0-37E7AFACAD19</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/SimSET/conv_SimSET_projdata_to_STIR.vcxproj">
+      <Project>681FE463-15C2-31BD-B0E6-2DD07C7C990E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/conv_gipl_to_interfile.vcxproj">
+      <Project>5C8E6E0F-210E-3FEF-8B39-B3B1D34FC800</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/conv_interfile_to_gipl.vcxproj">
+      <Project>B439665A-5E0D-32D4-B5B1-EB88B293A1E1</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/SimSET/conv_to_SimSET_att_image.vcxproj">
+      <Project>2FCD64E9-1E81-3588-9425-DAC38A79F7A6</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/convert_to_binary_image.vcxproj">
+      <Project>A8D638EE-F6C7-3ABF-A241-F696B7A271C9</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/correct_projdata.vcxproj">
+      <Project>3D96CAF0-2D8A-347D-AEA9-3F44EF9BA5CF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/create_projdata_template.vcxproj">
+      <Project>E1E92FCE-3EB3-3DC7-A885-461EC29385E6</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_utilities/create_tail_mask_from_ACFs.vcxproj">
+      <Project>2EF12C75-E46A-30F6-9393-C8ECE5686CC8</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/data_buildblock/data_buildblock.vcxproj">
+      <Project>C5A822D8-9C73-3E08-9AD9-6487F9B415D4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/display/display.vcxproj">
+      <Project>2F9AA9FB-6EFA-3FB8-8473-16B86B00F2BE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/display_projdata.vcxproj">
+      <Project>51AF345D-EF35-3835-8039-978858192806</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/do_linear_regression.vcxproj">
+      <Project>4423A6C3-F6A8-39E0-83B1-832274D487DE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_utilities/estimate_scatter.vcxproj">
+      <Project>0C0B0D7B-C578-3BDD-B1A3-4E35887AC73C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/eval_buildblock/eval_buildblock.vcxproj">
+      <Project>32ECCE39-C939-3364-9900-22542555CB83</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/extract_segments.vcxproj">
+      <Project>FA6A93AA-9C70-3D9E-A906-A454A65D7F95</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/find_ML_normfactors.vcxproj">
+      <Project>034FD7F0-5471-3A5F-8293-036192AC8490</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/find_ML_normfactors3D.vcxproj">
+      <Project>6F5E50C3-939E-39E3-B865-8E7AD616C4EF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/find_ML_singles_from_delayed.vcxproj">
+      <Project>9CD4FAA1-C1BB-365D-8BEE-5E69676839E9</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/find_fwhm_in_image.vcxproj">
+      <Project>779B774B-A3DC-31AF-81FB-EEDB9815896C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/find_maxima_in_image.vcxproj">
+      <Project>71876B47-A317-3B10-8458-7E6F3B35F2C5</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/forward_project.vcxproj">
+      <Project>EA39DF1C-2308-3A79-9831-3FD194A7BA6D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_test/fwdtest.vcxproj">
+      <Project>D4AB1B5F-A1F5-3429-BC66-D157529441E2</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/generate_image.vcxproj">
+      <Project>9F2F7F15-4A11-34EF-A766-B2366656B6CD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_utilities/get_dynamic_images_from_parametric_images.vcxproj">
+      <Project>F4D3B08E-ADA3-3B6E-B7F6-21B072B2D913</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/get_time_frame_info.vcxproj">
+      <Project>6354F984-2D0D-3111-99D6-28726AB401CD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSMAPOSL/iterative_OSMAPOSL.vcxproj">
+      <Project>AE1B16AA-CE4F-32BD-BC55-056E4DE6C0CD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSSPS/iterative_OSSPS.vcxproj">
+      <Project>410E0FA1-6A6C-340D-BBA5-5D8F2344CE88</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/list_ROI_values.vcxproj">
+      <Project>95792794-D29F-33CB-8B20-E65AE5665E2D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/list_detector_and_bin_info.vcxproj">
+      <Project>CB5D1E21-0F8E-3B27-8062-7D70533E9412</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/list_image_info.vcxproj">
+      <Project>00B12EE1-519D-3619-8CE8-8F6DD085025C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/list_image_values.vcxproj">
+      <Project>B49DEA99-CEB4-39FE-BD45-2503F45F34E4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_utilities/list_lm_events.vcxproj">
+      <Project>F33F9E65-B71F-32E2-9529-6B4296981E8F</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/list_projdata_info.vcxproj">
+      <Project>65141352-5165-3DA3-852D-B14710D05561</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_buildblock/listmode_buildblock.vcxproj">
+      <Project>9D184679-3B60-38E0-ADE0-CB198F6D46C0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_utilities/lm_fansums.vcxproj">
+      <Project>A05990CC-B645-36F4-83C1-018F8993C0FB</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_utilities/lm_to_projdata.vcxproj">
+      <Project>EF5C95BA-3FFF-35ED-9D84-9F0E9C57EEB7</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_utilities/lm_to_projdata_bootstrap.vcxproj">
+      <Project>1C4F2615-E52D-32B4-9D97-77DCBEFAF762</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/manip_image.vcxproj">
+      <Project>6FA1E37B-9F2D-345E-8203-CCFF0590E3EB</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/manip_projdata.vcxproj">
+      <Project>B2398C39-D11C-39E6-9658-2D8E8551EE24</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_buildblock/modelling_buildblock.vcxproj">
+      <Project>A937A450-7BF3-352A-9D13-ACAC58AB4CE0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_utilities/mult_image_parameters.vcxproj">
+      <Project>2A59519E-DFA8-3461-8D23-90311C6816B5</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_utilities/mult_model_with_dyn_images.vcxproj">
+      <Project>0650EE72-72D6-3130-81CF-D0E53CEE545D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/numerics_buildblock/numerics_buildblock.vcxproj">
+      <Project>2D36AD02-2236-33F2-ACB4-DBEBA258E87D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/poisson_noise.vcxproj">
+      <Project>7B390072-2E5F-3A97-A1A3-0B05B592B295</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/postfilter.vcxproj">
+      <Project>CEDC6951-9916-3FB7-963B-D409B0ACEAAE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/rebin_projdata.vcxproj">
+      <Project>366B597D-4A17-3A66-ACDD-C2498E1BB5B7</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_buildblock/recon_buildblock.vcxproj">
+      <Project>049B6410-7564-381C-88BC-C65435874216</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_test/recontest.vcxproj">
+      <Project>0447C08F-9AE3-30DC-AA01-DAF3955AC423</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_buildblock/scatter_buildblock.vcxproj">
+      <Project>E452130E-8C95-36D7-A57F-CF3EBBA7FC61</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/shift_image.vcxproj">
+      <Project>34300A6F-6802-3607-AB32-8CE2CBB3AE02</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/shift_image_origin.vcxproj">
+      <Project>1484DB6A-A81D-3018-8B2E-3C116F6E2210</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/spatial_transformation_buildblock/spatial_transformation_buildblock.vcxproj">
+      <Project>3786A6A8-352C-31F1-93C1-E77FE9F63A84</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/stir_math.vcxproj">
+      <Project>BC9EB6DC-4522-3F0D-8F7B-AACED07D75BE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/stir_write_pgm.vcxproj">
+      <Project>53D577FF-588D-3704-BC38-5CD44C08360E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_ArcCorrection.vcxproj">
+      <Project>0F2658B8-41FB-3D02-95FF-52C487B36A08</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_Array.vcxproj">
+      <Project>6F4CE56D-14B7-331B-A818-9B30DE7F4D64</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_ArrayFilter.vcxproj">
+      <Project>BA2145AF-1875-3859-9F2C-0A6865784989</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_BSplines.vcxproj">
+      <Project>FD53529B-7C32-31BF-9BEF-63714EB13B57</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_BSplinesRegularGrid.vcxproj">
+      <Project>B8E92E37-C27E-3960-9287-00A743CB5C87</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_BSplinesRegularGrid1D.vcxproj">
+      <Project>8D13D306-3E0B-349D-9125-287D5D6A9F71</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_ByteOrder.vcxproj">
+      <Project>864D650E-0FBB-3782-AAFF-05B5EB79A959</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_test/test_DataSymmetriesForBins_PET_CartesianGrid.vcxproj">
+      <Project>EB229CF0-F58A-3014-A90B-353642AFF78C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_DynamicDiscretisedDensity.vcxproj">
+      <Project>2EF833F6-B995-3842-AF77-4BADADE3895B</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_IR_filters.vcxproj">
+      <Project>F4B63B6E-8C99-30AF-9259-833E0D1065B4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_IndexRange.vcxproj">
+      <Project>C6291580-9EA4-3A3F-80C1-5287F8922F0F</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_NestedIterator.vcxproj">
+      <Project>D6E9420E-5FE2-35D6-BD90-C280A062F102</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_OutputFileFormat.vcxproj">
+      <Project>98027C6F-3FB5-3A7B-B29B-6863AA51808F</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/modelling/test_ParametricDiscretisedDensity.vcxproj">
+      <Project>E7766C6F-13D2-332B-8014-8741F89CA29A</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_test/test_PoissonLogLikelihoodWithLinearModelForMeanAndProjData.vcxproj">
+      <Project>C239CCA7-C6D1-3997-B9DB-CF104DFB521C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_ROIs.vcxproj">
+      <Project>1951F2F6-A8BF-3777-9649-27E1478C78CF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_Scanner.vcxproj">
+      <Project>E068EE23-8E5B-319F-900F-DE2B20845BA5</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_VectorWithOffset.vcxproj">
+      <Project>B4E85031-892F-3888-BC7E-22E2EA21AFA3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_VoxelsOnCartesianGrid.vcxproj">
+      <Project>E4FC9317-1E81-35D0-9D9F-D76269A4DFB0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_convert_array.vcxproj">
+      <Project>0E0EEDCC-8D2B-3A67-A75A-98D36EBC6CCE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_coordinates.vcxproj">
+      <Project>931F8B07-CC97-337A-A25D-7262A9FA9ADC</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_display.vcxproj">
+      <Project>3AED294C-5639-3C4B-982C-85ADEF354B85</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_erf.vcxproj">
+      <Project>99091AF6-D386-3B42-9037-C4D185B48411</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_export_array.vcxproj">
+      <Project>71374684-E801-32A7-851D-4A140B672ECC</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_filename_functions.vcxproj">
+      <Project>80A720D5-0B58-3277-AE57-2E230D0F1C8E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_find_fwhm_in_image.vcxproj">
+      <Project>DC2A630F-519E-3AA1-A433-173D92860332</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_integrate_discrete_function.vcxproj">
+      <Project>FB2F9C39-B214-3274-BDD5-E2CBEAB82499</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_interpolate.vcxproj">
+      <Project>C0558892-EAAF-3050-9306-D15AABAC93F3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_linear_regression.vcxproj">
+      <Project>6B411AC8-8CD8-36B0-8167-94683718D884</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_matrices.vcxproj">
+      <Project>BFF674CD-D7A6-3A70-867C-124490A84DEA</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/modelling/test_modelling.vcxproj">
+      <Project>2ABA4FC7-714B-3FFB-B58C-C95017E308EF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/numerics/test_overlap_interpolate.vcxproj">
+      <Project>1579C828-41F3-3983-B702-4A21D8E4E05C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_proj_data_in_memory.vcxproj">
+      <Project>AC289DF8-5A7F-35C7-B02B-8CB79FC3237E</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_proj_data_info.vcxproj">
+      <Project>FF6F4958-A96D-3BD2-87D8-CD6D316DC28A</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_stir_math.vcxproj">
+      <Project>6F23D7A4-BFD8-3B19-996F-0C8F2EFE185A</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_warp_image.vcxproj">
+      <Project>7C8AC617-BC11-3C8B-855B-3BD38070289C</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/test/test_zoom_image.vcxproj">
+      <Project>8BCC1A0D-AA8F-3549-856F-78BE9B6403F5</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_utilities/upsample_and_fit_single_scatter.vcxproj">
+      <Project>5A04CD1A-15FD-359B-B338-39E5523F2185</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/warp_and_accumulate_gated_images.vcxproj">
+      <Project>A217B04B-C534-3021-8416-64DDCD7D15F2</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/warp_image.vcxproj">
+      <Project>698958FF-CB12-31FE-BCFC-CD20A3C34397</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_utilities/write_patlak_matrix.vcxproj">
+      <Project>CAB3F52F-C396-389E-B0AF-BEB24F3865A0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/SimSET/write_phg_image_info.vcxproj">
+      <Project>B2583CA3-154F-3120-9E28-A3047DB2DD86</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/write_proj_matrix_by_bin.vcxproj">
+      <Project>E1C320EF-F39C-3E0C-80F1-22C88D0ACC41</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/zeropad_planes.vcxproj">
+      <Project>73F9CC27-B44A-3698-827D-2DBF3E7BBE0B</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/utilities/zoom_image.vcxproj">
+      <Project>B4DD2FAA-2E2E-33A1-B4AD-0743CB226378</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

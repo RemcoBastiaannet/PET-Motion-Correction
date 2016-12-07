@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{049B6410-7564-381C-88BC-C65435874216}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>recon_buildblock</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\recon_buildblock\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">recon_buildblock.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">recon_buildblock</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\recon_buildblock\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">recon_buildblock.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">recon_buildblock</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\recon_buildblock\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">recon_buildblock.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">recon_buildblock</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\recon_buildblock\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">recon_buildblock.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">recon_buildblock</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_lib_target.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_lib_target.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_lib_target.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/recon_buildblock/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_lib_target.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\recon_buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\MotionModel.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing_Siddon.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PresmoothingForwardProjectorByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_linear.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_piecewise_linear.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PostsmoothingBackProjectorByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\Reconstruction.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\AnalyticReconstruction.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\IterativeReconstruction.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\distributable.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForDensels.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialDataSymmetriesForBins.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperations_PET_CartesianGrid.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\find_basic_vs_nums_in_subset.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneDensel.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingRayTracing.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingInterpolation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinFromFile.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinSPECTUB.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Tools.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Weight3d.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingSquareProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\RayTraceVoxelsOnCartesianGrid.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPair.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingSeparateProjectors.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ChainedBinNormalisation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromProjData.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialBinNormalisation.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromAttenuationImage.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedPrior.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjDataRebinning.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\FourierRebinning.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\QuadraticPrior.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\FilterRootPrior.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedObjectiveFunction.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMean.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndProjData.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeData.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeDataWithProjMatrixByBin.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearKineticModelAndDynamicProjectionData.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndGatedProjDataWithMotion.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromECAT8.cxx"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/STIRBUILD/ZERO_CHECK.vcxproj">
+      <Project>30AD665A-FB55-355B-913E-7FEC12E50022</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/IO/IO.vcxproj">
+      <Project>2C701E2E-36AC-3044-8EC8-FDA3D1480AF3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/buildblock/buildblock.vcxproj">
+      <Project>BFCA66E5-8112-3F26-8137-36936DC49EFD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/data_buildblock/data_buildblock.vcxproj">
+      <Project>C5A822D8-9C73-3E08-9AD9-6487F9B415D4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/display/display.vcxproj">
+      <Project>2F9AA9FB-6EFA-3FB8-8473-16B86B00F2BE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_buildblock/listmode_buildblock.vcxproj">
+      <Project>9D184679-3B60-38E0-ADE0-CB198F6D46C0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_buildblock/modelling_buildblock.vcxproj">
+      <Project>A937A450-7BF3-352A-9D13-ACAC58AB4CE0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/numerics_buildblock/numerics_buildblock.vcxproj">
+      <Project>2D36AD02-2236-33F2-ACB4-DBEBA258E87D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/spatial_transformation_buildblock/spatial_transformation_buildblock.vcxproj">
+      <Project>3786A6A8-352C-31F1-93C1-E77FE9F63A84</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

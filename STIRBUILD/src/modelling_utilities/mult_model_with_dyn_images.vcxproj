@@ -1,0 +1,815 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{0650EE72-72D6-3130-81CF-D0E53CEE545D}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>mult_model_with_dyn_images</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\modelling_utilities\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mult_model_with_dyn_images.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mult_model_with_dyn_images</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\modelling_utilities\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mult_model_with_dyn_images.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mult_model_with_dyn_images</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\modelling_utilities\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">mult_model_with_dyn_images.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">mult_model_with_dyn_images</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\modelling_utilities\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">mult_model_with_dyn_images.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">mult_model_with_dyn_images</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\Debug\analytic_FBP3DRP.lib;..\analytic\FBP2D\Debug\analytic_FBP2D.lib;..\iterative\OSMAPOSL\Debug\iterative_OSMAPOSL.lib;..\iterative\OSSPS\Debug\iterative_OSSPS.lib;..\scatter_buildblock\Debug\scatter_buildblock.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\listmode_buildblock\Debug\listmode_buildblock.lib;..\recon_buildblock\Debug\recon_buildblock.lib;..\display\Debug\display.lib;..\IO\Debug\IO.lib;..\data_buildblock\Debug\data_buildblock.lib;..\numerics_buildblock\Debug\numerics_buildblock.lib;..\buildblock\Debug\buildblock.lib;..\spatial_transformation_buildblock\Debug\spatial_transformation_buildblock.lib;..\Shape_buildblock\Debug\Shape_buildblock.lib;..\eval_buildblock\Debug\eval_buildblock.lib;..\numerics_buildblock\Debug\numerics_buildblock.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\listmode_buildblock\Debug\listmode_buildblock.lib;..\data_buildblock\Debug\data_buildblock.lib;..\IO\Debug\IO.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\buildblock\Debug\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/modelling_utilities/Debug/mult_model_with_dyn_images.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/modelling_utilities/Debug/mult_model_with_dyn_images.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\Release\analytic_FBP3DRP.lib;..\analytic\FBP2D\Release\analytic_FBP2D.lib;..\iterative\OSMAPOSL\Release\iterative_OSMAPOSL.lib;..\iterative\OSSPS\Release\iterative_OSSPS.lib;..\scatter_buildblock\Release\scatter_buildblock.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\listmode_buildblock\Release\listmode_buildblock.lib;..\recon_buildblock\Release\recon_buildblock.lib;..\display\Release\display.lib;..\IO\Release\IO.lib;..\data_buildblock\Release\data_buildblock.lib;..\numerics_buildblock\Release\numerics_buildblock.lib;..\buildblock\Release\buildblock.lib;..\spatial_transformation_buildblock\Release\spatial_transformation_buildblock.lib;..\Shape_buildblock\Release\Shape_buildblock.lib;..\eval_buildblock\Release\eval_buildblock.lib;..\numerics_buildblock\Release\numerics_buildblock.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\listmode_buildblock\Release\listmode_buildblock.lib;..\data_buildblock\Release\data_buildblock.lib;..\IO\Release\IO.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\buildblock\Release\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/modelling_utilities/Release/mult_model_with_dyn_images.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/modelling_utilities/Release/mult_model_with_dyn_images.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\MinSizeRel\analytic_FBP3DRP.lib;..\analytic\FBP2D\MinSizeRel\analytic_FBP2D.lib;..\iterative\OSMAPOSL\MinSizeRel\iterative_OSMAPOSL.lib;..\iterative\OSSPS\MinSizeRel\iterative_OSSPS.lib;..\scatter_buildblock\MinSizeRel\scatter_buildblock.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\listmode_buildblock\MinSizeRel\listmode_buildblock.lib;..\recon_buildblock\MinSizeRel\recon_buildblock.lib;..\display\MinSizeRel\display.lib;..\IO\MinSizeRel\IO.lib;..\data_buildblock\MinSizeRel\data_buildblock.lib;..\numerics_buildblock\MinSizeRel\numerics_buildblock.lib;..\buildblock\MinSizeRel\buildblock.lib;..\spatial_transformation_buildblock\MinSizeRel\spatial_transformation_buildblock.lib;..\Shape_buildblock\MinSizeRel\Shape_buildblock.lib;..\eval_buildblock\MinSizeRel\eval_buildblock.lib;..\numerics_buildblock\MinSizeRel\numerics_buildblock.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\listmode_buildblock\MinSizeRel\listmode_buildblock.lib;..\data_buildblock\MinSizeRel\data_buildblock.lib;..\IO\MinSizeRel\IO.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\buildblock\MinSizeRel\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/modelling_utilities/MinSizeRel/mult_model_with_dyn_images.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/modelling_utilities/MinSizeRel/mult_model_with_dyn_images.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\RelWithDebInfo\analytic_FBP3DRP.lib;..\analytic\FBP2D\RelWithDebInfo\analytic_FBP2D.lib;..\iterative\OSMAPOSL\RelWithDebInfo\iterative_OSMAPOSL.lib;..\iterative\OSSPS\RelWithDebInfo\iterative_OSSPS.lib;..\scatter_buildblock\RelWithDebInfo\scatter_buildblock.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\listmode_buildblock\RelWithDebInfo\listmode_buildblock.lib;..\recon_buildblock\RelWithDebInfo\recon_buildblock.lib;..\display\RelWithDebInfo\display.lib;..\IO\RelWithDebInfo\IO.lib;..\data_buildblock\RelWithDebInfo\data_buildblock.lib;..\numerics_buildblock\RelWithDebInfo\numerics_buildblock.lib;..\buildblock\RelWithDebInfo\buildblock.lib;..\spatial_transformation_buildblock\RelWithDebInfo\spatial_transformation_buildblock.lib;..\Shape_buildblock\RelWithDebInfo\Shape_buildblock.lib;..\eval_buildblock\RelWithDebInfo\eval_buildblock.lib;..\numerics_buildblock\RelWithDebInfo\numerics_buildblock.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\listmode_buildblock\RelWithDebInfo\listmode_buildblock.lib;..\data_buildblock\RelWithDebInfo\data_buildblock.lib;..\IO\RelWithDebInfo\IO.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\buildblock\RelWithDebInfo\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/modelling_utilities/RelWithDebInfo/mult_model_with_dyn_images.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/modelling_utilities/RelWithDebInfo/mult_model_with_dyn_images.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\modelling_utilities\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArcCorrection.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Array.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Array1d.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFilter1DUsingConvolution.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFilter1DUsingConvolutionSymmetricKernel.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFilter2DUsingConvolution.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFilter3DUsingConvolution.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFilterUsingRealDFTWithPadding.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFunction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFunctionObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFunctionObject_1ArgumentImplementation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFunctionObject_2ArgumentImplementation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Array_complex_numbers.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\BasicCoordinate.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Bin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\BoundaryConditions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ByteOrder.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ByteOrderDefine.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CPUTimer.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CartesianCoordinate2D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CartesianCoordinate3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ChainedDataProcessor.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate2D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate4D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DataProcessor.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DataSymmetriesForViewSegmentNumbers.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Densel.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DetectionPosition.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DetectionPositionPair.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DiscretisedDensity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DiscretisedDensityOnCartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DynamicDiscretisedDensity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DynamicProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ExamInfo.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\FactoryRegistry.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\FullArrayIterator.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\GatedDiscretisedDensity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\GatedProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\HighResWallClockTimer.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT6ImageInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT6OutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT7DynamicDiscretisedDensityInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT7DynamicDiscretisedDensityOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT7ImageInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT7OutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT7ParametricDensityOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT8_32bitListmodeInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT962ListmodeInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ECAT966ListmodeInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ExamData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\FileSignature.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\GIPL_ImageFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ITKImageInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ITKOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputFileFormatRegistry.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFile.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForCylindricalPET.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForECATPET.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamWithRecords.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfileDynamicDiscretisedDensityOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfileHeader.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfileImageInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfileOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfilePDFSHeaderSPECT.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InterfileParametricDensityOutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\OutputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ROOTListmodeInputFileFormat.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ecat6_types.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ecat6_utils.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\interfile.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\read_data.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\read_data_1d.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\read_from_file.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\stir_AVW.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\stir_ecat6.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\stir_ecat7.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\stir_ecat_common.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\write_data.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\write_data_1d.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\write_to_file.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ImagingModality.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange2D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange4D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\KeyParser.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\LORCoordinates.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ML_norm.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MaximalArrayFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MaximalImageFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MedianArrayFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MedianImageFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MinimalArrayFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MinimalImageFilter3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\MultipleProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NestedIterator.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NestedIteratorHelpers.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NonseparableConvolutionUsingRealDFTImageFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NumericInfo.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NumericType.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NumericVectorWithOffset.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\OSMAPOSL\OSMAPOSLReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\OSSPS\OSSPSReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Object.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ParsingObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\PatientPosition.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\PixelsOnCartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\PostFiltering.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataFromStream.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataGEAdvance.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInMemory.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfo.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindrical.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindricalArcCorr.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindricalNoArcCorr.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInterfile.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RegisteredObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RegisteredParsingObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RelatedViewgrams.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RunTests.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SSRB.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Scanner.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Segment.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SegmentBySinogram.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SegmentByView.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SeparableArrayFunctionObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SeparableCartesianMetzImageFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SeparableConvolutionImageFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SeparableMetzArrayFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\Box3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\CombinedShape3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\DiscretisedShape3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\Ellipsoid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\EllipsoidalCylinder.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\Shape3D.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\Shape3DWithOrientation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Sinogram.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\StirException.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Succeeded.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TextWriter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ThresholdMinToSmallPositiveValueDataProcessor.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TimeFrameDefinitions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TimeGateDefinitions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TimedBlock.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TimedObject.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Timer.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TrivialDataSymmetriesForViewSegmentNumbers.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TruncateToCylindricalFOVImageProcessor.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\VectorWithOffset.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Verbosity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ViewSegmentNumbers.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Viewgram.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\VoxelsOnCartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\analytic\FBP2D\FBP2DReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\analytic\FBP2D\RampFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\analytic\FBP3DRP\ColsherFilter.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\analytic\FBP3DRP\FBP3DRPReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\array_index_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\assign.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\assign_to_subregion.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\centre_of_gravity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\common.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\config\gcc.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\config\visualc.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\convert_array.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\convert_range.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\cross_product.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\data\SinglesRates.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\data\SinglesRatesForTimeFrames.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\data\SinglesRatesFromECAT7.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\data\SinglesRatesFromSglFile.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\decay_correction_factor.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\detail\test_if_1d.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\display.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\doxygen_doc_for_boost.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\doxygengroups.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\doxygenmain.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\error.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\evaluation\ROIValues.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\evaluation\compute_ROI_values.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\extend_projdata.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\extract_line.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\find_fwhm_in_image.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\geometry\line_distances.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\getopt.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\index_at_maximum.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\info.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\interfile_keyword_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\interpolate.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\interpolate_projdata.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\inverse_SSRB.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\is_null_ptr.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\line.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\linear_regression.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithDiscreteDetectors.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithViewTangRingRingEncoding.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListModeData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListModeDataECAT.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListModeDataECAT8_32bit.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListModeDataROOT.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecord.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecordECAT8_32bit.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecordECAT962.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecordECAT966.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecordROOT.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\LmToProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\LmToProjDataBootstrap.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\make_array.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\min_positive_element.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\KineticModel.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\KineticParameters.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\ModelMatrix.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\ParametricDiscretisedDensity.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\PatlakPlot.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\PlasmaData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\PlasmaSample.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modulo.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\more_algorithms.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\num_threads.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplines.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplines1DRegularGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplinesRegularGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\IR_filters.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\MatrixFunction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\determinant.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\divide.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\erf.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\fourier.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\ieeefp.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\integrate_discrete_function.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\max_eigenvector.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\norm.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\overlap_interpolate.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\sampling_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\stir_NumericalRecipes.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_array_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\AnalyticReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingInterpolation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingSquareProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BinNormalisation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromAttenuationImage.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromECAT7.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromECAT8.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ChainedBinNormalisation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForDensels.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DistributedCachingInformation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DistributedWorker.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\FilterRootPrior.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBinUsingProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBinUsingRayTracing.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\FourierRebinning.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\GeneralisedObjectiveFunction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\GeneralisedPrior.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\IterativeReconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\MotionModel.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearKineticModelAndDynamicProjectionData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMean.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndGatedProjDataWithMotion.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeDataWithProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndProjData.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PostsmoothingBackProjectorByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PresmoothingForwardProjectorByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\PriorWithParabolicSurrogate.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjDataRebinning.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinFromFile.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinSPECTUB.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinUsingInterpolation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinUsingRayTracing.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBinValue.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDensel.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDenselValue.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPair.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPairUsingProjMatrixByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPairUsingSeparateProjectors.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\QuadraticPrior.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\RayTraceVoxelsOnCartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\Reconstruction.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\RelatedBins.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\RelatedDensels.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SPECTUB_Tools.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SPECTUB_Weight3d.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SumOfGeneralisedObjectiveFunctions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SymmetryOperation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SymmetryOperations_PET_CartesianGrid.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\TrivialBinNormalisation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\TrivialDataSymmetriesForBins.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\distributable.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\distributableMPICacheEnabled.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\distributable_main.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\distributed_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\distributed_test_functions.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\find_basic_vs_nums_in_subsets.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\round.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\scale_sinograms.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\scatter\CreateTailMaskFromACFs.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\scatter\ScatterEstimationByBin.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\shared_ptr.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\spatial_transformation\GatedSpatialTransformation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\spatial_transformation\SpatialTransformation.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\spatial_transformation\warp_image.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\stir_math.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\stream.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\thresholding.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\utilities.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\warning.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\zoom.h" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Array.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ArrayFunction.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\BasicCoordinate.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Bin.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ByteOrder.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CPUTimer.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CartesianCoordinate2D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\CartesianCoordinate3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate2D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Coordinate4D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DataProcessor.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DetectionPosition.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DetectionPositionPair.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DiscretisedDensity.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DiscretisedDensityOnCartesianGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\DynamicDiscretisedDensity.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ExamInfo.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\FactoryRegistry.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\FullArrayIterator.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\ExamData.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFile.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForCylindricalPET.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForECATPET.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\InputStreamWithRecords.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\read_data.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\read_data_1d.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\write_data.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IO\write_data_1d.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange2D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\IndexRange4D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\LORCoordinates.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NestedIterator.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NumericType.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\NumericVectorWithOffset.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\PixelsOnCartesianGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\PostFiltering.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjData.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataFromStream.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfo.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindrical.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindricalArcCorr.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ProjDataInfoCylindricalNoArcCorr.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RegisteredObject.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RegisteredParsingObject.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\RelatedViewgrams.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Scanner.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Segment.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SegmentBySinogram.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\SegmentByView.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\CombinedShape3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\DiscretisedShape3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\EllipsoidalCylinder.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Shape\Shape3D.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Sinogram.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TimedObject.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Timer.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\TrivialDataSymmetriesForViewSegmentNumbers.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\VectorWithOffset.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\ViewSegmentNumbers.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\Viewgram.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\VoxelsOnCartesianGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\array_index_functions.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\assign_to_subregion.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\convert_array.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\convert_range.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\data\SinglesRates.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\display.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\extract_line.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\linear_regression.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithDiscreteDetectors.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithViewTangRingRingEncoding.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\listmode\CListRecordROOT.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\make_array.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\KineticParameters.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\ModelMatrix.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\PlasmaData.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\modelling\PlasmaSample.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\more_algorithms.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplines1DRegularGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplinesDetail.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplinesRegularGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplines_coef.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\BSplines_weights.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\IR_filters.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\MatrixFunction.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\divide.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\erf.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\integrate_discrete_function.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\norm.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\overlap_interpolate.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\numerics\sampling_functions.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForDensels.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBin.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\GeneralisedPrior.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBin.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBin.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBinValue.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDensel.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDenselValue.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\RelatedBins.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\RelatedDensels.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SumOfGeneralisedObjectiveFunctions.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\recon_buildblock\SymmetryOperations_PET_CartesianGrid.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\round.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\scatter\ScatterEstimationByBin.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\stream.inl" />
+    <ClInclude Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include\stir\utilities.inl" />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_utilities\mult_model_with_dyn_images.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\buildblock\buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\data_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\IO_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\recon_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\Shape_buildblock\Shape_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_buildblock\modelling_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\spatial_transformation_buildblock\spatial_transformation_registries.cxx"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/STIRBUILD/ZERO_CHECK.vcxproj">
+      <Project>30AD665A-FB55-355B-913E-7FEC12E50022</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/IO/IO.vcxproj">
+      <Project>2C701E2E-36AC-3044-8EC8-FDA3D1480AF3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/Shape_buildblock/Shape_buildblock.vcxproj">
+      <Project>D762B603-6199-34EB-94A1-2482AB2FAA87</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP2D/analytic_FBP2D.vcxproj">
+      <Project>24E9927F-F888-3E70-B08C-1379CC21F18B</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP3DRP/analytic_FBP3DRP.vcxproj">
+      <Project>4AA15D79-9AA2-3236-9016-37BD81E4CBEF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/buildblock/buildblock.vcxproj">
+      <Project>BFCA66E5-8112-3F26-8137-36936DC49EFD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/data_buildblock/data_buildblock.vcxproj">
+      <Project>C5A822D8-9C73-3E08-9AD9-6487F9B415D4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/display/display.vcxproj">
+      <Project>2F9AA9FB-6EFA-3FB8-8473-16B86B00F2BE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/eval_buildblock/eval_buildblock.vcxproj">
+      <Project>32ECCE39-C939-3364-9900-22542555CB83</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSMAPOSL/iterative_OSMAPOSL.vcxproj">
+      <Project>AE1B16AA-CE4F-32BD-BC55-056E4DE6C0CD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSSPS/iterative_OSSPS.vcxproj">
+      <Project>410E0FA1-6A6C-340D-BBA5-5D8F2344CE88</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_buildblock/listmode_buildblock.vcxproj">
+      <Project>9D184679-3B60-38E0-ADE0-CB198F6D46C0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_buildblock/modelling_buildblock.vcxproj">
+      <Project>A937A450-7BF3-352A-9D13-ACAC58AB4CE0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/numerics_buildblock/numerics_buildblock.vcxproj">
+      <Project>2D36AD02-2236-33F2-ACB4-DBEBA258E87D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_buildblock/recon_buildblock.vcxproj">
+      <Project>049B6410-7564-381C-88BC-C65435874216</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_buildblock/scatter_buildblock.vcxproj">
+      <Project>E452130E-8C95-36D7-A57F-CF3EBBA7FC61</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/spatial_transformation_buildblock/spatial_transformation_buildblock.vcxproj">
+      <Project>3786A6A8-352C-31F1-93C1-E77FE9F63A84</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

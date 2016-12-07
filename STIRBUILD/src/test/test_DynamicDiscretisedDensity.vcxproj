@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{2EF833F6-B995-3842-AF77-4BADADE3895B}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>test_DynamicDiscretisedDensity</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\test\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">test_DynamicDiscretisedDensity.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">test_DynamicDiscretisedDensity</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\test\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">test_DynamicDiscretisedDensity.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">test_DynamicDiscretisedDensity</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\test\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">test_DynamicDiscretisedDensity.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">test_DynamicDiscretisedDensity</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\test\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">test_DynamicDiscretisedDensity.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">test_DynamicDiscretisedDensity</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\Debug\analytic_FBP3DRP.lib;..\analytic\FBP2D\Debug\analytic_FBP2D.lib;..\iterative\OSMAPOSL\Debug\iterative_OSMAPOSL.lib;..\iterative\OSSPS\Debug\iterative_OSSPS.lib;..\scatter_buildblock\Debug\scatter_buildblock.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\listmode_buildblock\Debug\listmode_buildblock.lib;..\recon_buildblock\Debug\recon_buildblock.lib;..\display\Debug\display.lib;..\IO\Debug\IO.lib;..\data_buildblock\Debug\data_buildblock.lib;..\numerics_buildblock\Debug\numerics_buildblock.lib;..\buildblock\Debug\buildblock.lib;..\spatial_transformation_buildblock\Debug\spatial_transformation_buildblock.lib;..\Shape_buildblock\Debug\Shape_buildblock.lib;..\eval_buildblock\Debug\eval_buildblock.lib;..\numerics_buildblock\Debug\numerics_buildblock.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\listmode_buildblock\Debug\listmode_buildblock.lib;..\data_buildblock\Debug\data_buildblock.lib;..\IO\Debug\IO.lib;..\modelling_buildblock\Debug\modelling_buildblock.lib;..\buildblock\Debug\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/test/Debug/test_DynamicDiscretisedDensity.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/test/Debug/test_DynamicDiscretisedDensity.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\Release\analytic_FBP3DRP.lib;..\analytic\FBP2D\Release\analytic_FBP2D.lib;..\iterative\OSMAPOSL\Release\iterative_OSMAPOSL.lib;..\iterative\OSSPS\Release\iterative_OSSPS.lib;..\scatter_buildblock\Release\scatter_buildblock.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\listmode_buildblock\Release\listmode_buildblock.lib;..\recon_buildblock\Release\recon_buildblock.lib;..\display\Release\display.lib;..\IO\Release\IO.lib;..\data_buildblock\Release\data_buildblock.lib;..\numerics_buildblock\Release\numerics_buildblock.lib;..\buildblock\Release\buildblock.lib;..\spatial_transformation_buildblock\Release\spatial_transformation_buildblock.lib;..\Shape_buildblock\Release\Shape_buildblock.lib;..\eval_buildblock\Release\eval_buildblock.lib;..\numerics_buildblock\Release\numerics_buildblock.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\listmode_buildblock\Release\listmode_buildblock.lib;..\data_buildblock\Release\data_buildblock.lib;..\IO\Release\IO.lib;..\modelling_buildblock\Release\modelling_buildblock.lib;..\buildblock\Release\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/test/Release/test_DynamicDiscretisedDensity.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/test/Release/test_DynamicDiscretisedDensity.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\MinSizeRel\analytic_FBP3DRP.lib;..\analytic\FBP2D\MinSizeRel\analytic_FBP2D.lib;..\iterative\OSMAPOSL\MinSizeRel\iterative_OSMAPOSL.lib;..\iterative\OSSPS\MinSizeRel\iterative_OSSPS.lib;..\scatter_buildblock\MinSizeRel\scatter_buildblock.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\listmode_buildblock\MinSizeRel\listmode_buildblock.lib;..\recon_buildblock\MinSizeRel\recon_buildblock.lib;..\display\MinSizeRel\display.lib;..\IO\MinSizeRel\IO.lib;..\data_buildblock\MinSizeRel\data_buildblock.lib;..\numerics_buildblock\MinSizeRel\numerics_buildblock.lib;..\buildblock\MinSizeRel\buildblock.lib;..\spatial_transformation_buildblock\MinSizeRel\spatial_transformation_buildblock.lib;..\Shape_buildblock\MinSizeRel\Shape_buildblock.lib;..\eval_buildblock\MinSizeRel\eval_buildblock.lib;..\numerics_buildblock\MinSizeRel\numerics_buildblock.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\listmode_buildblock\MinSizeRel\listmode_buildblock.lib;..\data_buildblock\MinSizeRel\data_buildblock.lib;..\IO\MinSizeRel\IO.lib;..\modelling_buildblock\MinSizeRel\modelling_buildblock.lib;..\buildblock\MinSizeRel\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/test/MinSizeRel/test_DynamicDiscretisedDensity.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/test/MinSizeRel/test_DynamicDiscretisedDensity.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\analytic\FBP3DRP\RelWithDebInfo\analytic_FBP3DRP.lib;..\analytic\FBP2D\RelWithDebInfo\analytic_FBP2D.lib;..\iterative\OSMAPOSL\RelWithDebInfo\iterative_OSMAPOSL.lib;..\iterative\OSSPS\RelWithDebInfo\iterative_OSSPS.lib;..\scatter_buildblock\RelWithDebInfo\scatter_buildblock.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\listmode_buildblock\RelWithDebInfo\listmode_buildblock.lib;..\recon_buildblock\RelWithDebInfo\recon_buildblock.lib;..\display\RelWithDebInfo\display.lib;..\IO\RelWithDebInfo\IO.lib;..\data_buildblock\RelWithDebInfo\data_buildblock.lib;..\numerics_buildblock\RelWithDebInfo\numerics_buildblock.lib;..\buildblock\RelWithDebInfo\buildblock.lib;..\spatial_transformation_buildblock\RelWithDebInfo\spatial_transformation_buildblock.lib;..\Shape_buildblock\RelWithDebInfo\Shape_buildblock.lib;..\eval_buildblock\RelWithDebInfo\eval_buildblock.lib;..\numerics_buildblock\RelWithDebInfo\numerics_buildblock.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\listmode_buildblock\RelWithDebInfo\listmode_buildblock.lib;..\data_buildblock\RelWithDebInfo\data_buildblock.lib;..\IO\RelWithDebInfo\IO.lib;..\modelling_buildblock\RelWithDebInfo\modelling_buildblock.lib;..\buildblock\RelWithDebInfo\buildblock.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/STIRBUILD/src/test/RelWithDebInfo/test_DynamicDiscretisedDensity.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/STIRBUILD/src/test/RelWithDebInfo/test_DynamicDiscretisedDensity.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\test\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_test_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\STIRBUILD\src\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\test\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_test_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\STIRBUILD\src\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\test\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_test_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\STIRBUILD\src\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/Manon/GitHub/PET-Motion-Correction/STIR-master -BD:/STIRBUILD --check-stamp-file D:\STIRBUILD\src\test\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\cmake\stir_test_exe_targets.cmake;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\STIRBUILD\src\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\test\test_DynamicDiscretisedDensity.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\buildblock\buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\data_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\IO_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\recon_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\Shape_buildblock\Shape_buildblock_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_buildblock\modelling_registries.cxx"  />
+    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\spatial_transformation_buildblock\spatial_transformation_registries.cxx"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/STIRBUILD/ZERO_CHECK.vcxproj">
+      <Project>30AD665A-FB55-355B-913E-7FEC12E50022</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/IO/IO.vcxproj">
+      <Project>2C701E2E-36AC-3044-8EC8-FDA3D1480AF3</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/Shape_buildblock/Shape_buildblock.vcxproj">
+      <Project>D762B603-6199-34EB-94A1-2482AB2FAA87</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP2D/analytic_FBP2D.vcxproj">
+      <Project>24E9927F-F888-3E70-B08C-1379CC21F18B</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/analytic/FBP3DRP/analytic_FBP3DRP.vcxproj">
+      <Project>4AA15D79-9AA2-3236-9016-37BD81E4CBEF</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/buildblock/buildblock.vcxproj">
+      <Project>BFCA66E5-8112-3F26-8137-36936DC49EFD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/data_buildblock/data_buildblock.vcxproj">
+      <Project>C5A822D8-9C73-3E08-9AD9-6487F9B415D4</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/display/display.vcxproj">
+      <Project>2F9AA9FB-6EFA-3FB8-8473-16B86B00F2BE</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/eval_buildblock/eval_buildblock.vcxproj">
+      <Project>32ECCE39-C939-3364-9900-22542555CB83</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSMAPOSL/iterative_OSMAPOSL.vcxproj">
+      <Project>AE1B16AA-CE4F-32BD-BC55-056E4DE6C0CD</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/iterative/OSSPS/iterative_OSSPS.vcxproj">
+      <Project>410E0FA1-6A6C-340D-BBA5-5D8F2344CE88</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/listmode_buildblock/listmode_buildblock.vcxproj">
+      <Project>9D184679-3B60-38E0-ADE0-CB198F6D46C0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/modelling_buildblock/modelling_buildblock.vcxproj">
+      <Project>A937A450-7BF3-352A-9D13-ACAC58AB4CE0</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/numerics_buildblock/numerics_buildblock.vcxproj">
+      <Project>2D36AD02-2236-33F2-ACB4-DBEBA258E87D</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/recon_buildblock/recon_buildblock.vcxproj">
+      <Project>049B6410-7564-381C-88BC-C65435874216</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/scatter_buildblock/scatter_buildblock.vcxproj">
+      <Project>E452130E-8C95-36D7-A57F-CF3EBBA7FC61</Project>
+    </ProjectReference>
+    <ProjectReference Include="D:/STIRBUILD/src/spatial_transformation_buildblock/spatial_transformation_buildblock.vcxproj">
+      <Project>3786A6A8-352C-31F1-93C1-E77FE9F63A84</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

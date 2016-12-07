@@ -1,0 +1,35 @@
+# CMake generated Testfile for 
+# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src
+# Build directory: D:/STIRBUILD/src
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+subdirs("buildblock")
+subdirs("numerics_buildblock")
+subdirs("data_buildblock")
+subdirs("display")
+subdirs("recon_buildblock")
+subdirs("modelling_buildblock")
+subdirs("listmode_buildblock")
+subdirs("IO")
+subdirs("spatial_transformation_buildblock")
+subdirs("Shape_buildblock")
+subdirs("eval_buildblock")
+subdirs("scatter_buildblock")
+subdirs("utilities")
+subdirs("scatter_utilities")
+subdirs("modelling_utilities")
+subdirs("listmode_utilities")
+subdirs("analytic/FBP2D")
+subdirs("analytic/FBP3DRP")
+subdirs("iterative/OSMAPOSL")
+subdirs("iterative/OSSPS")
+subdirs("iterative/POSMAPOSL")
+subdirs("iterative/POSSPS")
+subdirs("SimSET")
+subdirs("SimSET/scripts")
+subdirs("recon_test")
+subdirs("test")
+subdirs("test/numerics")
+subdirs("test/modelling")
+subdirs("swig")
