@@ -23,9 +23,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="StirSupport.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="stir.py" />
+    <Compile Include="stirextra.py" />
     <Compile Include="STIRTest.py" />
   </ItemGroup>
   <PropertyGroup>
