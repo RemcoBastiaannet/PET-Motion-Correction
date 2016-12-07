@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/spatial_transformation_buildblock
+# Source directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/spatial_transformation_buildblock
 # Build directory: D:/STIRBUILD/src/spatial_transformation_buildblock
 # 
 # This file includes the relevant testing commands required for 

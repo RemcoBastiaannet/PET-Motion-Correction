@@ -65,7 +65,7 @@
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;D:\Manon\Anaconda\include;D:\Manon\Anaconda\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\libs\boost_1_62_0;D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\include;C:\Program Files\Anaconda2\include;C:\Program Files\Anaconda2\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -87,7 +87,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;D:\Manon\Anaconda\include;D:\Manon\Anaconda\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\libs\boost_1_62_0;D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\include;C:\Program Files\Anaconda2\include;C:\Program Files\Anaconda2\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -109,7 +109,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;D:\Manon\Anaconda\include;D:\Manon\Anaconda\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\libs\boost_1_62_0;D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\include;C:\Program Files\Anaconda2\include;C:\Program Files\Anaconda2\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -131,7 +131,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\Manon\GitHub\PET-Motion-Correction\libs\boost_1_62_0;D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\include;D:\Manon\Anaconda\include;D:\Manon\Anaconda\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\libs\boost_1_62_0;D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\include;C:\Program Files\Anaconda2\include;C:\Program Files\Anaconda2\lib\site-packages\numpy\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>

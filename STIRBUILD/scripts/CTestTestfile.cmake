@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts
+# Source directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts
 # Build directory: D:/STIRBUILD/scripts
 # 
 # This file includes the relevant testing commands required for 

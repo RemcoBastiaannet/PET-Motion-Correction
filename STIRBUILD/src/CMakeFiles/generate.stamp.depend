@@ -1,17 +1,13 @@
 # CMake generation dependency list for this directory.
-D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/CMakeLists.txt
-C:/Program Files/CMake/share/cmake-3.7/Modules/CheckFunctionExists.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindBoost.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindOpenMP.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CheckCSourceCompiles.cmake
-D:/STIRBUILD/CMakeFiles/FindOpenMP/ompver.c
-C:/Program Files/CMake/share/cmake-3.7/Modules/CheckCXXSourceCompiles.cmake
-D:/STIRBUILD/CMakeFiles/FindOpenMP/ompver.cpp
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/cmake/stir_dirs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindDoxygen.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
+D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/CMakeLists.txt
+C:/Program Files/CMake/share/cmake-3.6/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindBoost.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindOpenMP.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/CMakeParseArguments.cmake
+D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/cmake/stir_dirs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindDoxygen.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/CMakeParseArguments.cmake

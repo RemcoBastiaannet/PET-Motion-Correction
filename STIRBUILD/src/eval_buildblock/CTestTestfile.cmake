@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/eval_buildblock
+# Source directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/eval_buildblock
 # Build directory: D:/STIRBUILD/src/eval_buildblock
 # 
 # This file includes the relevant testing commands required for 

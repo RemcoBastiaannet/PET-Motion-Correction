@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\SinglesRates.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\data_buildblock\SinglesRates.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\SinglesRatesForTimeFrames.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\data_buildblock\SinglesRatesForTimeFrames.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\CMakeLists.txt" />
+    <CustomBuild Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\data_buildblock\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

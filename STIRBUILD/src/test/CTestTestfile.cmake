@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test
+# Source directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/test
 # Build directory: D:/STIRBUILD/src/test
 # 
 # This file includes the relevant testing commands required for 
@@ -24,7 +24,7 @@ add_test(test_find_fwhm_in_image "D:/STIRBUILD/src/test/test_find_fwhm_in_image"
 add_test(test_proj_data_info "D:/STIRBUILD/src/test/test_proj_data_info")
 add_test(test_proj_data_in_memory "D:/STIRBUILD/src/test/test_proj_data_in_memory")
 add_test(test_export_array "D:/STIRBUILD/src/test/test_export_array")
-add_test(test_linear_regression "D:/STIRBUILD/src/test/test_linear_regression" "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/input/test_linear_regression.in")
+add_test(test_linear_regression "D:/STIRBUILD/src/test/test_linear_regression" "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/test/input/test_linear_regression.in")
 if("${CTEST_CONFIGURATION_TYPE}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
   add_test(test_stir_math "D:/STIRBUILD/src/test/Debug/test_stir_math.exe" "D:/STIRBUILD/src/utilities/Debug/stir_math.exe")
   set_tests_properties(test_stir_math PROPERTIES  DEPENDS "stir_math")
@@ -40,5 +40,5 @@ elseif("${CTEST_CONFIGURATION_TYPE}" MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd]
 else()
   add_test(test_stir_math NOT_AVAILABLE)
 endif()
-add_test(test_OutputFileFormat_test_InterfileOutputFileFormat.in "D:/STIRBUILD/src/test/test_OutputFileFormat" "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/input/test_InterfileOutputFileFormat.in")
-add_test(test_OutputFileFormat_test_InterfileOutputFileFormat_short.in "D:/STIRBUILD/src/test/test_OutputFileFormat" "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/test/input/test_InterfileOutputFileFormat_short.in")
+add_test(test_OutputFileFormat_test_InterfileOutputFileFormat.in "D:/STIRBUILD/src/test/test_OutputFileFormat" "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/test/input/test_InterfileOutputFileFormat.in")
+add_test(test_OutputFileFormat_test_InterfileOutputFileFormat_short.in "D:/STIRBUILD/src/test/test_OutputFileFormat" "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/test/input/test_InterfileOutputFileFormat_short.in")

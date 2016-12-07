@@ -1,42 +1,42 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\ExamData.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\ExamData.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\OutputFileFormat.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\OutputFileFormat.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\OutputFileFormat_default.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\OutputFileFormat_default.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InterfileOutputFileFormat.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InterfileOutputFileFormat.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\interfile.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\interfile.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InterfileHeader.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InterfileHeader.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InterfilePDFSHeaderSPECT.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InterfilePDFSHeaderSPECT.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InputFileFormatRegistry.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InputFileFormatRegistry.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InterfileDynamicDiscretisedDensityOutputFileFormat.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InterfileDynamicDiscretisedDensityOutputFileFormat.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\InterfileParametricDensityOutputFileFormat.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\InterfileParametricDensityOutputFileFormat.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\GIPL_ImageFormat.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\GIPL_ImageFormat.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\CMakeLists.txt" />
+    <CustomBuild Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

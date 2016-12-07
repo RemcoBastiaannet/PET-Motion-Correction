@@ -1,174 +1,174 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\MotionModel.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\MotionModel.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing_Siddon.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingRayTracing_Siddon.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PresmoothingForwardProjectorByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PresmoothingForwardProjectorByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_linear.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_linear.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_piecewise_linear.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingInterpolation_piecewise_linear.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PostsmoothingBackProjectorByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PostsmoothingBackProjectorByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\Reconstruction.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\Reconstruction.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\AnalyticReconstruction.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\AnalyticReconstruction.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\IterativeReconstruction.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\IterativeReconstruction.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\distributable.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\distributable.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForDensels.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForDensels.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialDataSymmetriesForBins.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialDataSymmetriesForBins.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperations_PET_CartesianGrid.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\SymmetryOperations_PET_CartesianGrid.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\find_basic_vs_nums_in_subset.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\find_basic_vs_nums_in_subset.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneDensel.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixElemsForOneDensel.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingRayTracing.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingRayTracing.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingInterpolation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinUsingInterpolation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinFromFile.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinFromFile.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinSPECTUB.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjMatrixByBinSPECTUB.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Tools.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Tools.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Weight3d.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\SPECTUB_Weight3d.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ForwardProjectorByBinUsingProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingSquareProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BackProjectorByBinUsingSquareProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\RayTraceVoxelsOnCartesianGrid.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\RayTraceVoxelsOnCartesianGrid.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPair.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPair.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingSeparateProjectors.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjectorByBinPairUsingSeparateProjectors.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ChainedBinNormalisation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ChainedBinNormalisation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromProjData.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromProjData.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialBinNormalisation.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\TrivialBinNormalisation.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromAttenuationImage.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromAttenuationImage.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedPrior.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedPrior.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjDataRebinning.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\ProjDataRebinning.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\FourierRebinning.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\FourierRebinning.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\QuadraticPrior.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\QuadraticPrior.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\FilterRootPrior.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\FilterRootPrior.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedObjectiveFunction.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\GeneralisedObjectiveFunction.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMean.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMean.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndProjData.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndProjData.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeData.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeData.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeDataWithProjMatrixByBin.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeDataWithProjMatrixByBin.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearKineticModelAndDynamicProjectionData.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearKineticModelAndDynamicProjectionData.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndGatedProjDataWithMotion.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndGatedProjDataWithMotion.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromECAT8.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\BinNormalisationFromECAT8.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt" />
+    <CustomBuild Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

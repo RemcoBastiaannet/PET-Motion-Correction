@@ -1,4 +1,4 @@
-# Install script for directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts
+# Install script for directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,13 +29,13 @@ endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE PROGRAM FILES
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/stir_subtract"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/stir_divide"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/count"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/stir_print_voxel_sizes.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/estimate_scatter.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/zoom_att_image.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/scripts/get_num_voxels.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/stir_subtract"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/stir_divide"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/count"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/stir_print_voxel_sizes.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/estimate_scatter.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/zoom_att_image.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/scripts/get_num_voxels.sh"
     )
 endif()
 

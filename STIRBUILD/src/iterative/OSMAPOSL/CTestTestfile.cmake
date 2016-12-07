@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/iterative/OSMAPOSL
+# Source directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/iterative/OSMAPOSL
 # Build directory: D:/STIRBUILD/src/iterative/OSMAPOSL
 # 
 # This file includes the relevant testing commands required for 

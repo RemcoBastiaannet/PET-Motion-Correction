@@ -24,7 +24,7 @@ AVW_LIBRARIES:FILEPATH=AVW_LIBRARIES-NOTFOUND
 AVW_ROOT_DIR:PATH=
 
 //root of Boost
-BOOST_ROOT:PATH=D:/Manon/GitHub/PET-Motion-Correction/libs/boost_1_62_0
+BOOST_ROOT:PATH=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/boost_1_62_0
 
 //Create and install the HTML based API documentation (requires
 // Doxygen)
@@ -46,7 +46,7 @@ BUILD_SWIG_PYTHON:BOOL=ON
 Boost_DIR:PATH=Boost_DIR-NOTFOUND
 
 //Path to a file.
-Boost_INCLUDE_DIR:PATH=D:/Manon/GitHub/PET-Motion-Correction/libs/boost_1_62_0
+Boost_INCLUDE_DIR:PATH=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/boost_1_62_0
 
 //Path to a program.
 CERN_ROOT_CONFIG:FILEPATH=CERN_ROOT_CONFIG-NOTFOUND
@@ -60,7 +60,7 @@ CMAKE_BUILD_TYPE:STRING=Release
 CMAKE_CONFIGURATION_TYPES:STRING=Debug;Release;MinSizeRel;RelWithDebInfo
 
 //Flags used by the compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /W3 /GR /EHsc
+CMAKE_CXX_FLAGS:STRING= /DWIN32 /D_WINDOWS /W3 /GR /EHsc
 
 //Flags used by the compiler during debug builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1
@@ -79,7 +79,7 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=/MD /Zi /O2 /Ob1 /DNDEBUG
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
 
 //Flags used by the compiler during all build types.
-CMAKE_C_FLAGS:STRING=/DWIN32 /D_WINDOWS /W3
+CMAKE_C_FLAGS:STRING= /DWIN32 /D_WINDOWS /W3
 
 //Flags used by the compiler during debug builds.
 CMAKE_C_FLAGS_DEBUG:STRING=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1
@@ -98,7 +98,7 @@ CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=/MD /Zi /O2 /Ob1 /DNDEBUG
 CMAKE_C_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
 
 //Flags used by the linker.
-CMAKE_EXE_LINKER_FLAGS:STRING=/machine:x64
+CMAKE_EXE_LINKER_FLAGS:STRING= /machine:x64
 
 //Flags used by the linker during debug builds.
 CMAKE_EXE_LINKER_FLAGS_DEBUG:STRING=/debug /INCREMENTAL
@@ -119,7 +119,7 @@ CMAKE_INSTALL_PREFIX:PATH=C:/Program Files/STIR
 CMAKE_LINKER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/x86_amd64/link.exe
 
 //Flags used by the linker during the creation of modules.
-CMAKE_MODULE_LINKER_FLAGS:STRING=/machine:x64
+CMAKE_MODULE_LINKER_FLAGS:STRING= /machine:x64
 
 //Flags used by the linker during debug builds.
 CMAKE_MODULE_LINKER_FLAGS_DEBUG:STRING=/debug /INCREMENTAL
@@ -140,10 +140,10 @@ CMAKE_PROJECT_NAME:STATIC=STIR
 CMAKE_RC_COMPILER:FILEPATH=rc
 
 //Flags for Windows Resource Compiler.
-CMAKE_RC_FLAGS:STRING=/DWIN32
+CMAKE_RC_FLAGS:STRING=' /DWIN32 '
 
 //Flags used by the linker during the creation of dll's.
-CMAKE_SHARED_LINKER_FLAGS:STRING=/machine:x64
+CMAKE_SHARED_LINKER_FLAGS:STRING= /machine:x64
 
 //Flags used by the linker during debug builds.
 CMAKE_SHARED_LINKER_FLAGS_DEBUG:STRING=/debug /INCREMENTAL
@@ -165,7 +165,7 @@ CMAKE_SKIP_INSTALL_RPATH:BOOL=OFF
 CMAKE_SKIP_RPATH:BOOL=OFF
 
 //Flags used by the linker during the creation of static libraries.
-CMAKE_STATIC_LINKER_FLAGS:STRING=/machine:x64
+CMAKE_STATIC_LINKER_FLAGS:STRING= /machine:x64
 
 //Flags used by the linker during debug builds.
 CMAKE_STATIC_LINKER_FLAGS_DEBUG:STRING=
@@ -237,13 +237,13 @@ PYTHON_DEBUG_LIBRARY:FILEPATH=PYTHON_DEBUG_LIBRARY-NOTFOUND
 PYTHON_DEST:PATH=C:/Program Files/STIR/python
 
 //Path to a program.
-PYTHON_EXECUTABLE:FILEPATH=D:/Manon/Anaconda/python.exe
+PYTHON_EXECUTABLE:FILEPATH=C:/Program Files/Anaconda2/python.exe
 
 //Path to a file.
-PYTHON_INCLUDE_DIR:PATH=D:/Manon/Anaconda/include
+PYTHON_INCLUDE_DIR:PATH=C:/Program Files/Anaconda2/include
 
 //Path to a library.
-PYTHON_LIBRARY:FILEPATH=D:/Manon/Anaconda/libs/python27.lib
+PYTHON_LIBRARY:FILEPATH=C:/Program Files/Anaconda2/libs/python27.lib
 
 //Path to a library.
 PYTHON_LIBRARY_DEBUG:FILEPATH=PYTHON_LIBRARY_DEBUG-NOTFOUND
@@ -261,7 +261,7 @@ STIR_BINARY_DIR:STATIC=D:/STIRBUILD
 STIR_DEFAULT_PROJECTOR_AS_V2:BOOL=OFF
 
 //Path to a file.
-STIR_LOCAL:PATH=STIR_LOCAL-NOTFOUND
+STIR_LOCAL:PATH=
 
 //Compile with MPI
 STIR_MPI:BOOL=OFF
@@ -270,13 +270,13 @@ STIR_MPI:BOOL=OFF
 STIR_OPENMP:BOOL=ON
 
 //Value Computed by CMake
-STIR_SOURCE_DIR:STATIC=D:/Manon/GitHub/PET-Motion-Correction/STIR-master
+STIR_SOURCE_DIR:STATIC=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master
 
 //Path to a file.
-SWIG_DIR:PATH=D:/Manon/Anaconda/Library/bin/Lib
+SWIG_DIR:PATH=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/swigwin-3.0.10/Lib
 
 //Path to a program.
-SWIG_EXECUTABLE:FILEPATH=D:/Manon/Anaconda/Library/bin/swig.exe
+SWIG_EXECUTABLE:FILEPATH=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/swigwin-3.0.10/swig.exe
 
 //Swig version
 SWIG_VERSION:STRING=3.0.10
@@ -294,7 +294,7 @@ VERSION_MINOR:STRING=1
 VERSION_PATCH:STRING=0
 
 //Dependencies for the target
-_stir_LIB_DEPENDS:STATIC=general;analytic_FBP3DRP;general;analytic_FBP2D;general;iterative_OSMAPOSL;general;iterative_OSSPS;general;scatter_buildblock;general;modelling_buildblock;general;listmode_buildblock;general;recon_buildblock;general;display;general;IO;general;data_buildblock;general;numerics_buildblock;general;buildblock;general;spatial_transformation_buildblock;general;Shape_buildblock;general;eval_buildblock;general;numerics_buildblock;general;modelling_buildblock;general;listmode_buildblock;general;D:/Manon/Anaconda/libs/python27.lib;
+_stir_LIB_DEPENDS:STATIC=general;analytic_FBP3DRP;general;analytic_FBP2D;general;iterative_OSMAPOSL;general;iterative_OSSPS;general;scatter_buildblock;general;modelling_buildblock;general;listmode_buildblock;general;recon_buildblock;general;display;general;IO;general;data_buildblock;general;numerics_buildblock;general;buildblock;general;spatial_transformation_buildblock;general;Shape_buildblock;general;eval_buildblock;general;numerics_buildblock;general;modelling_buildblock;general;listmode_buildblock;general;C:/Program Files/Anaconda2/libs/python27.lib;
 
 //Dependencies for the target
 analytic_FBP2D_LIB_DEPENDS:STATIC=general;recon_buildblock;general;IO;
@@ -360,9 +360,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=d:/STIRBUILD
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=7
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=6
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=0
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake.exe
 //Path to cpack program executable.
@@ -415,7 +415,7 @@ CMAKE_GENERATOR_PLATFORM:INTERNAL=
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
-CMAKE_HOME_DIRECTORY:INTERNAL=D:/Manon/GitHub/PET-Motion-Correction/STIR-master
+CMAKE_HOME_DIRECTORY:INTERNAL=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
@@ -436,7 +436,7 @@ CMAKE_RC_COMPILER_WORKS:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RC_FLAGS
 CMAKE_RC_FLAGS-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.7
+CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.6
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
@@ -468,25 +468,21 @@ DOXYGEN_DOT_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: DOXYGEN_EXECUTABLE
 DOXYGEN_EXECUTABLE-ADVANCED:INTERNAL=1
 //Details about finding Numpy
-FIND_PACKAGE_MESSAGE_DETAILS_Numpy:INTERNAL=[D:\Manon\Anaconda\lib\site-packages\numpy\core\include][v()]
+FIND_PACKAGE_MESSAGE_DETAILS_Numpy:INTERNAL=[C:\Program Files\Anaconda2\lib\site-packages\numpy\core\include][v()]
 //Details about finding OpenMP
 FIND_PACKAGE_MESSAGE_DETAILS_OpenMP:INTERNAL=[/openmp][/openmp][v()]
 //Details about finding PythonInterp
-FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[D:/Manon/Anaconda/python.exe][v2.7.12()]
+FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[C:/Program Files/Anaconda2/python.exe][v2.7.12()]
 //Details about finding PythonLibs
-FIND_PACKAGE_MESSAGE_DETAILS_PythonLibs:INTERNAL=[D:/Manon/Anaconda/libs/python27.lib][D:/Manon/Anaconda/include][v2.7.12()]
+FIND_PACKAGE_MESSAGE_DETAILS_PythonLibs:INTERNAL=[C:/Program Files/Anaconda2/libs/python27.lib][C:/Program Files/Anaconda2/include][v2.7.12()]
 //Details about finding SWIG
-FIND_PACKAGE_MESSAGE_DETAILS_SWIG:INTERNAL=[D:/Manon/Anaconda/Library/bin/swig.exe][D:/Manon/Anaconda/Library/bin/Lib][v3.0.10()]
+FIND_PACKAGE_MESSAGE_DETAILS_SWIG:INTERNAL=[D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/swigwin-3.0.10/swig.exe][D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/swigwin-3.0.10/Lib][v3.0.10()]
 //Have function getopt
 HAVE_SYSTEM_GETOPT:INTERNAL=
 //ADVANCED property for variable: OpenMP_CXX_FLAGS
 OpenMP_CXX_FLAGS-ADVANCED:INTERNAL=1
-//C++ compiler's OpenMP specification date
-OpenMP_CXX_SPEC_DATE:INTERNAL=200203
 //ADVANCED property for variable: OpenMP_C_FLAGS
 OpenMP_C_FLAGS-ADVANCED:INTERNAL=1
-//C compiler's OpenMP specification date
-OpenMP_C_SPEC_DATE:INTERNAL=200203
 //Test OpenMP_FLAG_DETECTED
 OpenMP_FLAG_DETECTED:INTERNAL=1
 //ADVANCED property for variable: PYTHON_DEBUG_LIBRARY
@@ -510,11 +506,11 @@ VERSION_MINOR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: VERSION_PATCH
 VERSION_PATCH-ADVANCED:INTERNAL=1
 //Last used BOOST_ROOT value.
-_BOOST_ROOT_LAST:INTERNAL=D:/Manon/GitHub/PET-Motion-Correction/libs/boost_1_62_0
+_BOOST_ROOT_LAST:INTERNAL=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/boost_1_62_0
 //Components requested for this build tree.
 _Boost_COMPONENTS_SEARCHED:INTERNAL=
 //Last used Boost_INCLUDE_DIR value.
-_Boost_INCLUDE_DIR_LAST:INTERNAL=D:/Manon/GitHub/PET-Motion-Correction/libs/boost_1_62_0
+_Boost_INCLUDE_DIR_LAST:INTERNAL=D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/libs/boost_1_62_0
 //Last used Boost_NAMESPACE value.
 _Boost_NAMESPACE_LAST:INTERNAL=boost
 //Last used Boost_USE_MULTITHREADED value.

@@ -1,4 +1,4 @@
-# Install script for directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/modelling_utilities
+# Install script for directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/modelling_utilities
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

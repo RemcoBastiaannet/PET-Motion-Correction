@@ -1,4 +1,4 @@
-# Install script for directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/swig
+# Install script for directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/swig
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -92,6 +92,6 @@ if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMP
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "C:/Program Files/STIR/python" TYPE FILE FILES "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/swig/stirextra.py")
+file(INSTALL DESTINATION "C:/Program Files/STIR/python" TYPE FILE FILES "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/swig/stirextra.py")
 endif()
 

@@ -1,4 +1,4 @@
 # CMake generation dependency list for this directory.
-D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/display/CMakeLists.txt
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindX11.cmake
-D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/cmake/stir_lib_target.cmake
+D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/display/CMakeLists.txt
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindX11.cmake
+D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/cmake/stir_lib_target.cmake

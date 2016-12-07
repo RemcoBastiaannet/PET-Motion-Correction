@@ -4,31 +4,31 @@
     <ClCompile Include="D:\STIRBUILD\src\swig\stirPYTHON_wrap.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\buildblock\buildblock_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\buildblock\buildblock_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\data_buildblock\data_buildblock_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\data_buildblock\data_buildblock_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\IO\IO_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\IO\IO_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\recon_buildblock\recon_buildblock_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\recon_buildblock\recon_buildblock_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\Shape_buildblock\Shape_buildblock_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\Shape_buildblock\Shape_buildblock_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\modelling_buildblock\modelling_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\modelling_buildblock\modelling_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\spatial_transformation_buildblock\spatial_transformation_registries.cxx">
+    <ClCompile Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\spatial_transformation_buildblock\spatial_transformation_registries.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\swig\CMakeLists.txt" />
-    <CustomBuild Include="D:\Manon\GitHub\PET-Motion-Correction\STIR-master\src\swig\stir.i" />
+    <CustomBuild Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\swig\CMakeLists.txt" />
+    <CustomBuild Include="D:\OneDrive\Documenten\Werk\Documents\Projects\MotionCompensation\GitHubRepos\PET-Motion-Correction\STIR-master\src\swig\stir.i" />
   </ItemGroup>
   <ItemGroup>
     <None Include="D:\STIRBUILD\src\swig\stir.py" />

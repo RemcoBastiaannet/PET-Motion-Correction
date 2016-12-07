@@ -1,4 +1,4 @@
-# Install script for directory: D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts
+# Install script for directory: D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,13 +29,13 @@ endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE PROGRAM FILES
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/add_SimSET_results.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/conv_SimSET_projdata_to_STIR.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/make_hv_from_Simset_params.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/mult_num_photons.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/run_SimSET.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/SimSET_STIR_names.sh"
-    "D:/Manon/GitHub/PET-Motion-Correction/STIR-master/src/SimSET/scripts/stir_image_to_simset_object.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/add_SimSET_results.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/conv_SimSET_projdata_to_STIR.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/make_hv_from_Simset_params.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/mult_num_photons.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/run_SimSET.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/SimSET_STIR_names.sh"
+    "D:/OneDrive/Documenten/Werk/Documents/Projects/MotionCompensation/GitHubRepos/PET-Motion-Correction/STIR-master/src/SimSET/scripts/stir_image_to_simset_object.sh"
     )
 endif()
 
