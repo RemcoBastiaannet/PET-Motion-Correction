@@ -33,6 +33,8 @@
 #include "stir/recon_buildblock/ProjMatrixByBin.h"
 #include "stir/recon_buildblock/ProjMatrixElemsForOneBin.h"
 
+#include "stir\info.h"
+
 // define a local preprocessor symbol to keep code relatively clean
 #ifdef STIR_NO_MUTABLE
 #define STIR_MUTABLE_CONST
@@ -61,7 +63,7 @@ ProjMatrixByBin::post_processing()
   return false;
 }
 
-ProjMatrixByBin::ProjMatrixByBin()
+ProjMatrixByBin::ProjMatrixByBin() : MotModPTR(null)
 { 
   set_defaults();
 }

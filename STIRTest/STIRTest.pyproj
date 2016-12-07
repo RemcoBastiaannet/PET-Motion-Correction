@@ -6,11 +6,13 @@
     <ProjectGuid>bd49ba41-ee8f-4ca0-b57e-542889a48472</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>STIRTest.py</StartupFile>
-    <SearchPath>..\pythonwrapper\</SearchPath>
+    <SearchPath>..\libs\commonPython\;..\..\..\..\..\..\..\..\..\STIRBUILD\src\swig\RelWithDebInfo\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>STIRTest</Name>
     <RootNamespace>STIRTest</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

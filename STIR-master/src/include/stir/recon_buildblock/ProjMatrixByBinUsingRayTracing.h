@@ -31,10 +31,9 @@
 
 #include "stir/RegisteredParsingObject.h"
 #include "stir/recon_buildblock/ProjMatrixByBin.h"
+#include "stir/recon_buildblock/ProjMatrixByBin.h"
 #include "stir/CartesianCoordinate3D.h"
 #include "stir/shared_ptr.h"
-
- 
 
 START_NAMESPACE_STIR
 
@@ -132,6 +131,8 @@ public :
   //! Default constructor (calls set_defaults())
   ProjMatrixByBinUsingRayTracing();
 
+  ProjMatrixByBinUsingRayTracing(shared_ptr<MotionModel>& MotMod);
+  
   //! Stores all necessary geometric info
   /*! Note that the density_info_ptr is not stored in this object. It's only used to get some info on sizes etc.
   */

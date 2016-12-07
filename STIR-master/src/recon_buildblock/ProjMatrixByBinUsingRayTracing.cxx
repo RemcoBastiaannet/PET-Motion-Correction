@@ -63,8 +63,8 @@
 using std::min;
 using std::max;
 #endif
-START_NAMESPACE_STIR
 
+START_NAMESPACE_STIR
 
 const char * const 
 ProjMatrixByBinUsingRayTracing::registered_name =
@@ -73,7 +73,14 @@ ProjMatrixByBinUsingRayTracing::registered_name =
 ProjMatrixByBinUsingRayTracing::
 ProjMatrixByBinUsingRayTracing()
 {
-  set_defaults();
+	set_defaults();
+}
+
+ProjMatrixByBinUsingRayTracing::
+ProjMatrixByBinUsingRayTracing(shared_ptr<MotionModel>& MotMod)
+{
+	MotModPTR = MotMod;
+	set_defaults();
 }
 //******************** parsing *************
 

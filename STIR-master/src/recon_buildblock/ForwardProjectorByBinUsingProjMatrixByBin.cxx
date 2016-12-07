@@ -48,7 +48,6 @@ using std::auto_ptr;
 
 START_NAMESPACE_STIR
 
-//////////////////////////////////////////////////////////
 const char * const 
 ForwardProjectorByBinUsingProjMatrixByBin::registered_name =
   "Matrix";
@@ -144,7 +143,9 @@ ForwardProjectorByBinUsingProjMatrixByBin::
         { 
           Bin bin(segment_num, view_num, ax_pos, tang_pos, 0);
           proj_matrix_ptr->get_proj_matrix_elems_for_one_bin(proj_matrix_row, bin);
-          proj_matrix_row.forward_project(bin,image);
+		  
+		  //proj_matrix_row.forward_project(bin, image);
+		  proj_matrix_row.forward_project(bin,image, proj_matrix_ptr);
           viewgram[ax_pos][tang_pos] = bin.get_bin_value();
         }
         ++r_viewgrams_iter; 
@@ -215,7 +216,8 @@ ForwardProjectorByBinUsingProjMatrixByBin::
             assert(bin == basic_bin);
             
             symm_op_ptr->transform_proj_matrix_elems_for_one_bin(proj_matrix_row_copy);
-            proj_matrix_row_copy.forward_project(bin,image);
+            //proj_matrix_row_copy.forward_project(bin,image);
+			proj_matrix_row_copy.forward_project(bin, image, proj_matrix_ptr);
             
             viewgram[axial_pos_tmp][tang_pos_tmp] = bin.get_bin_value();
           }

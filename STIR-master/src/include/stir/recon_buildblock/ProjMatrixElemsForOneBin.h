@@ -1,6 +1,6 @@
 //
 //
-
+#pragma once
 #ifndef __stir_recon_buildblock_ProjMatrixElemsForOneBin__
 #define __stir_recon_buildblock_ProjMatrixElemsForOneBin__
 
@@ -39,12 +39,16 @@
 #include "stir/recon_buildblock/ProjMatrixElemsForOneBinValue.h"
 #include "stir/Bin.h"
 #include <vector>
+#include "stir/shared_ptr.h"
+#include "stir\BasicCoordinate.h"
+#include "stir\recon_buildblock\MotionModel.h"
 
 START_NAMESPACE_STIR
 
 class Succeeded;
 class RelatedBins;
 template <int num_dimensions, typename elemT> class DiscretisedDensity;
+class ProjMatrixByBin;
 
 
 
@@ -192,10 +196,20 @@ public:
   void back_project(DiscretisedDensity<3,float>&,
                     const Bin&) const;
 
+  //! OVERLOADING REMCO VERSION Backward PROJECT
+  void back_project(DiscretisedDensity<3, float>&,
+ 			   const Bin&, const shared_ptr<ProjMatrixByBin>&);
+
+
+  //! OVERLOADING REMCO VERSION FORWARD PROJECT
+  void forward_project(Bin&,
+		const DiscretisedDensity<3, float>&, const shared_ptr<ProjMatrixByBin>& );
+
   //! forward project into a single bin
   void forward_project(Bin&,
                       const DiscretisedDensity<3,float>&) const;
- //! back project related bins
+ 
+  //! back project related bins
   void back_project(DiscretisedDensity<3,float>&,
                     const RelatedBins&) const; 
   //! forward project related bins

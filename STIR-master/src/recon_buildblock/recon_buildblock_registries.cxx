@@ -31,9 +31,13 @@
 #include "stir/recon_buildblock/QuadraticPrior.h"
 
 #include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracing.h"
+//#include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracingMotCorr.h"
+
 #include "stir/recon_buildblock/ProjMatrixByBinUsingInterpolation.h"
 #include "stir/recon_buildblock/ProjMatrixByBinFromFile.h"
 #include "stir/recon_buildblock/ProjMatrixByBinSPECTUB.h"
+
+//#include "stir/recon_buildblock/ProjMatrixByBinMotCorr.h"
 
 #include "stir/recon_buildblock/ForwardProjectorByBinUsingProjMatrixByBin.h"
 #include "stir/recon_buildblock/ForwardProjectorByBinUsingRayTracing.h"
@@ -62,6 +66,9 @@
 #include "stir/OSMAPOSL/OSMAPOSLReconstruction.h"
 #include "stir/OSSPS/OSSPSReconstruction.h"
 
+#include "stir/recon_buildblock/MotionModel.h"
+#include "stir/recon_buildblock/ProjMatrixElemsForOneBin.h"
+
 #ifdef HAVE_LLN_MATRIX
 #include "stir/recon_buildblock/BinNormalisationFromECAT7.h"
 #endif
@@ -72,6 +79,7 @@
 //#include "stir/IO/InputFileFormatRegistry.h"
 
 START_NAMESPACE_STIR
+
 //static RegisterInputFileFormat<InterfileProjMatrixByBinInputFileFormat> idummy0(0);
 
 static PoissonLogLikelihoodWithLinearModelForMeanAndProjData<DiscretisedDensity<3,float> >::RegisterIt dummy1;

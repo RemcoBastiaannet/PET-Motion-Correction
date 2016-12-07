@@ -84,6 +84,12 @@
 #include "stir/recon_buildblock/BackProjectorByBinUsingProjMatrixByBin.h"
 #include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracing.h"
 
+// #include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracingMotCorr.h"
+// #include "stir/recon_buildblock/ProjMatrixByBinMotCorr.h"
+
+#include "stir/recon_buildblock/MotionModel.h"
+#include "stir/recon_buildblock/ProjMatrixElemsForOneBin.h" 
+
 #include "stir/analytic/FBP2D/FBP2DReconstruction.h"
 #include "stir/analytic/FBP3DRP/FBP3DRPReconstruction.h"
 
@@ -834,6 +840,7 @@ namespace std {
 %shared_ptr(stir::Segment<float>);
 %shared_ptr(stir::Sinogram<float>);
 %shared_ptr(stir::Viewgram<float>);
+
 #else
 namespace boost {
 template<class T> class shared_ptr
@@ -1455,7 +1462,6 @@ namespace stir {
 %include "stir/analytic/FBP3DRP/FBP3DRPReconstruction.h"
 
 
-
 %template (GeneralisedObjectiveFunction3DFloat) stir::GeneralisedObjectiveFunction<stir::DiscretisedDensity<3,float> >;
 //%template () stir::GeneralisedObjectiveFunction<stir::DiscretisedDensity<3,float> >;
 %template (PoissonLogLikelihoodWithLinearModelForMean3DFloat) stir::PoissonLogLikelihoodWithLinearModelForMean<stir::DiscretisedDensity<3,float> >;
@@ -1499,6 +1505,15 @@ namespace stir {
     stir::BackProjectorByBin>);
 %shared_ptr(stir::BackProjectorByBinUsingProjMatrixByBin);
 %shared_ptr(stir::ProjMatrixByBin);
+
+
+
+///////////////////////////////////////////////////////////////////////
+//%shared_ptr(stir::ProjMatrixByBinMotCorr);
+//%shared_ptr(stir::MotionModel);
+///////////////////////////////////////////////////////////////////////
+
+
 %shared_ptr(stir::RegisteredParsingObject<
 	      stir::ProjMatrixByBinUsingRayTracing,
               stir::ProjMatrixByBin,
@@ -1519,6 +1534,19 @@ namespace stir {
 
 %include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracing.h"
 
+///Remoo add//////////////////////////////////////////////
+
+%include "std_vector.i"
+namespace std {
+%template(FloatVecVec) std::vector < std::vector < float> >;
+}
+
+%shared_ptr(stir::MotionModel);
+
+%include "stir/recon_buildblock/MotionModel.h"
+//%include "stir/recon_buildblock/ProjMatrixByBin.h"
+//END REMCO ADD////////////////////////////////
+
 %shared_ptr(  stir::AddParser<stir::ForwardProjectorByBin>);
 %template (internalAddParserForwardProjectorByBin)
   stir::AddParser<stir::ForwardProjectorByBin>;
@@ -1534,3 +1562,4 @@ namespace stir {
   stir::RegisteredParsingObject<stir::BackProjectorByBinUsingProjMatrixByBin,
      stir::BackProjectorByBin>;
 %include "stir/recon_buildblock/BackProjectorByBinUsingProjMatrixByBin.h"
+

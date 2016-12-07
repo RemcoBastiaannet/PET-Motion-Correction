@@ -23,6 +23,7 @@ set (dir_LIB_SOURCES ${dir}_LIB_SOURCES)
 
 set(${dir_LIB_SOURCES}
  ForwardProjectorByBin 
+ MotionModel
 	ForwardProjectorByBinUsingRayTracing 
 	ForwardProjectorByBinUsingRayTracing_Siddon 
 	PresmoothingForwardProjectorByBin

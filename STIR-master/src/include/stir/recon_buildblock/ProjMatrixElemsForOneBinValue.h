@@ -28,7 +28,7 @@
 
     See STIR/LICENSE.txt for details
 */
-
+#pragma once
 #ifndef __ProjMatrixElemsForOneBinValue_H__
 #define __ProjMatrixElemsForOneBinValue_H__
 

@@ -44,6 +44,10 @@
 #ifdef STIR_OPENMP
 #include <omp.h>
 #endif
+#include "stir\DiscretisedDensity.h"
+
+
+#include "stir\recon_buildblock\MotionModel.h"
 
 // define a local preprocessor symbol to keep code relatively clean
 #ifdef STIR_NO_MUTABLE
@@ -91,8 +95,11 @@ class ProjMatrixByBin :
   public TimedObject
 {
 public:
+  //Hier ons bewegings model
+
+	shared_ptr<MotionModel>& MotModPTR;
   
-  virtual ~ProjMatrixByBin() {}
+	virtual ~ProjMatrixByBin() {}
 
   //! To be called before any calculation is performed
   /*! Note that get_proj_matrix_elems_for_one_bin() will expect objects of
@@ -207,6 +214,7 @@ protected:
     STIR_MUTABLE_CONST;
 
 private:
+	shared_ptr<MotionModel> null;
   
   typedef boost::uint32_t CacheKey;
 

@@ -38,6 +38,7 @@ START_NAMESPACE_STIR
 template <int num_dimensions, class coordT> class BasicCoordinate;
 class ViewSegmentNumbers;
 class ProjMatrixElemsForOneBin;
+//class ProjMatrixElemsForOneBinMotCorr;
 class ProjMatrixElemsForOneDensel;
 class Bin;
 
@@ -87,6 +88,7 @@ public:
   virtual void 
     transform_proj_matrix_elems_for_one_bin(
       ProjMatrixElemsForOneBin& lor) const;
+
 
   virtual void 
     transform_proj_matrix_elems_for_one_densel(

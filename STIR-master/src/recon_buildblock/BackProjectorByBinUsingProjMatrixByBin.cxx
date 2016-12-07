@@ -148,7 +148,11 @@ actual_back_project(DiscretisedDensity<3,float>& image,
 		  continue;
 		Bin bin(segment_num, view_num, ax_pos, tang_pos, viewgram[ax_pos][tang_pos]);
 		proj_matrix_ptr->get_proj_matrix_elems_for_one_bin(proj_matrix_row, bin);
-		proj_matrix_row.back_project(image, bin);
+		
+		//proj_matrix_row.back_project(image, bin);
+		proj_matrix_row.back_project(image, bin, proj_matrix_ptr);
+
+
 	      }
 	  ++r_viewgrams_iter;   
 	}
@@ -227,7 +231,9 @@ actual_back_project(DiscretisedDensity<3,float>& image,
 		    assert(bin.tangential_pos_num() == basic_bin.tangential_pos_num());
 	      
 		    symm_op_ptr->transform_proj_matrix_elems_for_one_bin(proj_matrix_row_copy);
-		    proj_matrix_row_copy.back_project(image, bin);
+
+			//proj_matrix_row_copy.back_project(image, bin);
+			proj_matrix_row_copy.back_project(image, bin, proj_matrix_ptr);
 		  }
 	      }  
 	  }      

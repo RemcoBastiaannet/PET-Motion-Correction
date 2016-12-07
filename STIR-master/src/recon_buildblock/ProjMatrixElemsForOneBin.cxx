@@ -35,13 +35,19 @@
 */
 #include "stir/Succeeded.h"
 #include "stir/recon_buildblock/ProjMatrixElemsForOneBin.h"
+#include "stir/recon_buildblock/MotionModel.h"
 #include "stir/DiscretisedDensity.h"
 #include "stir/recon_buildblock/SymmetryOperation.h"
 #include "stir/recon_buildblock/DataSymmetriesForBins.h"
 
+#include "stir/recon_buildblock/ProjMatrixByBinUsingRayTracing.h"
 #include "stir/recon_buildblock/RelatedBins.h"
 #include <algorithm>
-//#include <iostream>
+#include <iostream>
+
+#include "stir/info.h"
+#include <boost\format.hpp>
+
 //#include "stir/stream.h"
 
 #ifndef STIR_NO_NAMESPACES
@@ -363,7 +369,8 @@ back_project(DiscretisedDensity<3,float>& density,
       const BasicCoordinate<3,int> coords = element_ptr->get_coords();
       if (coords[1] >= density.get_min_index() && coords[1] <= density.get_max_index())
         density[coords[1]][coords[2]][coords[3]] += element_ptr->get_value() * data;		
-      element_ptr++;            
+      element_ptr++;
+	  std::cout << coords[1] << std::endl;
     }    
   }    
 }
@@ -384,11 +391,78 @@ forward_project(Bin& single,
       
       if (coords[1] >= density.get_min_index() && coords[1] <= density.get_max_index())
         single += density[coords[1]][coords[2]][coords[3]] * element_ptr->get_value();
-      ++element_ptr;		
+      ++element_ptr;
+	  info(boost::format("COORD %1% ") % coords[2]);
+
     }	      
   }   
 }
 
+///////////////////////REMCO ADD/////////////////////////////////////////////////
+
+void
+ProjMatrixElemsForOneBin::
+forward_project(Bin& single,
+	const DiscretisedDensity<3, float>& density, const shared_ptr<ProjMatrixByBin>& proj_matrix_ptr)
+{
+	{
+
+		const_iterator element_ptr = begin();
+		while (element_ptr != end())
+		{
+			BasicCoordinate<3, int> coords = proj_matrix_ptr->MotModPTR->translateCoordsForward(element_ptr->get_coords());
+			//BasicCoordinate<3, int> coords = element_ptr->get_coords();
+
+			if (coords[1] >= density.get_min_index() && coords[1] <= density.get_max_index()) {
+				if (coords[2] >= density[coords[1]].get_min_index() && coords[2] <= density[coords[1]].get_max_index()) {
+					if (coords[3] >= density[coords[1]][coords[2]].get_min_index() && coords[3] <= density[coords[1]][coords[2]].get_max_index()) {
+						single += density[coords[1]][coords[2]][coords[3]] * element_ptr->get_value();
+					}
+				}
+			}
+			++element_ptr;
+
+
+		}
+	}
+}
+
+void
+ProjMatrixElemsForOneBin::
+back_project(DiscretisedDensity<3, float>& density,
+	const Bin& single,
+	const shared_ptr<ProjMatrixByBin>& proj_matrix_ptr)
+{
+	{
+		const float data = single.get_bin_value();
+		// KT 21/02/2002 added check on 0
+		if (data == 0)
+			return;
+
+		const_iterator element_ptr =
+			begin();
+		while (element_ptr != end())
+		{
+			BasicCoordinate<3, int> coords = proj_matrix_ptr->MotModPTR->translateCoordsBackward(element_ptr->get_coords());
+			//BasicCoordinate<3, int> coords = element_ptr->get_coords();
+
+			if (coords[1] >= density.get_min_index() && coords[1] <= density.get_max_index()) {
+				if (coords[2] >= density[coords[1]].get_min_index() && coords[2] <= density[coords[1]].get_max_index()) {
+					if (coords[3] >= density[coords[1]][coords[2]].get_min_index() && coords[3] <= density[coords[1]][coords[2]].get_max_index()) {
+						density[coords[1]][coords[2]][coords[3]] += element_ptr->get_value() * data;
+					}
+				}
+			}
+			element_ptr++;
+		}
+	}
+}
+
+
+
+
+
+////////////////////////END REMCO ADDDDDDDD///////////////
 
 void 
 ProjMatrixElemsForOneBin::
@@ -435,6 +509,7 @@ forward_project(RelatedBins& r_bins,
       symmetries->find_symmetry_operation_from_basic_bin(*r_bins_iterator);
     symm_op_ptr->transform_proj_matrix_elems_for_one_bin(row_copy);
     row_copy.forward_project(*r_bins_iterator,density);
+	info("Hier een coord!");
   }  
   
 }
