@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{8EBA1610-62A2-3171-A046-D230E3FD7711}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>buildblock</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">buildblock.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">buildblock</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">buildblock.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">buildblock</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">buildblock.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">buildblock</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">buildblock.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">buildblock</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\libs\boost_1_62_0;..\..\..\STIR-master\src\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_PMRT;STIR_OPENMP;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\CommitMap\libs\boost_1_62_0;D:\CommitMap\STIR-master\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions> /machine:x64 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/CommitMap/STIR-master -BD:/CommitMap/STIR-BUILD --check-stamp-file D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;D:\CommitMap\STIR-master\src\cmake\stir_lib_target.cmake;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/CommitMap/STIR-master -BD:/CommitMap/STIR-BUILD --check-stamp-file D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;D:\CommitMap\STIR-master\src\cmake\stir_lib_target.cmake;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/CommitMap/STIR-master -BD:/CommitMap/STIR-BUILD --check-stamp-file D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;D:\CommitMap\STIR-master\src\cmake\stir_lib_target.cmake;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/CommitMap/STIR-master -BD:/CommitMap/STIR-BUILD --check-stamp-file D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/CommitMap/STIR-master/src/buildblock/CMakeLists.txt;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;D:\CommitMap\STIR-master\src\cmake\stir_lib_target.cmake;D:\CommitMap\STIR-master\src\buildblock\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\CommitMap\STIR-BUILD\src\buildblock\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Array.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\IndexRange.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\PatientPosition.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjData.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInfo.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInfoCylindrical.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInfoCylindricalArcCorr.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInfoCylindricalNoArcCorr.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArcCorrection.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataFromStream.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataGEAdvance.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInMemory.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ProjDataInterfile.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Scanner.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SegmentBySinogram.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Segment.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SegmentByView.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Viewgram.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Verbosity.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\Sinogram.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\RelatedViewgrams.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\scale_sinograms.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\interpolate_projdata.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\extend_projdata.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\DiscretisedDensity.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\VoxelsOnCartesianGrid.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\utilities.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\interfile_keyword_functions.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\zoom.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\NumericType.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ByteOrder.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\KeyParser.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\recon_array_functions.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\linear_regression.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\overlap_interpolate.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\error.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\warning.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\TextWriter.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\DataSymmetriesForViewSegmentNumbers.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\TimeFrameDefinitions.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ParsingObject.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArrayFilter1DUsingConvolutionSymmetricKernel.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArrayFilterUsingRealDFTWithPadding.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SeparableArrayFunctionObject.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SeparableMetzArrayFilter.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MedianArrayFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MedianImageFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MinimalArrayFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MinimalImageFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SeparableCartesianMetzImageFilter.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\TruncateToCylindricalFOVImageProcessor.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ThresholdMinToSmallPositiveValueDataProcessor.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ChainedDataProcessor.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArrayFilter1DUsingConvolution.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SeparableConvolutionImageFilter.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\NonseparableConvolutionUsingRealDFTImageFilter.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\SSRB.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\inverse_SSRB.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\centre_of_gravity.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\DynamicDiscretisedDensity.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\DynamicProjData.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MultipleProjData.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\GatedProjData.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArrayFilter2DUsingConvolution.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ArrayFilter3DUsingConvolution.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\find_fwhm_in_image.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\GatedDiscretisedDensity.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MaximalArrayFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\MaximalImageFilter3D.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\TimeGateDefinitions.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\ML_norm.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\num_threads.cxx" />
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\getopt.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/CommitMap/STIR-BUILD/ZERO_CHECK.vcxproj">
+      <Project>A12CFA76-0FF6-30AF-A43F-16BACB1EF9B4</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

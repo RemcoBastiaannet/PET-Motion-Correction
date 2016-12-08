@@ -1,0 +1,1332 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_utilities\estimate_scatter.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\buildblock\buildblock_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\data_buildblock\data_buildblock_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\IO\IO_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\recon_buildblock\recon_buildblock_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\Shape_buildblock\Shape_buildblock_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\modelling_buildblock\modelling_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\spatial_transformation_buildblock\spatial_transformation_registries.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArcCorrection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Array1d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFilter1DUsingConvolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFilter1DUsingConvolutionSymmetricKernel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFilter2DUsingConvolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFilter3DUsingConvolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFilterUsingRealDFTWithPadding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFunctionObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFunctionObject_1ArgumentImplementation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFunctionObject_2ArgumentImplementation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Array_complex_numbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\BasicCoordinate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Bin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\BoundaryConditions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ByteOrder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ByteOrderDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CPUTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CartesianCoordinate2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CartesianCoordinate3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ChainedDataProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate4D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DataProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DataSymmetriesForViewSegmentNumbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Densel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DetectionPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DetectionPositionPair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DiscretisedDensity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DiscretisedDensityOnCartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DynamicDiscretisedDensity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DynamicProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ExamInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\FactoryRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\FullArrayIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\GatedDiscretisedDensity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\GatedProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\HighResWallClockTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT6ImageInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT6OutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT7DynamicDiscretisedDensityInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT7DynamicDiscretisedDensityOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT7ImageInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT7OutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT7ParametricDensityOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT8_32bitListmodeInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT962ListmodeInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ECAT966ListmodeInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ExamData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\FileSignature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\GIPL_ImageFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ITKImageInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ITKOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputFileFormatRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForCylindricalPET.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForECATPET.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamWithRecords.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfileDynamicDiscretisedDensityOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfileHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfileImageInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfileOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfilePDFSHeaderSPECT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InterfileParametricDensityOutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\OutputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ROOTListmodeInputFileFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ecat6_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ecat6_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\interfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\read_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\read_data_1d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\read_from_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\stir_AVW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\stir_ecat6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\stir_ecat7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\stir_ecat_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\write_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\write_data_1d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\write_to_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ImagingModality.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange4D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\KeyParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\LORCoordinates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ML_norm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MaximalArrayFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MaximalImageFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MedianArrayFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MedianImageFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MinimalArrayFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MinimalImageFilter3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\MultipleProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NestedIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NestedIteratorHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NonseparableConvolutionUsingRealDFTImageFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NumericInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NumericType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NumericVectorWithOffset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\OSMAPOSL\OSMAPOSLReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\OSSPS\OSSPSReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ParsingObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\PatientPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\PixelsOnCartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\PostFiltering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataFromStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataGEAdvance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindrical.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindricalArcCorr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindricalNoArcCorr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInterfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RegisteredObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RegisteredParsingObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RelatedViewgrams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RunTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SSRB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Scanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Segment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SegmentBySinogram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SegmentByView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SeparableArrayFunctionObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SeparableCartesianMetzImageFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SeparableConvolutionImageFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SeparableMetzArrayFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\Box3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\CombinedShape3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\DiscretisedShape3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\Ellipsoid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\EllipsoidalCylinder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\Shape3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\Shape3DWithOrientation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Sinogram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\StirException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Succeeded.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TextWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ThresholdMinToSmallPositiveValueDataProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TimeFrameDefinitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TimeGateDefinitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TimedBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TimedObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TrivialDataSymmetriesForViewSegmentNumbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TruncateToCylindricalFOVImageProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\VectorWithOffset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Verbosity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ViewSegmentNumbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Viewgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\VoxelsOnCartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\analytic\FBP2D\FBP2DReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\analytic\FBP2D\RampFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\analytic\FBP3DRP\ColsherFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\analytic\FBP3DRP\FBP3DRPReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\array_index_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\assign.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\assign_to_subregion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\centre_of_gravity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\config\gcc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\config\visualc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\convert_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\convert_range.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\cross_product.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\data\SinglesRates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\data\SinglesRatesForTimeFrames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\data\SinglesRatesFromECAT7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\data\SinglesRatesFromSglFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\decay_correction_factor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\detail\test_if_1d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\doxygen_doc_for_boost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\doxygengroups.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\doxygenmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\evaluation\ROIValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\evaluation\compute_ROI_values.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\extend_projdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\extract_line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\find_fwhm_in_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\geometry\line_distances.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\getopt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\index_at_maximum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\info.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\interfile_keyword_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\interpolate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\interpolate_projdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\inverse_SSRB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\is_null_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\linear_regression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithDiscreteDetectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithViewTangRingRingEncoding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListModeData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListModeDataECAT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListModeDataECAT8_32bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListModeDataROOT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecordECAT8_32bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecordECAT962.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecordECAT966.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecordROOT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\LmToProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\LmToProjDataBootstrap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\make_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\min_positive_element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\KineticModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\KineticParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\ModelMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\ParametricDiscretisedDensity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\PatlakPlot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\PlasmaData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\PlasmaSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modulo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\more_algorithms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\num_threads.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplines1DRegularGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplinesRegularGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\IR_filters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\MatrixFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\determinant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\divide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\erf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\fourier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\ieeefp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\integrate_discrete_function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\max_eigenvector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\norm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\overlap_interpolate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\sampling_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\stir_NumericalRecipes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_array_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\AnalyticReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BackProjectorByBinUsingSquareProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BinNormalisation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromAttenuationImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromECAT7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromECAT8.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\BinNormalisationFromProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ChainedBinNormalisation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForDensels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DistributedCachingInformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DistributedWorker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\FilterRootPrior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBinUsingProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBinUsingRayTracing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\FourierRebinning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\GeneralisedObjectiveFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\GeneralisedPrior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\IterativeReconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\MotionModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearKineticModelAndDynamicProjectionData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMean.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndGatedProjDataWithMotion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndListModeDataWithProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PoissonLogLikelihoodWithLinearModelForMeanAndProjData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PostsmoothingBackProjectorByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PresmoothingForwardProjectorByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\PriorWithParabolicSurrogate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjDataRebinning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinFromFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinSPECTUB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinUsingInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBinUsingRayTracing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBinValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDensel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDenselValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPairUsingProjMatrixByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjectorByBinPairUsingSeparateProjectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\QuadraticPrior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\RayTraceVoxelsOnCartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\Reconstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\RelatedBins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\RelatedDensels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SPECTUB_Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SPECTUB_Weight3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SumOfGeneralisedObjectiveFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SymmetryOperation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SymmetryOperations_PET_CartesianGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\TrivialBinNormalisation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\TrivialDataSymmetriesForBins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\distributable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\distributableMPICacheEnabled.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\distributable_main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\distributed_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\distributed_test_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\find_basic_vs_nums_in_subsets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\round.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\scale_sinograms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\scatter\CreateTailMaskFromACFs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\scatter\ScatterEstimationByBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\shared_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\spatial_transformation\GatedSpatialTransformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\spatial_transformation\SpatialTransformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\spatial_transformation\warp_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\stir_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\thresholding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\warning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\zoom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Array.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ArrayFunction.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\BasicCoordinate.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Bin.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ByteOrder.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CPUTimer.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CartesianCoordinate2D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\CartesianCoordinate3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate2D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Coordinate4D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DataProcessor.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DetectionPosition.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DetectionPositionPair.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DiscretisedDensity.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DiscretisedDensityOnCartesianGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\DynamicDiscretisedDensity.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ExamInfo.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\FactoryRegistry.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\FullArrayIterator.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\ExamData.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFile.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForCylindricalPET.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamFromROOTFileForECATPET.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\InputStreamWithRecords.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\read_data.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\read_data_1d.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\write_data.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IO\write_data_1d.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange2D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\IndexRange4D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\LORCoordinates.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NestedIterator.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NumericType.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\NumericVectorWithOffset.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\PixelsOnCartesianGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\PostFiltering.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjData.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataFromStream.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfo.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindrical.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindricalArcCorr.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ProjDataInfoCylindricalNoArcCorr.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RegisteredObject.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RegisteredParsingObject.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\RelatedViewgrams.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Scanner.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Segment.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SegmentBySinogram.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\SegmentByView.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\CombinedShape3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\DiscretisedShape3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\EllipsoidalCylinder.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Shape\Shape3D.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Sinogram.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TimedObject.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Timer.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\TrivialDataSymmetriesForViewSegmentNumbers.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\VectorWithOffset.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\ViewSegmentNumbers.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\Viewgram.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\VoxelsOnCartesianGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\array_index_functions.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\assign_to_subregion.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\convert_array.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\convert_range.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\data\SinglesRates.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\display.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\extract_line.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\linear_regression.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithDiscreteDetectors.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListEventCylindricalScannerWithViewTangRingRingEncoding.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\listmode\CListRecordROOT.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\make_array.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\KineticParameters.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\ModelMatrix.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\PlasmaData.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\modelling\PlasmaSample.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\more_algorithms.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplines1DRegularGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplinesDetail.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplinesRegularGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplines_coef.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\BSplines_weights.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\IR_filters.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\MatrixFunction.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\divide.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\erf.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\integrate_discrete_function.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\norm.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\overlap_interpolate.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\numerics\sampling_functions.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForBins_PET_CartesianGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\DataSymmetriesForDensels.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ForwardProjectorByBin.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\GeneralisedPrior.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixByBin.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBin.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneBinValue.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDensel.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\ProjMatrixElemsForOneDenselValue.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\RelatedBins.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\RelatedDensels.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SumOfGeneralisedObjectiveFunctions.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\recon_buildblock\SymmetryOperations_PET_CartesianGrid.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\round.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\scatter\ScatterEstimationByBin.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\stream.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\CommitMap\STIR-master\src\include\stir\utilities.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\CommitMap\STIR-master\src\scatter_utilities\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{575D6D50-2A17-3D0E-9CC5-6B0ED9871D32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{AA2C96F4-4DB9-3362-9D7A-EE3F8490FDBE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

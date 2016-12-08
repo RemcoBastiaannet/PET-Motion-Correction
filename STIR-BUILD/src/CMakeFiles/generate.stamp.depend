@@ -1,0 +1,13 @@
+# CMake generation dependency list for this directory.
+D:/CommitMap/STIR-master/src/CMakeLists.txt
+C:/Program Files/CMake/share/cmake-3.6/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindBoost.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindOpenMP.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/CMakeParseArguments.cmake
+D:/CommitMap/STIR-master/src/cmake/stir_dirs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindDoxygen.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.6/Modules/CMakeParseArguments.cmake

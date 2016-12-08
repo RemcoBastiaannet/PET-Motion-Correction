@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\sample_scatter_points.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\single_scatter_estimate.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\single_scatter_integrals.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\scatter_detection_modelling.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\cached_single_scatter_integrals.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\scatter_estimate_for_one_scatter_point.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\upsample_and_fit_scatter_estimate.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\ScatterEstimationByBin.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\CommitMap\STIR-master\src\scatter_buildblock\CreateTailMaskFromACFs.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\CommitMap\STIR-master\src\scatter_buildblock\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{575D6D50-2A17-3D0E-9CC5-6B0ED9871D32}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

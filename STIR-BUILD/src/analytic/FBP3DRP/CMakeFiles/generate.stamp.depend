@@ -1,0 +1,4 @@
+# CMake generation dependency list for this directory.
+D:/CommitMap/STIR-master/src/analytic/FBP3DRP/CMakeLists.txt
+D:/CommitMap/STIR-master/src/cmake/stir_lib_target.cmake
+D:/CommitMap/STIR-master/src/cmake/stir_exe_targets.cmake

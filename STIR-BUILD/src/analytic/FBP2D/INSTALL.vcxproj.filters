@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\CommitMap\STIR-BUILD\CMakeFiles\07cd68e3a9c9a468c3d996f1afd47b7b\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A79DF845-8B62-398F-AA55-8F3006D69B12}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
