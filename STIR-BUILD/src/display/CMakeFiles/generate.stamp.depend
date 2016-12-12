@@ -1,4 +1,0 @@
-# CMake generation dependency list for this directory.
-D:/CommitMap/STIR-master/src/display/CMakeLists.txt
-C:/Program Files/CMake/share/cmake-3.6/Modules/FindX11.cmake
-D:/CommitMap/STIR-master/src/cmake/stir_lib_target.cmake

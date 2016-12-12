@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "test", "..\test\test.pyproj", "{624F8780-0B5A-4CF7-BFF2-6E925779006C}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MLEMReconProject", "MLEMReconProject\MLEMReconProject.pyproj", "{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "LinearMotionModel", "LinearMotionModel\LinearMotionModel.pyproj", "{2AC47BDF-027A-4164-93B8-59293F26B413}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,12 +17,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Release|x64.ActiveCfg = Release|Any CPU
-		{624F8780-0B5A-4CF7-BFF2-6E925779006C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA60FBA0-AD1E-44B1-94B2-30A9D450CACC}.Release|x86.ActiveCfg = Release|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x64.ActiveCfg = Release|Any CPU
+		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
