@@ -46,12 +46,12 @@ phantomP = []
 plt.figure(1)
 for iFrame in range(nFrames): 
     tmp = np.zeros((1, 128, 128)) # matrix 128 x 128 gevuld met 0'en
-    tmp[0, (10+iFrame*10):(30+iFrame*10), 60:80] = 1
+    tmp[0, (10+iFrame*5):(30+iFrame*5), 60:80] = 1
     phantomP.append(tmp) 
     plt.subplot(3,3,iFrame+1), plt.title('Original image Time frame {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
 plt.show() 
 
-originalImageP = phantomP[1]
+originalImageP = phantomP[0]
 
 # Stir data format instance with the size of the original image in python (not yet filled!) 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -83,27 +83,61 @@ forwardprojector.forward_project(measurement, originalImageS);
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
 
+
+
+
+
+
 # Sinogram motion correction in the Y-direction
-# Voor iedere hoek theta ga je de afstand langs de projectie-as (r) verticaal verschuiven 
-# Data: [z, y, x] (y = r, x = theta) 
-# deltaR = deltaMotion * sin(theta), deltaMotion = beweging die uit het motion model komt 
+# Probeer alles 5 pixel naar beneden te schuiven, check na voorwaards projecteren of je sinogram dan klopt, blijf doorgaan totdat het juist is 
+plt.figure(3) 
+plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImageP[0,:,:])
 
-measurementOldP = measurementP 
+shiftedImageGuessP = originalImageP 
+#count = 1; 
+#while True: # alternative for a do-while loop
+# Guess downwards shift in pixels 
+nPixelsShift = 1
+shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelsShift, np.shape(originalImageP)[2]))
 
-theta = 0 
-deltaMotion = 10 # Motion shift in the Y direction 
-for distance in range(np.shape(measurementP)[1]): # distance along the projection axis 
-    shiftLOR = deltaMotion * np.sin(theta) # Shift of the LOR needed along the projection axis 
-    tmp = measurementP
-    if distance >= shiftLOR: 
-        measurementP[0, distance, theta] = tmp[0, distance-shiftLOR, theta]
-    else: 
-        measurementP[0, distance, theta] = 0 
+# Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
+shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
+for row in range(nPixelsShift): 
+    shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
+plt.subplot(1,2,2), plt.title('Shifted Image Guess'), plt.imshow(shiftedImageGuessP[0,:,:])
+plt.show() 
 
-plt.figure(2), 
-plt.subplot(1,2,1), plt.title('Sinogram original image'), plt.imshow(measurementOldP[0,:,:]) 
-plt.subplot(1,2,2), plt.title('Sinogram original image MOTION CORRECTED'), plt.imshow(measurementP[0,:,:]) 
+shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+fillStirSpace(shiftedImageGuessS, shiftedImageGuessP) 
+
+# Forward project shifted guess 
+sinogramShiftedGuess = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+forwardprojector.forward_project(sinogramShiftedGuess, shiftedImageGuessS)
+sinogramShiftedGuessS = sinogramShiftedGuess.get_segment_by_sinogram(0)
+sinogramShiftedGuessP = stirextra.to_numpy(sinogramShiftedGuessS) 
+
+plt.figure(20), 
+plt.subplot(1,2,1),  plt.title('Sinogram of Original Image'), plt.imshow(measurementP[0,:,:])
+plt.subplot(1,2,2), plt.title('Sinogram Shifted Image Guess'), plt.imshow(sinogramShiftedGuessP[0,:,:])
 plt.show()
+
+# Comparing the shifted sinogram with the first time frame WRONG!! should not be measurementP, but sinogram of the first shifted time frame
+sinogramsSum = measurementP + sinogramShiftedGuessP
+plt.figure(22), plt.title('Sinograms sum'), plt.imshow(sinogramsSum[0,:,:]), plt.show() 
+
+differenceError = measurementP - sinogramShiftedGuessP
+plt.figure(21), plt.title('Difference error'), plt.imshow(differenceError[0,:,:]), plt.show() 
+
+#print count, np.amax(differenceError) 
+#count = count + 1  
+#if (np.amax(differenceError) < 5 or count > 10): 
+    #break; 
+
+
+
+
 
 # Backprojecting the sinogram to get an image 
 finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
