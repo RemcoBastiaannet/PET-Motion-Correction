@@ -65,7 +65,9 @@ fillStirSpace(originalImageS, originalImageP)
 
 # Initialize the projection matrix (using ray-tracing) 
 # Het motion model doet nu niets, maar is nodig omdat Stir anders flipt 
-MotionModel = stir.MotionModel() 
+slope = 1 
+offSet = 1
+MotionModel = stir.MotionModel(nFrames, slope, offSet) 
 MotionModel.setOffset(0.0)
 projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
 projmatrix.set_num_tangential_LORs(nLOR)
@@ -110,23 +112,34 @@ for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweg
     measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
     
 
-    count = 1; 
+    nPixelShift = 1 
     shiftedImageGuessP = phantomP[iFrame-1] # First guess 
     # eigenlijk wil je beginnen bij de image die je in je vorige iteratie hebt gevonden voor het vorige time frame, want dit plaatje hoor je eigenlijk niet te hebben
     while True: # alternative for a do-while loop
 
         # Guess downwards shift in pixels 
-        nPixelsShift = 1
         shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelsShift, np.shape(originalImageP)[2]))
 
         # Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
+        # MANON VERSIE 
+        '''
         shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
         for row in range(nPixelsShift): 
             shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
         plt.figure(3) 
         plt.subplot(1,2,1), plt.title('Shifted Image {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
-        plt.subplot(1,2,2), plt.title('Shifted Image Guess, shift {0} pixels'.format(count)), plt.imshow(shiftedImageGuessP[0,:,:])
+        plt.subplot(1,2,2), plt.title('Shifted Image Guess, shift {0} pixels'.format(nPixelShift)), plt.imshow(shiftedImageGuessP[0,:,:])
         plt.show() 
+        '''
+        # EINDE MANON VERSIE 
+        
+        # MOTION MODEL VERSIE 
+        MotionModel.setOffset(-nPixelsShift)
+        projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
+        projmatrix.set_num_tangential_LORs(nLOR)
+        projmatrix.set_up(projdata_info, originalImageS)
+        forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
+        # EINDE MOTION MODEL VERSIE 
 
         shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                         stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -151,15 +164,17 @@ for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweg
         quadError = np.sum(differenceError**2)
         maxError = 500 # ???    
       
-        if (quadError < maxError or count > 10): 
+        if (quadError < maxError or nPixelShift > 10): 
             print 'Shifted sinogram was matched to the measurement, with:'
-            print 'shift: {0}'.format(count), 'Quadratic error: {0}'.format(quadError)
+            print 'shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
+            print nPixelShift
             raw_input("Press Enter to continue...")
             break; 
-        count = count + 1  
+        nPixelShift = nPixelShift + 1 
 
-        if count > 10: 
+        if nPixelShift > 10: 
             print 'Shifted sinogram was NOT successfully matched to the measurement'
+            print nPixelShift
             raw_input("Press Enter to continue...")
             break; 
 
