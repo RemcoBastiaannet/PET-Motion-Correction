@@ -14,6 +14,7 @@ import time
 import matplotlib.pyplot as plt
 from StirSupport import *
 from scipy.optimize import minimize
+from prompt_toolkit import input
 
 nVoxelsXY = 256
 nRings = 1
@@ -26,6 +27,7 @@ scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
 span = 1 
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
+trueShiftPixels = 5; 
 
 # Span is a number used by CTI to say how much axial compression has been used. 
 # It is always an odd number. Higher span, more axial compression. Span 1 means no axial compression.
@@ -46,7 +48,7 @@ phantomP = []
 plt.figure(1)
 for iFrame in range(nFrames): 
     tmp = np.zeros((1, 128, 128)) # matrix 128 x 128 gevuld met 0'en
-    tmp[0, (10+iFrame*5):(30+iFrame*5), 60:80] = 1
+    tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
     phantomP.append(tmp) 
     plt.subplot(3,3,iFrame+1), plt.title('Original image Time frame {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
 plt.show() 
@@ -90,50 +92,78 @@ measurementP = stirextra.to_numpy(measurementS)
 
 # Sinogram motion correction in the Y-direction
 # Probeer alles 5 pixel naar beneden te schuiven, check na voorwaards projecteren of je sinogram dan klopt, blijf doorgaan totdat het juist is 
-plt.figure(3) 
-plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImageP[0,:,:])
 
-shiftedImageGuessP = originalImageP 
-#count = 1; 
-#while True: # alternative for a do-while loop
-# Guess downwards shift in pixels 
-nPixelsShift = 1
-shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelsShift, np.shape(originalImageP)[2]))
-
-# Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
-shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
-for row in range(nPixelsShift): 
-    shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
-plt.subplot(1,2,2), plt.title('Shifted Image Guess'), plt.imshow(shiftedImageGuessP[0,:,:])
-plt.show() 
-
-shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+# Outer loop 
+# Make a sinogram of the current time frame that we are exploring
+# ALS JE ALLE TIJDSFRAMES WIL HEBBEN DOE JE range(1, nFrames)!! 
+for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweging zoeken in het tweede frame (index 1) 
+    # "Measuring" the sinogram of the phantom in the current time frame 
+    measurementShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-fillStirSpace(shiftedImageGuessS, shiftedImageGuessP) 
+    fillStirSpace(measurementShiftedImageS, phantomP[iFrame])
+    
+    measurementShiftedImage = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    forwardprojector.forward_project(measurementShiftedImage, measurementShiftedImageS);  
+    
+    measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
+    measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
+    
 
-# Forward project shifted guess 
-sinogramShiftedGuess = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(sinogramShiftedGuess, shiftedImageGuessS)
-sinogramShiftedGuessS = sinogramShiftedGuess.get_segment_by_sinogram(0)
-sinogramShiftedGuessP = stirextra.to_numpy(sinogramShiftedGuessS) 
+    count = 1; 
+    shiftedImageGuessP = phantomP[iFrame-1] # First guess 
+    # eigenlijk wil je beginnen bij de image die je in je vorige iteratie hebt gevonden voor het vorige time frame, want dit plaatje hoor je eigenlijk niet te hebben
+    while True: # alternative for a do-while loop
 
-plt.figure(20), 
-plt.subplot(1,2,1),  plt.title('Sinogram of Original Image'), plt.imshow(measurementP[0,:,:])
-plt.subplot(1,2,2), plt.title('Sinogram Shifted Image Guess'), plt.imshow(sinogramShiftedGuessP[0,:,:])
-plt.show()
+        # Guess downwards shift in pixels 
+        nPixelsShift = 1
+        shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelsShift, np.shape(originalImageP)[2]))
 
-# Comparing the shifted sinogram with the first time frame WRONG!! should not be measurementP, but sinogram of the first shifted time frame
-sinogramsSum = measurementP + sinogramShiftedGuessP
-plt.figure(22), plt.title('Sinograms sum'), plt.imshow(sinogramsSum[0,:,:]), plt.show() 
+        # Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
+        shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
+        for row in range(nPixelsShift): 
+            shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
+        plt.figure(3) 
+        plt.subplot(1,2,1), plt.title('Shifted Image {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
+        plt.subplot(1,2,2), plt.title('Shifted Image Guess, shift {0} pixels'.format(count)), plt.imshow(shiftedImageGuessP[0,:,:])
+        plt.show() 
 
-differenceError = measurementP - sinogramShiftedGuessP
-plt.figure(21), plt.title('Difference error'), plt.imshow(differenceError[0,:,:]), plt.show() 
+        shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+        fillStirSpace(shiftedImageGuessS, shiftedImageGuessP) 
 
-#print count, np.amax(differenceError) 
-#count = count + 1  
-#if (np.amax(differenceError) < 5 or count > 10): 
-    #break; 
+        # Forward project shifted guess 
+        sinogramShiftedGuess = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+        forwardprojector.forward_project(sinogramShiftedGuess, shiftedImageGuessS)
+        sinogramShiftedGuessS = sinogramShiftedGuess.get_segment_by_sinogram(0)
+        sinogramShiftedGuessP = stirextra.to_numpy(sinogramShiftedGuessS) 
+
+        '''
+        plt.figure(20), 
+        plt.subplot(1,2,1),  plt.title('Sinogram of Original Image'), plt.imshow(measurementP[0,:,:])
+        plt.subplot(1,2,2), plt.title('Sinogram Shifted Image Guess'), plt.imshow(sinogramShiftedGuessP[0,:,:])
+        plt.show()
+        '''
+
+        # Comparing the shifted sinogram with the first time frame WRONG!! should not be measurementP, but sinogram of the first shifted time frame
+        differenceError = measurementShiftedImageP - sinogramShiftedGuessP
+        quadError = np.sum(differenceError**2)
+        maxError = 500 # ???    
+      
+        if (quadError < maxError or count > 10): 
+            print 'Shifted sinogram was matched to the measurement, with:'
+            print 'shift: {0}'.format(count), 'Quadratic error: {0}'.format(quadError)
+            raw_input("Press Enter to continue...")
+            break; 
+        count = count + 1  
+
+        if count > 10: 
+            print 'Shifted sinogram was NOT successfully matched to the measurement'
+            raw_input("Press Enter to continue...")
+            break; 
+
+
 
 
 
