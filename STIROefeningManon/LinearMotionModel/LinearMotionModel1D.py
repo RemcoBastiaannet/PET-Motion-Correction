@@ -65,10 +65,9 @@ fillStirSpace(originalImageS, originalImageP)
 
 # Initialize the projection matrix (using ray-tracing) 
 # Het motion model doet nu niets, maar is nodig omdat Stir anders flipt 
-slope = 1 
-offSet = 1
+slope = 0.0 
+offSet = 0.0 # eerste meting niet verschuiven 
 MotionModel = stir.MotionModel(nFrames, slope, offSet) 
-MotionModel.setOffset(0.0)
 projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
 projmatrix.set_num_tangential_LORs(nLOR)
 projmatrix.set_up(projdata_info, originalImageS)
@@ -98,7 +97,7 @@ measurementP = stirextra.to_numpy(measurementS)
 # Outer loop 
 # Make a sinogram of the current time frame that we are exploring
 # ALS JE ALLE TIJDSFRAMES WIL HEBBEN DOE JE range(1, nFrames)!! 
-for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweging zoeken in het tweede frame (index 1) 
+for iFrame in range(1, 2): # de eerste is je referentie, dus je begint met beweging zoeken in het tweede frame (index 1) 
     # "Measuring" the sinogram of the phantom in the current time frame 
     measurementShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -112,19 +111,19 @@ for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweg
     measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
     
 
-    nPixelShift = 1 
+    nPixelShift = -1 
     shiftedImageGuessP = phantomP[iFrame-1] # First guess 
     # eigenlijk wil je beginnen bij de image die je in je vorige iteratie hebt gevonden voor het vorige time frame, want dit plaatje hoor je eigenlijk niet te hebben
     while True: # alternative for a do-while loop
 
-        # Guess downwards shift in pixels 
-        shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelsShift, np.shape(originalImageP)[2]))
+        # Guess downwards shift in pixels
 
         # Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
-        # MANON VERSIE 
+        # MANON VERSIE -> er is een of andere functie scipy, ndimage, imshift ofzo 
         '''
+        shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelShift, np.shape(originalImageP)[2]))
         shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
-        for row in range(nPixelsShift): 
+        for row in range(nPixelShift): 
             shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
         plt.figure(3) 
         plt.subplot(1,2,1), plt.title('Shifted Image {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
@@ -134,11 +133,7 @@ for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweg
         # EINDE MANON VERSIE 
         
         # MOTION MODEL VERSIE 
-        MotionModel.setOffset(-nPixelsShift)
-        projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
-        projmatrix.set_num_tangential_LORs(nLOR)
-        projmatrix.set_up(projdata_info, originalImageS)
-        forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
+        MotionModel.setOffset(nPixelShift)
         # EINDE MOTION MODEL VERSIE 
 
         shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -159,18 +154,29 @@ for iFrame in range(1, 3): # de eerste is je referentie, dus je begint met beweg
         plt.show()
         '''
 
-        # Comparing the shifted sinogram with the first time frame WRONG!! should not be measurementP, but sinogram of the first shifted time frame
+        # MOTION MODEL VERSIE 
+        MotionModel.setOffset(0.0) # terugwaards moet anders zijn dan voorwaards 
+        backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
+        MotionModelShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+        backprojector.back_project(MotionModelShiftedImageS, sinogramShiftedGuess)
+        backMotionModelShiftedImageP = stirextra.to_numpy(MotionModelShiftedImageS)
+        plt.figure(30), plt.title('Backprojection of Motion Model Shifted Image'), plt.imshow(backMotionModelShiftedImageP[0,:,:]), plt.show() 
+        # MOTION MODEL VERSIE 
+
+        # Comparing 
         differenceError = measurementShiftedImageP - sinogramShiftedGuessP
         quadError = np.sum(differenceError**2)
         maxError = 500 # ???    
       
-        if (quadError < maxError or nPixelShift > 10): 
+        if (quadError < maxError): 
             print 'Shifted sinogram was matched to the measurement, with:'
             print 'shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
             print nPixelShift
             raw_input("Press Enter to continue...")
             break; 
-        nPixelShift = nPixelShift + 1 
+        nPixelShift = nPixelShift - 1 
 
         if nPixelShift > 10: 
             print 'Shifted sinogram was NOT successfully matched to the measurement'
