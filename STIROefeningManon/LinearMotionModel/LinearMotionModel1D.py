@@ -12,7 +12,7 @@ from prompt_toolkit import input
 
 def MLEMrecon(originalImageP, measurementP, nMLEM, forwardprojector, backprojector): 
     # Initial guess 
-    guessP = np.ones(np.shape(originalImageP))
+    guessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
     guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
@@ -91,7 +91,7 @@ for iFrame in range(nFrames):
     tmp = np.zeros((1, 128, 128)) 
     tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
     phantomP.append(tmp) 
-    plt.subplot(1,2,iFrame+1), plt.title('Original image Time frame {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
+    plt.subplot(1,2,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.xlabel('x'), plt.ylabel('y'), plt.imshow(phantomP[iFrame][0,:,:])
 plt.show() 
 
 originalImageP = phantomP[0]
@@ -130,6 +130,9 @@ forwardprojector.forward_project(measurementShiftedImage, measurementShiftedImag
     
 measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
 measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
+
+plt.figure(2) 
+plt.subplot(1,2,1), plt.title('Forward projection, time frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(phantomP[iFrame][0,:,:])
     
 # Finding the shift of the second frame (first shifted frame) w.r.t. the first frame (original image) and correction for it, using a do-while like loop 
 nPixelShift = -1 # Attempted shift 
@@ -164,7 +167,7 @@ while True:
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
         MotionModelShiftedImageP = MLEMrecon(originalImageP, sinogramShiftedGuessP, nMLEM, forwardprojector, backprojector)
-        plt.figure(30)
+        plt.figure(3)
         plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImageP[0,:,:])  
         plt.subplot(1,2,2), plt.title('Motion Model Shifted Second Time Frame'), plt.imshow(MotionModelShiftedImageP[0,:,:]) 
         plt.show() 
