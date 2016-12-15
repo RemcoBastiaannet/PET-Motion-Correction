@@ -1,3 +1,9 @@
+# TO DO 
+# STIR-master -> examples -> Matlab code, Python, mMR
+# - Sinogram 
+# - Reconstructie met 1) scatter correctie, 2) randoms correctie, 3) attenuatie correctie 
+# - OSMAPOSL proberen werkend te krijgen
+
 import sys
 import stir
 import stirextra
@@ -16,17 +22,26 @@ nLOR = 10
 nFrames = 5
 nIt = 2 # number of MLEM iterations 
 
-# Now we setup the scanner
+#Now we setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
-span = 1 # axial compression 
+span = 1 
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Shift per time frame, handig als dit deelbaar is door 5 (want de oplossing wordt gezocht in 5 stappen) 
+trueShiftPixels = 5; 
 
-# Setup projection data
+# Span is a number used by CTI to say how much axial compression has been used. 
+# It is always an odd number. Higher span, more axial compression. Span 1 means no axial compression.
+# In 3D PET, an axial compression is used to reduce the data size and the computation times during the image reconstruction. 
+# This is achieved by averaging a set of sinograms with adjacent values of the oblique polar angle. This sampling scheme achieves good results in the centre of the FOV. 
+# However, there is a loss in the radial, tangential and axial resolutions at off-centre positions, which is increased in scanners with large FOVs. 
+
+# CTI: www.cti-medical.co.uk ?
+
+#Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
 
 # Phantom for each time frame, in python dataformat  
+nFrames = 5 
 phantomP = [] 
 
 # Create the individual frames 
@@ -49,7 +64,8 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 fillStirSpace(originalImageS, originalImageP)
 
 # Initialize the projection matrix (using ray-tracing) 
-slope = 0.0 # kan eigenlijk weg, want dit zijn de default waardes 
+# Het motion model doet nu niets, maar is nodig omdat Stir anders flipt 
+slope = 0.0 
 offSet = 0.0 # eerste meting niet verschuiven 
 MotionModel = stir.MotionModel(nFrames, slope, offSet) 
 projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
@@ -70,11 +86,19 @@ forwardprojector.forward_project(measurement, originalImageS);
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
 
+
+
+
+
+
+# Sinogram motion correction in the Y-direction
+# Probeer alles 5 pixel naar beneden te schuiven, check na voorwaards projecteren of je sinogram dan klopt, blijf doorgaan totdat het juist is 
+
+# Outer loop 
+# Make a sinogram of the current time frame that we are exploring
 # ALS JE ALLE TIJDSFRAMES WIL HEBBEN DOE JE range(1, nFrames)!! 
-nPixelShiftTotal = [] # Total shift for each time rime (w.r.t. the reference time frame) 
-nPixelShiftTotal.insert(1, 0) # De eerste keer moet er al iets in zitten, om op te tellen bij de eerste waarde. 
-for iFrame in range(1, 4): # de eerste is je referentie, dus je begint met beweging zoeken in het tweede frame (index 1) 
-    # "Measuring" the sinogram of the phantom in the current time frame (the time frame we want to find!) 
+for iFrame in range(1, 2): # de eerste is je referentie, dus je begint met beweging zoeken in het tweede frame (index 1) 
+    # "Measuring" the sinogram of the phantom in the current time frame 
     measurementShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
@@ -86,11 +110,31 @@ for iFrame in range(1, 4): # de eerste is je referentie, dus je begint met beweg
     measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
     measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
     
-    nPixelShift = 0 # Het is mogelijk dat er geen shift is in het volgende time frame, dus die situatie moet je ook checken  
-    shiftedImageGuessP = phantomP[iFrame-1] # First guess is the previous image 
 
+    nPixelShift = -1 
+    shiftedImageGuessP = phantomP[iFrame-1] # First guess 
+    # eigenlijk wil je beginnen bij de image die je in je vorige iteratie hebt gevonden voor het vorige time frame, want dit plaatje hoor je eigenlijk niet te hebben
     while True: # alternative for a do-while loop
+
+        # Guess downwards shift in pixels
+
+        # Shift image by adding rows containing zeros and deleting the same number of rows at the bottom 
+        # MANON VERSIE -> er is een of andere functie scipy, ndimage, imshift ofzo 
+        '''
+        shiftLines = np.zeros((np.shape(originalImageP)[0], nPixelShift, np.shape(originalImageP)[2]))
+        shiftedImageGuessP = np.concatenate((shiftLines, shiftedImageGuessP), axis = 1)
+        for row in range(nPixelShift): 
+            shiftedImageGuessP = np.delete(shiftedImageGuessP, (-1), axis = 1)
+        plt.figure(3) 
+        plt.subplot(1,2,1), plt.title('Shifted Image {0}'.format(iFrame)), plt.imshow(phantomP[iFrame][0,:,:])
+        plt.subplot(1,2,2), plt.title('Shifted Image Guess, shift {0} pixels'.format(nPixelShift)), plt.imshow(shiftedImageGuessP[0,:,:])
+        plt.show() 
+        '''
+        # EINDE MANON VERSIE 
+        
+        # MOTION MODEL VERSIE 
         MotionModel.setOffset(nPixelShift)
+        # EINDE MOTION MODEL VERSIE 
 
         shiftedImageGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                         stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -103,40 +147,44 @@ for iFrame in range(1, 4): # de eerste is je referentie, dus je begint met beweg
         sinogramShiftedGuessS = sinogramShiftedGuess.get_segment_by_sinogram(0)
         sinogramShiftedGuessP = stirextra.to_numpy(sinogramShiftedGuessS) 
 
+        '''
+        plt.figure(20), 
+        plt.subplot(1,2,1),  plt.title('Sinogram of Original Image'), plt.imshow(measurementP[0,:,:])
+        plt.subplot(1,2,2), plt.title('Sinogram Shifted Image Guess'), plt.imshow(sinogramShiftedGuessP[0,:,:])
+        plt.show()
+        '''
+
+        # MOTION MODEL VERSIE 
+        MotionModel.setOffset(0.0) # terugwaards moet anders zijn dan voorwaards 
+        backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
+        MotionModelShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+        backprojector.back_project(MotionModelShiftedImageS, sinogramShiftedGuess)
+        backMotionModelShiftedImageP = stirextra.to_numpy(MotionModelShiftedImageS)
+        plt.figure(30), plt.title('Backprojection of Motion Model Shifted Image'), plt.imshow(backMotionModelShiftedImageP[0,:,:]), plt.show() 
+        # MOTION MODEL VERSIE 
+
         # Comparing 
         differenceError = measurementShiftedImageP - sinogramShiftedGuessP
         quadError = np.sum(differenceError**2)
-        maxError = 3000 # ???    
+        maxError = 500 # ???    
       
         if (quadError < maxError): 
             print 'Shifted sinogram was matched to the measurement, with:'
             print 'shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
+            print nPixelShift
             raw_input("Press Enter to continue...")
-            # Motion Correction (only if the shift is found succesfully) 
-            nPixelShiftTotal.insert(len(nPixelShiftTotal)+1, nPixelShift + nPixelShiftTotal[-1]) # KLOPT NIET!!!!!!!!!!!!!!!!!! Want nPixelShift is niet het totaal. 
-            # !!!!!!!!!!!!!!!!!!!!!!!!!
-            # !!!!!!!!!!!!!!!!!
-
-            MotionModel.setOffset(nPixelShiftTotal[iFrame-1]) # NIET -nPixelShift (dat minteken zorgt ie zelf al voor blijkbaar), iFrame-1 want element 0 hoort bij het eerste verschoven frame t.o.v. het reference frame.
-            MotionModelShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-            backprojector.back_project(MotionModelShiftedImageS, sinogramShiftedGuess) 
-            MotionModelShiftedImageP = stirextra.to_numpy(MotionModelShiftedImageS) 
-            plt.figure(30), 
-            plt.subplot(1,2,1), plt.title('Original Image (0th time frame)'), plt.imshow(phantomP[0][0,:,:]) 
-            plt.subplot(1,2,2), plt.title('Backprojection of Motion Model Shifted Image'), plt.imshow(MotionModelShiftedImageP[0,:,:]) 
-            plt.show() 
             break; 
-        nPixelShift = nPixelShift - trueShiftPixels/5 
+        nPixelShift = nPixelShift - 1 
 
-        if abs(nPixelShift) > abs(trueShiftPixels*iFrame + 5): 
+        if nPixelShift > 10: 
             print 'Shifted sinogram was NOT successfully matched to the measurement'
-            print 'shift: {0}'.format(nPixelShift) 
+            print nPixelShift
             raw_input("Press Enter to continue...")
             break; 
 
-    
+
 
 
 
