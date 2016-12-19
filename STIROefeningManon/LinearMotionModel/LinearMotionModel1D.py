@@ -63,7 +63,9 @@ def MLEMrecon(originalImageP, measurementP, nMLEM, forwardprojector, backproject
         errorBackprP = stirextra.to_numpy(errorBackprS)
         guessP *= errorBackprP/normalizationP
 
-    return guessP 
+    return guessP
+
+showImages = True   
 
 nVoxelsXY = 256
 nRings = 1
@@ -76,7 +78,7 @@ scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; 
+trueShiftPixels = 10; # Must be even (attempted shift is increased in steps of two) 
 
 # Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
@@ -86,13 +88,13 @@ nFrames = 2
 phantomP = [] 
 
 # Create the individual time frames, the phantom is shifted in each frame w.r.t. the previous one 
-plt.figure(1)
+if (showImages): plt.figure(1)
 for iFrame in range(nFrames): 
     tmp = np.zeros((1, 128, 128)) 
     tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
     phantomP.append(tmp) 
-    plt.subplot(1,2,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.xlabel('x'), plt.ylabel('y'), plt.imshow(phantomP[iFrame][0,:,:])
-plt.show() 
+    if (showImages): plt.subplot(1,2,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.xlabel('x'), plt.ylabel('y'), plt.imshow(phantomP[iFrame][0,:,:])
+if (showImages): plt.show() 
 
 originalImageP = phantomP[0]
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -131,14 +133,17 @@ forwardprojector.forward_project(measurementShiftedImage, measurementShiftedImag
 measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
 measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
 
-plt.figure(2) 
-plt.subplot(1,2,1), plt.title('Forward projection, time frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(phantomP[iFrame][0,:,:])
+if (showImages): 
+    plt.figure(2) 
+    plt.subplot(1,2,1), plt.title('Time Frame 1'), plt.imshow(originalImageP[0,:,:])
+    plt.subplot(1,2,2), plt.title('Time Frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(measurementShiftedImageP[0,:,:])
+    plt.show()
     
 # Finding the shift of the second frame (first shifted frame) w.r.t. the first frame (original image) and correction for it, using a do-while like loop 
-nPixelShift = -1 # Attempted shift 
+nPixelShift = 0 # Attempted shift 
 shiftedImageGuessP = phantomP[0] # First guess for the shifted image
 
-while True: 
+while True:
     # Update the motion model with a new shift for this iteration 
     MotionModel.setOffset(nPixelShift) 
 
@@ -153,31 +158,49 @@ while True:
     forwardprojector.forward_project(sinogramShiftedGuess, shiftedImageGuessS)
     sinogramShiftedGuessS = sinogramShiftedGuess.get_segment_by_sinogram(0)
     sinogramShiftedGuessP = stirextra.to_numpy(sinogramShiftedGuessS) 
+    if (showImages):
+        plt.figure(3)
+        plt.subplot(1,3,1), plt.title('Time Frame 1'), plt.imshow(measurementP[0,:,:])
+        plt.subplot(1,3,2), plt.title('Guess Time Frame 2'), plt.imshow(sinogramShiftedGuessP[0,:,:])
+        plt.subplot(1,3,3), plt.title('Difference'), plt.imshow(abs(measurementShiftedImageP[0,:,:]-sinogramShiftedGuessP[0,:,:]))
+        plt.show()
 
     # Comparing the sinograms of the shifted measurement with the shifted guess
     differenceError = measurementShiftedImageP - sinogramShiftedGuessP
     quadError = np.sum(differenceError**2)
     maxError = 500   
+
+    # Backprojection 
+    MotionModel.setOffset(0.0)
+    backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
+    shiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))
+    backprojector.back_project(shiftedImageS, sinogramShiftedGuess)
+    shiftedImageP = stirextra.to_numpy(shiftedImageS)
+
+    if (showImages):
+        plt.figure(4) 
+        plt.subplot(1,2,1), plt.title('Time Frame 2'), plt.imshow(phantomP[1][0,:,:])
+        plt.subplot(1,2,2), plt.title('Shifted Time Frame 2'), plt.imshow(shiftedImageP[0,:,:])
+        plt.show() 
       
     if (quadError < maxError): 
         # Motion correction, by changing the backprojector such that it will correct for the shift of the forward projector 
         MotionModel.setOffset(nPixelShift) 
-        backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
-        MotionModelShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-        MotionModelShiftedImageP = MLEMrecon(originalImageP, sinogramShiftedGuessP, nMLEM, forwardprojector, backprojector)
-        plt.figure(3)
-        plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImageP[0,:,:])  
-        plt.subplot(1,2,2), plt.title('Motion Model Shifted Second Time Frame'), plt.imshow(MotionModelShiftedImageP[0,:,:]) 
-        plt.show() 
+        correctedImageP = MLEMrecon(originalImageP, sinogramShiftedGuessP, nMLEM, forwardprojector, backprojector)
+        if (showImages):
+            plt.figure(5)
+            plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImageP[0,:,:])  
+            plt.subplot(1,2,2), plt.title('Time Frame 2 Motion Corrected'), plt.imshow(correctedImageP[0,:,:]) 
+            plt.show() 
 
         print 'Shifted sinogram was successfully matched to the measurement :)'
         print 'Shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
         raw_input("Press Enter to continue...")
         break; 
 
-    nPixelShift = nPixelShift - 1 
+    nPixelShift = nPixelShift - trueShiftPixels/5 
 
     # If no solution is found after a certain number of iterations the loop will be ended 
     if nPixelShift > trueShiftPixels + 5: 
