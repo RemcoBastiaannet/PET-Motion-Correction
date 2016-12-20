@@ -82,7 +82,7 @@ scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Must be even (attempted shift is increased in steps of two) 
+trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 # Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
@@ -147,6 +147,7 @@ if (showImages):
 nPixelShift = 0 # Attempted shift 
 shiftedImageGuessP = phantomP[0] # First guess for the shifted image
 
+quadErrorList = []
 while True:
     # Update the motion model with a new shift for this iteration 
     MotionModel.setOffset(nPixelShift) 
@@ -172,6 +173,7 @@ while True:
     # Comparing the sinograms of the shifted measurement with the shifted guess
     differenceError = measurementShiftedImageP - sinogramShiftedGuessP
     quadError = np.sum(differenceError**2)
+    quadErrorList.append(quadError)
     maxError = 500   
 
     # Backprojection 
@@ -201,6 +203,7 @@ while True:
 
         print 'Shifted sinogram was successfully matched to the measurement :)'
         print 'Shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
+        print quadErrorList
         raw_input("Press Enter to continue...")
         break; 
 
