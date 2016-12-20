@@ -36,7 +36,8 @@ def MLEMrecon(originalImageP, measurementP, nMLEM, forwardprojector, backproject
         errorP[np.isinf(errorP)] = 0
         errorP[errorP > 1E10] = 0;
         errorP[errorP < 1E-10] = 0;
-    
+
+   
         # Niet zo handig/overzichtelijk, maar in guessSinogram zit nu dus de error 
         fillStirSpace(guessSinogramS, errorP)
         guessSinogram.set_segment(guessSinogramS)  
@@ -74,8 +75,8 @@ showImages = True
 nVoxelsXY = 256
 nRings = 1
 nLOR = 10
-nFrames = 5
-nMLEM = 5 
+nFrames = 2
+nMLEM = 3 
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -142,11 +143,99 @@ if (showImages):
     plt.subplot(1,2,1), plt.title('Time Frame 1'), plt.imshow(originalImageP[0,:,:])
     plt.subplot(1,2,2), plt.title('Time Frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(measurementShiftedImageP[0,:,:])
     plt.show()
+
+# ######################################### NIEUWE MODEL OPTIMALISATIE (MET MLEM) ########################################
     
+# MLEM + model optimalisatie tegelijk 
+# 1) Gok je plaatje (begin met alles 1) 
+# 2) Maar hier een projectie van met Offset 0 (frame 1, referentie) 
+# 3) Maak hier nog een projectie van, maar gok de Offset, deze is in het algemeen niet 0 (frame 2, verschoven) 
+# 4) Tel de sinogrammen bij elkaar op (NORMALISATIE) 
+# 5) Vergelijk de opgetelde sinogrammen met je meting 
+# 6) De error projecteer je terug om je gok te updaten (MLEM), en update je gok voor de shift (eerst nog even niet afhankelijk van hoe de error er precies uitziet) 
+# 7) Herhaal totdat de shift gevonden is 
+# 8) Motion correctie van de sinogrammen, gecorrigeerde sinogrammen bij elkaar optellen en terugprojecteren (NORMALISATIE) 
+# 9) Uitbreiden voor meerdere tijdsframes 
+
+# 1) Gok je plaatje (begin met alles 1) 
+imageGuessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
+imageGuessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+for i in range(nMLEM):
+    fillStirSpace(imageGuessS, imageGuessP)
+
+    # 2) Maar hier een projectie van met Offset 0 (frame 1, referentie) 
+    # 3) Maak hier nog een projectie van, maar gok de Offset, deze is in het algemeen niet 0 (frame 2, verschoven) 
+    sinogramsGuessS = [] 
+    sinogramsGuessP = []
+
+    for iOffset in range(nFrames): 
+        MotionModel.setOffset(iOffset) # width of a time bin is now always 1 
+        sinogramImageGuess = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+        forwardprojector.forward_project(sinogramImageGuess, imageGuessS)
+        sinogramImageGuessS = sinogramImageGuess.get_segment_by_sinogram(0)
+        sinogramsGuessS.append(sinogramImageGuessS)
+        sinogramsGuessP.append(stirextra.to_numpy(sinogramImageGuessS)) 
+
+    if (showImages):
+        plt.figure(3)
+        for i in range(nFrames): plt.subplot(1,nFrames,i+1), plt.title('Guess Time Frame {0}'.format(i)), plt.imshow(sinogramsGuessP[i][0,:,:])
+        plt.show()  
+
+    # 4) Tel de sinogrammen bij elkaar op (NORMALISATIE) 
+    # Deze stap is fout! Je moet de sinogrammen niet bij elkaar optellen, maar in een 3D matrix opslaan, zodat je tijdinformatie bewaart 
+
+    # b) MLEM error 
+    errorMLEMP = measurementP/sinogramsGuessP[0]
+    errorMLEMP[np.isnan(errorMLEMP)] = 0
+    errorMLEMP[np.isinf(errorMLEMP)] = 0
+    errorMLEMP[errorMLEMP > 1E10] = 0;
+    errorMLEMP[errorMLEMP < 1E-10] = 0;
+
+    # 6) De error projecteer je terug om je gok te updaten (MLEM), en update je gok voor de shift (eerst nog even niet afhankelijk van hoe de error er precies uitziet) 
+    errorMLEM = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    errorMLEMS = errorMLEM.get_segment_by_sinogram(0)
+    fillStirSpace(errorMLEMS, errorMLEMP)
+
+    errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+    MotionModel.setOffset(0.0)
+    backprojector.back_project(errorBackprS, errorMLEM)
+
+    normalizationSinogramP = np.ones(np.shape(measurementP)) 
+    normalizationSinogramS = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    normalizationSinogram = normalizationSinogramS.get_segment_by_sinogram(0)
+    fillStirSpace(normalizationSinogram, normalizationSinogramP) 
+    normalizationSinogramS.set_segment(normalizationSinogram)
+
+    normalizationS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+    MotionModel.setOffset(0.0)
+    backprojector.back_project(normalizationS, normalizationSinogramS)
+    normalizationP = stirextra.to_numpy(normalizationS)
+
+    # Update guess 
+    errorBackprP = stirextra.to_numpy(errorBackprS)
+    imageGuessP *= errorBackprP/normalizationP
+
+    plt.figure(3)
+    plt.title('Guess'), plt.imshow(imageGuessP[0,:,:])
+    plt.show()
+
+
+
+'''
+#################################################### OUDE MODELOPTIMALISATIE #################################################
+
 # Finding the shift of the second frame (first shifted frame) w.r.t. the first frame (original image) and correction for it, using a do-while like loop 
 nPixelShift = 0 # Attempted shift 
 shiftedImageGuessP = phantomP[0] # First guess for the shifted image
-
 quadErrorList = []
 while True:
     # Update the motion model with a new shift for this iteration 
@@ -203,7 +292,7 @@ while True:
 
         print 'Shifted sinogram was successfully matched to the measurement :)'
         print 'Shift: {0}'.format(nPixelShift), 'Quadratic error: {0}'.format(quadError)
-        print quadErrorList
+        #print quadErrorList
         raw_input("Press Enter to continue...")
         break; 
 
@@ -215,3 +304,4 @@ while True:
         print nPixelShift
         raw_input("Press Enter to continue...")
         break; 
+'''
