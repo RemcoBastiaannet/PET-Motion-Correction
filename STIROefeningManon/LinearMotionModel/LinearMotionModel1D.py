@@ -11,6 +11,9 @@ from scipy.optimize import minimize
 from prompt_toolkit import input
 
 def MLEMrecon(originalImageP, measurementP, nMLEM, forwardprojector, backprojector): 
+    # originalImageP is only used for the shape of the geuss 
+    # measurementP is used to compare the guess with 
+
     # Initial guess 
     guessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
     guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -33,7 +36,8 @@ def MLEMrecon(originalImageP, measurementP, nMLEM, forwardprojector, backproject
         errorP[np.isinf(errorP)] = 0
         errorP[errorP > 1E10] = 0;
         errorP[errorP < 1E-10] = 0;
-
+    
+        # Niet zo handig/overzichtelijk, maar in guessSinogram zit nu dus de error 
         fillStirSpace(guessSinogramS, errorP)
         guessSinogram.set_segment(guessSinogramS)  
 
