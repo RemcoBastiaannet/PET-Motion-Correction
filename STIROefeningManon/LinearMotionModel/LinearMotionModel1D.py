@@ -76,7 +76,7 @@ nVoxelsXY = 256
 nRings = 1
 nLOR = 10
 nFrames = 3
-nMLEM = 10 
+nMLEM = 1
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -92,13 +92,13 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 phantomP = [] 
 
 # Create the individual time frames, the phantom is shifted in each frame w.r.t. the previous one 
-if (showImages): plt.figure(1)
+#if (showImages): plt.figure(1)
 for iFrame in range(nFrames): 
     tmp = np.zeros((1, 128, 128)) 
     tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
     phantomP.append(tmp) 
-    if (showImages): plt.subplot(1,nFrames,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.imshow(phantomP[iFrame][0,:,:])
-if (showImages): plt.show() 
+    #if (showImages): plt.subplot(1,nFrames,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.imshow(phantomP[iFrame][0,:,:])
+#if (showImages): plt.show() 
 
 originalImageP = phantomP[0]
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -128,47 +128,19 @@ projmatrix.set_up(projdata_info, originalImageS)
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
-### Measurement 
-measurementsPhantomP = []
+### Measurement/projections
+measurementPhantomPlist = []
 for iFrame in range(nFrames): 
     measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
     forwardprojector.forward_project(measurement, phantomS[iFrame]);  
     measurementS = measurement.get_segment_by_sinogram(0)
     measurementP = stirextra.to_numpy(measurementS)
-    measurementsPhantomP.append(measurementP) 
+    measurementPhantomPlist.append(measurementP) 
 
-plt.figure(2)
-for iFrame in range(nFrames): plt.subplot(2,nFrames/2+1,iFrame+1), plt.imshow(measurementsPhantomP[iFrame][0,:,:])
-plt.show()
-plt.figure(5)
-for iFrame in range(nFrames): plt.subplot(2,nFrames/2+1,iFrame+1), plt.imshow(abs(measurementsPhantomP[iFrame][0,:,:]-measurementsPhantomP[0][0,:,:]))
-plt.show()
+#plt.figure(2)
+#for iFrame in range(nFrames): plt.subplot(2,nFrames/2+1,iFrame+1), plt.imshow(measurementPhantomPlist[iFrame][0,:,:])
+#plt.show()
 ### 
-
-# Forward project the original image 
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(measurement, originalImageS);  
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-
-# Convert Python data to STIR data for the second time frame (= first shifted frame, after the original image) 
-measurementShiftedImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-            stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-            stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-fillStirSpace(measurementShiftedImageS, phantomP[1])
-
-# Forward project the data of the second time frame (= the first shifted frame, after the original image)    
-measurementShiftedImage = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(measurementShiftedImage, measurementShiftedImageS);  
-    
-measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
-measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
-
-if (showImages): 
-    plt.figure(3) 
-    plt.subplot(1,2,1), plt.title('Time Frame 1'), plt.imshow(originalImageP[0,:,:])
-    plt.subplot(1,2,2), plt.title('Time Frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(measurementShiftedImageP[0,:,:])
-    plt.show()
 
 # MLEM 
 # Initial guess 
@@ -176,38 +148,65 @@ guessImageP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet h
 guessImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+guessImageSlist = []
 guessImagePlist = []
 guessImagePlist.append(guessImageP) 
+guessSinogramPlist = []
+errorPTotal = 1 
+
+# TEST 
+fillStirSpace(guessImageS, guessImageP)
+normSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+forwardprojector.forward_project(normSinogram, guessImageS)
+tmp = normSinogram.get_segment_by_sinogram(0)
+normSinogramP = stirextra.to_numpy(tmp)
+plt.imshow(normSinogramP[0,:,:]), plt.show()
+fillStirSpace(tmp, normSinogramP)
+normSinogram.set_segment(tmp)
+ 
+backprojector.back_project(guessImageS, normSinogram)
+
+b = stirextra.to_numpy(guessImageS)
+plt.imshow(b[0,:,:]), plt.show()
+# EINDE TEST 
 
 for i in range(nMLEM): 
-    MotionModel.setOffset(0.0) 
+    par1 = -10 # Dit is de juiste shift 
 
     # update current guess 
     fillStirSpace(guessImageS, guessImageP)
+    guessImageSlist.append(guessImageS)
+ 
+    # Forward project initial guess  
+    for iFrame in range(nFrames): 
+        guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+        MotionModel.setOffset(par1*iFrame) # Ieder frame heeft zijn eigen shift (als er meer tijd is verstreken, is de shift groter), hoe groot precies hangt af van een parameter
+        forwardprojector.forward_project(guessSinogram, guessImageS)
+        guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
+        guessSinogramP = stirextra.to_numpy(guessSinogramS)
+        guessSinogramPlist.append(guessSinogramP)
+        errorP = measurementPhantomPlist[iFrame]/guessSinogramP
+        errorP[np.isnan(errorP)] = 0
+        errorP[np.isinf(errorP)] = 0
+        errorP[errorP > 1E10] = 0
+        errorP[errorP < 1E-10] = 0
+        plt.figure(3), plt.imshow(errorP[0,:,:]), plt.title('Sinogram error'), plt.show() 
 
-    # Forward project initial guess 
-    guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    forwardprojector.forward_project(guessSinogram, guessImageS); 
-    guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
-    guessSinogramP = stirextra.to_numpy(guessSinogramS)
+        fillStirSpace(guessSinogramS, errorP)
+        guessSinogram.set_segment(guessSinogramS)
 
-    # Compare guess to measurement 
-    errorP = measurementP/guessSinogramP # je vergelijkt nu met het originele plaatje 
-    errorP[np.isnan(errorP)] = 0
-    errorP[np.isinf(errorP)] = 0
-    errorP[errorP > 1E10] = 0;
-    errorP[errorP < 1E-10] = 0;
+        errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-    # Niet zo handig/overzichtelijk, maar in guessSinogram zit nu dus de error 
-    fillStirSpace(guessSinogramS, errorP)
-    guessSinogram.set_segment(guessSinogramS)  
-
-    # Error terugprojecteren 
-    errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-    backprojector.back_project(errorBackprS, guessSinogram)
+        MotionModel.setOffset(par1*iFrame)
+        backprojector.back_project(errorBackprS, guessSinogram)
+        errorBackprP = stirextra.to_numpy(errorBackprS) 
+        plt.figure(4), plt.imshow(errorBackprP[0,:,:]), plt.title('Backprojection sinogram error'), plt.show() 
+        errorPTotal *= errorBackprP
+    #plt.figure(5), plt.imshow(errorPTotal[0,:,:]), plt.title('Total error'), plt.show() 
+        #plt.figure(3), plt.subplot(1,3,iFrame+1), plt.imshow(guessSinogramP[0,:,:])
+    #plt.show() 
 
     # Normalization - werkt nog niet correct! 
     normalizationSinogramP = np.ones(np.shape(measurementP)) 
@@ -220,23 +219,32 @@ for i in range(nMLEM):
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
+    MotionModel.setOffset(par1*iFrame) # normalisatie moet frame specifiek worden 
     backprojector.back_project(normalizationS, normalizationSinogramS)
     normalizationP = stirextra.to_numpy(normalizationS)
+    plt.figure(5), plt.imshow(normalizationP[0,:,:]), plt.title('Normalization'), plt.show() 
 
     # Update guess 
     guessImageP = stirextra.to_numpy(guessImageS)
     errorBackprP = stirextra.to_numpy(errorBackprS)
-    guessImageP *= errorBackprP/normalizationP
-    guessImagePlist.append(guessImageP) 
+    norm = 1/(3*b)
+    norm[np.isnan(norm)] = 0
+    norm[np.isinf(norm)] = 0
+    plt.figure(3), plt.imshow(norm[0,:,:]), plt.show()
+    guessImageP *= errorPTotal
+    guessImagePlist.append(guessImageP) # voor visualisatie, guessImageP heeft nu de laatste, mocht je die nodig hebben
  
 if (showImages): 
-    plt.figure(4)
-    for i in range(nMLEM+1): plt.subplot(2,nMLEM/2+1,i+1), plt.imshow(guessImagePlist[i][0,:,:])
+    plt.figure(5)
+    plt.imshow(guessImagePlist[1][0,:,:])
     plt.show()
+
+# TO DO 
+# Juiste shift vinden, in plaats van er in zetten
+# Normalisatie fixen
 
 
 ''' 
-# 0) time resolved sinogram maken "meting"
 # 2) Maar hier een projectie van met Offset 0 (frame 1, referentie) 
 # 3) Maak hier nog een projectie van, maar gok de Offset, deze is in het algemeen niet 0 (frame 2, verschoven) 
 # 4) Combineer de sinogrammen tot een soort time resolved 3D sinogram 
