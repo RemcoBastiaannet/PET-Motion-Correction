@@ -76,7 +76,7 @@ nVoxelsXY = 256
 nRings = 1
 nLOR = 10
 nFrames = 2
-nMLEM = 3 
+nMLEM = 10 
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -144,6 +144,68 @@ if (showImages):
     plt.subplot(1,2,2), plt.title('Time Frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(measurementShiftedImageP[0,:,:])
     plt.show()
 
+# MLEM 
+# Initial guess 
+guessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
+guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+guessPlist = []
+guessPlist.append(guessP) 
+
+for i in range(nMLEM): 
+    # update current guess 
+    fillStirSpace(guessS, guessP)
+
+    # Forward project initial guess 
+    guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    forwardprojector.forward_project(guessSinogram, guessS); 
+    guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
+    guessSinogramP = stirextra.to_numpy(guessSinogramS)
+
+    # Compare guess to measurement 
+    errorP = measurementP/guessSinogramP # je vergelijkt nu met het originele plaatje 
+    errorP[np.isnan(errorP)] = 0
+    errorP[np.isinf(errorP)] = 0
+    errorP[errorP > 1E10] = 0;
+    errorP[errorP < 1E-10] = 0;
+
+    # Niet zo handig/overzichtelijk, maar in guessSinogram zit nu dus de error 
+    fillStirSpace(guessSinogramS, errorP)
+    guessSinogram.set_segment(guessSinogramS)  
+
+    # Error terugprojecteren 
+    errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+    backprojector.back_project(errorBackprS, guessSinogram)
+
+    # Normalization - werkt nog niet correct! 
+    normalizationSinogramP = np.ones(np.shape(measurementP)) 
+    normalizationSinogramS = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    normalizationSinogram = normalizationSinogramS.get_segment_by_sinogram(0)
+    fillStirSpace(normalizationSinogram, normalizationSinogramP) 
+    normalizationSinogramS.set_segment(normalizationSinogram)
+
+    normalizationS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+    backprojector.back_project(normalizationS, normalizationSinogramS)
+    normalizationP = stirextra.to_numpy(normalizationS)
+
+    # Update guess 
+    guessP = stirextra.to_numpy(guessS)
+    errorBackprP = stirextra.to_numpy(errorBackprS)
+    guessP *= errorBackprP/normalizationP
+    guessPlist.append(guessP) 
+ 
+plt.figure(5)
+for i in range(nMLEM): plt.subplot(2,nMLEM/2,i+1), plt.imshow(guessPlist[i][0,:,:])
+plt.show()
+
+'''
 # ######################################### NIEUWE MODEL OPTIMALISATIE (MET MLEM) ########################################
     
 # MLEM + model optimalisatie tegelijk 
@@ -227,7 +289,7 @@ for i in range(nMLEM):
     plt.figure(3)
     plt.title('Guess'), plt.imshow(imageGuessP[0,:,:])
     plt.show()
-
+'''
 
 
 '''
