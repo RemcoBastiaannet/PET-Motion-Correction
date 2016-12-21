@@ -75,7 +75,7 @@ showImages = True
 nVoxelsXY = 256
 nRings = 1
 nLOR = 10
-nFrames = 2
+nFrames = 3
 nMLEM = 10 
 
 # Setup the scanner
@@ -89,7 +89,6 @@ trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden 
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
 
 # Phantoms for each time frame
-nFrames = 2 
 phantomP = [] 
 
 # Create the individual time frames, the phantom is shifted in each frame w.r.t. the previous one 
@@ -98,7 +97,7 @@ for iFrame in range(nFrames):
     tmp = np.zeros((1, 128, 128)) 
     tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
     phantomP.append(tmp) 
-    if (showImages): plt.subplot(1,2,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.xlabel('x'), plt.ylabel('y'), plt.imshow(phantomP[iFrame][0,:,:])
+    if (showImages): plt.subplot(1,nFrames,iFrame+1), plt.title('Time frame {0}'.format(iFrame + 1)), plt.imshow(phantomP[iFrame][0,:,:])
 if (showImages): plt.show() 
 
 originalImageP = phantomP[0]
@@ -106,6 +105,16 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 fillStirSpace(originalImageS, originalImageP)
+
+### STIR versies van de verschillende time frames, nodig voor projecties 
+phantomS = []
+for iFrame in range(nFrames): 
+    imageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+    fillStirSpace(imageS, phantomP[iFrame])
+    phantomS.append(imageS)
+### 
 
 # Initialize the projection matrix (using ray-tracing) 
 slope = 0.0 
@@ -118,6 +127,23 @@ projmatrix.set_up(projdata_info, originalImageS)
 # Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
+
+### Measurement 
+measurementsPhantomP = []
+for iFrame in range(nFrames): 
+    measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    forwardprojector.forward_project(measurement, phantomS[iFrame]);  
+    measurementS = measurement.get_segment_by_sinogram(0)
+    measurementP = stirextra.to_numpy(measurementS)
+    measurementsPhantomP.append(measurementP) 
+
+plt.figure(2)
+for iFrame in range(nFrames): plt.subplot(2,nFrames/2+1,iFrame+1), plt.imshow(measurementsPhantomP[iFrame][0,:,:])
+plt.show()
+plt.figure(5)
+for iFrame in range(nFrames): plt.subplot(2,nFrames/2+1,iFrame+1), plt.imshow(abs(measurementsPhantomP[iFrame][0,:,:]-measurementsPhantomP[0][0,:,:]))
+plt.show()
+### 
 
 # Forward project the original image 
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
@@ -139,27 +165,29 @@ measurementShiftedImageS = measurementShiftedImage.get_segment_by_sinogram(0)
 measurementShiftedImageP = stirextra.to_numpy(measurementShiftedImageS)
 
 if (showImages): 
-    plt.figure(2) 
+    plt.figure(3) 
     plt.subplot(1,2,1), plt.title('Time Frame 1'), plt.imshow(originalImageP[0,:,:])
     plt.subplot(1,2,2), plt.title('Time Frame {0}'.format(iFrame + 1)), plt.xlabel('theta'), plt.ylabel('x'), plt.imshow(measurementShiftedImageP[0,:,:])
     plt.show()
 
 # MLEM 
 # Initial guess 
-guessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
-guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+guessImageP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
+guessImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-guessPlist = []
-guessPlist.append(guessP) 
+guessImagePlist = []
+guessImagePlist.append(guessImageP) 
 
 for i in range(nMLEM): 
+    MotionModel.setOffset(0.0) 
+
     # update current guess 
-    fillStirSpace(guessS, guessP)
+    fillStirSpace(guessImageS, guessImageP)
 
     # Forward project initial guess 
     guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    forwardprojector.forward_project(guessSinogram, guessS); 
+    forwardprojector.forward_project(guessSinogram, guessImageS); 
     guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
     guessSinogramP = stirextra.to_numpy(guessSinogramS)
 
@@ -196,37 +224,28 @@ for i in range(nMLEM):
     normalizationP = stirextra.to_numpy(normalizationS)
 
     # Update guess 
-    guessP = stirextra.to_numpy(guessS)
+    guessImageP = stirextra.to_numpy(guessImageS)
     errorBackprP = stirextra.to_numpy(errorBackprS)
-    guessP *= errorBackprP/normalizationP
-    guessPlist.append(guessP) 
+    guessImageP *= errorBackprP/normalizationP
+    guessImagePlist.append(guessImageP) 
  
-plt.figure(5)
-for i in range(nMLEM): plt.subplot(2,nMLEM/2,i+1), plt.imshow(guessPlist[i][0,:,:])
-plt.show()
+if (showImages): 
+    plt.figure(4)
+    for i in range(nMLEM+1): plt.subplot(2,nMLEM/2+1,i+1), plt.imshow(guessImagePlist[i][0,:,:])
+    plt.show()
 
-'''
-# ######################################### NIEUWE MODEL OPTIMALISATIE (MET MLEM) ########################################
-    
-# MLEM + model optimalisatie tegelijk 
-# 1) Gok je plaatje (begin met alles 1) 
+
+''' 
+# 0) time resolved sinogram maken "meting"
 # 2) Maar hier een projectie van met Offset 0 (frame 1, referentie) 
 # 3) Maak hier nog een projectie van, maar gok de Offset, deze is in het algemeen niet 0 (frame 2, verschoven) 
-# 4) Tel de sinogrammen bij elkaar op (NORMALISATIE) 
+# 4) Combineer de sinogrammen tot een soort time resolved 3D sinogram 
 # 5) Vergelijk de opgetelde sinogrammen met je meting 
-# 6) De error projecteer je terug om je gok te updaten (MLEM), en update je gok voor de shift (eerst nog even niet afhankelijk van hoe de error er precies uitziet) 
+# 6) Update de gok voor de shift 
 # 7) Herhaal totdat de shift gevonden is 
-# 8) Motion correctie van de sinogrammen, gecorrigeerde sinogrammen bij elkaar optellen en terugprojecteren (NORMALISATIE) 
-# 9) Uitbreiden voor meerdere tijdsframes 
-
-# 1) Gok je plaatje (begin met alles 1) 
-imageGuessP = np.ones(np.shape(originalImageP)) # Dit moet waarschijnlijk niet het eerste plaatje zijn. 
-imageGuessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+# 8) Motion correctie van de sinogrammen, gecorrigeerde sinogrammen bij elkaar optellen en terugprojecteren (NORMALISATIE)  
 
 for i in range(nMLEM):
-    fillStirSpace(imageGuessS, imageGuessP)
 
     # 2) Maar hier een projectie van met Offset 0 (frame 1, referentie) 
     # 3) Maak hier nog een projectie van, maar gok de Offset, deze is in het algemeen niet 0 (frame 2, verschoven) 
@@ -240,55 +259,6 @@ for i in range(nMLEM):
         sinogramImageGuessS = sinogramImageGuess.get_segment_by_sinogram(0)
         sinogramsGuessS.append(sinogramImageGuessS)
         sinogramsGuessP.append(stirextra.to_numpy(sinogramImageGuessS)) 
-
-    if (showImages):
-        plt.figure(3)
-        for i in range(nFrames): plt.subplot(1,nFrames,i+1), plt.title('Guess Time Frame {0}'.format(i)), plt.imshow(sinogramsGuessP[i][0,:,:])
-        plt.show()  
-
-    # 4) Tel de sinogrammen bij elkaar op (NORMALISATIE) 
-    # Deze stap is fout! Je moet de sinogrammen niet bij elkaar optellen, maar in een 3D matrix opslaan, zodat je tijdinformatie bewaart 
-
-    # b) MLEM error 
-    errorMLEMP = measurementP/sinogramsGuessP[0]
-    errorMLEMP[np.isnan(errorMLEMP)] = 0
-    errorMLEMP[np.isinf(errorMLEMP)] = 0
-    errorMLEMP[errorMLEMP > 1E10] = 0;
-    errorMLEMP[errorMLEMP < 1E-10] = 0;
-
-    # 6) De error projecteer je terug om je gok te updaten (MLEM), en update je gok voor de shift (eerst nog even niet afhankelijk van hoe de error er precies uitziet) 
-    errorMLEM = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    errorMLEMS = errorMLEM.get_segment_by_sinogram(0)
-    fillStirSpace(errorMLEMS, errorMLEMP)
-
-    errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-    MotionModel.setOffset(0.0)
-    backprojector.back_project(errorBackprS, errorMLEM)
-
-    normalizationSinogramP = np.ones(np.shape(measurementP)) 
-    normalizationSinogramS = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    normalizationSinogram = normalizationSinogramS.get_segment_by_sinogram(0)
-    fillStirSpace(normalizationSinogram, normalizationSinogramP) 
-    normalizationSinogramS.set_segment(normalizationSinogram)
-
-    normalizationS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-    MotionModel.setOffset(0.0)
-    backprojector.back_project(normalizationS, normalizationSinogramS)
-    normalizationP = stirextra.to_numpy(normalizationS)
-
-    # Update guess 
-    errorBackprP = stirextra.to_numpy(errorBackprS)
-    imageGuessP *= errorBackprP/normalizationP
-
-    plt.figure(3)
-    plt.title('Guess'), plt.imshow(imageGuessP[0,:,:])
-    plt.show()
 '''
 
 
