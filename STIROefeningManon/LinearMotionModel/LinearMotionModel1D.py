@@ -78,6 +78,7 @@ nLOR = 10
 nFrames = 3
 nMLEM = 1
 
+
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
@@ -123,6 +124,11 @@ MotionModel = stir.MotionModel(nFrames, slope, offSet) # A motion model is compu
 projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
 projmatrix.set_num_tangential_LORs(nLOR)
 projmatrix.set_up(projdata_info, originalImageS)
+
+####
+recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config.par')
+s = recon.set_up(target)
+####
 
 # Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
