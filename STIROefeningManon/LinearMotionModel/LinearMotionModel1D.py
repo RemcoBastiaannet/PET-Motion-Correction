@@ -62,10 +62,7 @@ projmatrix.set_num_tangential_LORs(nLOR)
 projmatrix.set_up(projdata_info, originalImageS)
 
 
-
-
 inout = np.uint32(stir.ios.ios_base_in ) |  np.uint32(stir.ios.out)
-projdataout = stir.ProjDataInterfile(stir.ExamInfo(), projdata_info, 'stir_test.hs', inout)
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
 # Create projectors
@@ -75,21 +72,19 @@ backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 ### Measurement/projections of the inital time frames 
 forwardprojector.forward_project(measurement, phantomS[0])
 measurementS = measurement.get_segment_by_sinogram(0)
-measurement
 measurementP = stirextra.to_numpy(measurementS)
 plt.imshow(measurementP[0,:,:]), plt.show()
 
-#### Remco's config file voorbeeld
-target = imageS
+
+target = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 target.fill(1)
 
-recon = stir.OSMAPOSLReconstruction3DFloat('config2.par')
+recon = stir.OSMAPOSLReconstruction3DFloat('config.par')
 s = recon.set_up(target)
 recon.reconstruct(target)
-####
-
-outy = stirextra.to_numpy(target)
-plt.imshow(outy[0,:,:]), plt.show()
+plt.imshow(stirextra.to_numpy(outy[0,:,:])), plt.show()
 
 
 
