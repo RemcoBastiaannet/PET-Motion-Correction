@@ -1,6 +1,6 @@
 !INTERFILE  :=
 !imaging modality := Unknown
-name of data file := stir_test.s
+name of data file := sino_1.s
 originating system := Siemens mMR
 !version of keys := STIR3.0
 !GENERAL DATA :=

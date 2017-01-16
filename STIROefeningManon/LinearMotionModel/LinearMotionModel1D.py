@@ -43,7 +43,11 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 fillStirSpace(originalImageS, originalImageP)
 
-### STIR versies van de verschillende time frames, nodig voor projecties 
+plt.figure(1)
+plt.subplot(1,2,1), plt.title('Phantom frame 1'), plt.imshow(phantomP[0][0,:,:]) 
+plt.subplot(1,2,2), plt.title('Phantom frame 2'), plt.imshow(phantomP[1][0,:,:]) 
+plt.show()
+
 phantomS = []
 for iFrame in range(nFrames): 
     imageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -51,7 +55,6 @@ for iFrame in range(nFrames):
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
     fillStirSpace(imageS, phantomP[iFrame])
     phantomS.append(imageS)
-### 
 
 # Initialize the projection matrix (using ray-tracing) 
 slope = 0.0 
@@ -61,30 +64,57 @@ projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
 projmatrix.set_num_tangential_LORs(nLOR)
 projmatrix.set_up(projdata_info, originalImageS)
 
-
-inout = np.uint32(stir.ios.ios_base_in ) |  np.uint32(stir.ios.out)
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-
 # Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
-### Measurement/projections of the inital time frames 
+
+reconImagePList = []
+#_________________________FIRST RECONSTRUCTION________________________
+# Measurement/projections of inital time frame
+measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 forwardprojector.forward_project(measurement, phantomS[0])
+measurement.write_to_file('sino_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
-plt.imshow(measurementP[0,:,:]), plt.show()
+plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 1'), plt.show()
 
-
-target = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+# Image reconstruction using OSMAPOSL 
+reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-target.fill(1)
+reconImageS.fill(1)
 
-recon = stir.OSMAPOSLReconstruction3DFloat('config.par')
-s = recon.set_up(target)
-recon.reconstruct(target)
-plt.imshow(stirextra.to_numpy(outy[0,:,:])), plt.show()
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_1.par')
+reconOSMAPOSL.reconstruct(reconImageS)
+reconImageP = stirextra.to_numpy(reconImage)
+reconImagePList.append(reconImageP)
+plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL Reconstruction time frame 1'), plt.show()
+
+
+#_________________________SECOND RECONSTRUCTION________________________
+# Measurement/projections of inital time frame
+measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+forwardprojector.forward_project(measurement, phantomS[1])
+measurement.write_to_file('sino_2.hs')
+measurementS = measurement.get_segment_by_sinogram(0)
+measurementP = stirextra.to_numpy(measurementS)
+plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 2'), plt.show()
+
+# Image reconstruction using OSMAPOSL 
+reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+reconImageS.fill(1)
+
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_2.par')
+reconOSMAPOSL.reconstruct(reconImageS)
+reconImageP = stirextra.to_numpy(reconImage)
+reconImagePList.append(reconImageP)
+plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL Reconstruction time frame 2'), plt.show()
+
+
+#_________________________COMBINING RECONSTRUCTIONS________________________
 
 
 

@@ -5,7 +5,7 @@ OSMAPOSLParameters :=
 
 objective function type:= PoissonLogLikelihoodWithLinearModelForMeanAndProjData
 PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
-input file := stir_test.hs
+input file := sino_1.hs
 
 projector pair type := Matrix
   Projector Pair Using Matrix Parameters :=
@@ -23,7 +23,7 @@ projector pair type := Matrix
 end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
 
 initial estimate:= some_image
-output filename prefix := output
+output filename prefix := output_1
 
 number of subsets:= 1
 number of subiterations:= 4
