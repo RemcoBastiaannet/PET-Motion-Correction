@@ -56,6 +56,7 @@ for iFrame in range(nFrames):
     fillStirSpace(imageS, phantomP[iFrame])
     phantomS.append(imageS)
 
+
 # Initialize the projection matrix (using ray-tracing) 
 slope = 0.0 
 offSet = 0.0 # Do not shift the first projection (reference frame)  
@@ -69,9 +70,9 @@ forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
 
-reconImagePList = []
 #_________________________FIRST RECONSTRUCTION________________________
 # Measurement/projections of inital time frame
+reconImagePList = []
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sino_1.hs')
@@ -85,12 +86,13 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 reconImageS.fill(1)
 
+MotionModel.setOffset(0.0)
 reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
-reconImageP = stirextra.to_numpy(reconImage)
+reconImageP = stirextra.to_numpy(reconImageS)
 reconImagePList.append(reconImageP)
-plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL Reconstruction time frame 1'), plt.show()
+plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 1'), plt.show()
 
 
 #_________________________SECOND RECONSTRUCTION________________________
@@ -108,15 +110,20 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 reconImageS.fill(1)
 
+MotionModel.setOffset(0.0)
 reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_2.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
-reconImageP = stirextra.to_numpy(reconImage)
+reconImageP = stirextra.to_numpy(reconImageS)
 reconImagePList.append(reconImageP)
-plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL Reconstruction time frame 2'), plt.show()
+plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 2'), plt.show()
 
 
 #_________________________COMBINING RECONSTRUCTIONS________________________
+reconImagePCombined = [0.5*sum(x) for x in zip(reconImagePList[0], reconImagePList[1])]
+plt.imshow(reconImagePCombined[0][:,:]), plt.title('Combined reconstructions (no motion correction)'), plt.show() # [0][:,:] omdat het sinogram nu net anders gestructureerd is  
+
+
 
 
 
