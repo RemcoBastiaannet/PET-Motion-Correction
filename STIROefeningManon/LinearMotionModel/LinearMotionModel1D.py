@@ -15,15 +15,14 @@ showImages = True
 nVoxelsXY = 256
 nRings = 1
 nLOR = 10
-nFrames = 3
-nMLEM = 3
+nFrames = 2
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 40; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 # Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
@@ -43,10 +42,10 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 fillStirSpace(originalImageS, originalImageP)
 
-plt.figure(1)
-plt.subplot(1,2,1), plt.title('Phantom frame 1'), plt.imshow(phantomP[0][0,:,:]) 
-plt.subplot(1,2,2), plt.title('Phantom frame 2'), plt.imshow(phantomP[1][0,:,:]) 
-plt.show()
+#plt.figure(1)
+#plt.subplot(1,2,1), plt.title('Phantom frame 1'), plt.imshow(phantomP[0][0,:,:]) 
+#plt.subplot(1,2,2), plt.title('Phantom frame 2'), plt.imshow(phantomP[1][0,:,:]) 
+#plt.show()
 
 phantomS = []
 for iFrame in range(nFrames): 
@@ -78,50 +77,58 @@ forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sino_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
-plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 1'), plt.show()
+#plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 1'), plt.show()
 
 # Image reconstruction using OSMAPOSL 
 reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-reconImageS.fill(1)
+reconImageS.fill(1) # moet er staan 
 
 MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_1.par')
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImageP = stirextra.to_numpy(reconImageS)
 reconImagePList.append(reconImageP)
-plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 1'), plt.show()
+#plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 1'), plt.show()
 
 
-#_________________________SECOND RECONSTRUCTION________________________
-# Measurement/projections of inital time frame
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(measurement, phantomS[1])
-measurement.write_to_file('sino_2.hs')
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 2'), plt.show()
+quadErrorSumList = [] 
+#### PROBLEEM: als je de code meerdere keren uitvoert doet het raar 
+for par1 in range(0, -60, -10): 
+    #_________________________SECOND RECONSTRUCTION________________________
+    # Measurement/projections of inital time frame
+    measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    forwardprojector.forward_project(measurement, phantomS[1])
+    measurement.write_to_file('sino_2.hs') # Hier gaat het mogelijk mis, als deze niet wordt overschreven maar toegevoegd bijvoorbeeld.
+    measurementS = measurement.get_segment_by_sinogram(0)
+    measurementP = stirextra.to_numpy(measurementS)
+    #plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 2'), plt.show()
 
-# Image reconstruction using OSMAPOSL 
-reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-reconImageS.fill(1)
+    # Image reconstruction using OSMAPOSL 
+    reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+    reconImageS.fill(1) # moet er staan 
 
-MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_2.par')
-s = reconOSMAPOSL.set_up(reconImageS)
-reconOSMAPOSL.reconstruct(reconImageS)
-reconImageP = stirextra.to_numpy(reconImageS)
-reconImagePList.append(reconImageP)
-plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 2'), plt.show()
+    MotionModel.setOffset(par1)
+    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_2.par')
+    s = reconOSMAPOSL.set_up(reconImageS)
+    reconOSMAPOSL.reconstruct(reconImageS)
+    reconImageP = stirextra.to_numpy(reconImageS)
+    reconImagePList.append(reconImageP)
+    plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 2'), plt.show()
+
+    quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePList[0][0,:,:])**2)
+    quadErrorSumList.append(quadErrorSum)
+
+print quadErrorSumList 
 
 
 #_________________________COMBINING RECONSTRUCTIONS________________________
 reconImagePCombined = [0.5*sum(x) for x in zip(reconImagePList[0], reconImagePList[1])]
-plt.imshow(reconImagePCombined[0][:,:]), plt.title('Combined reconstructions (no motion correction)'), plt.show() # [0][:,:] omdat het sinogram nu net anders gestructureerd is  
+plt.imshow(reconImagePCombined[0][:,:]), plt.title('Combined reconstructions (with motion correction)'), plt.show() # [0][:,:] omdat het sinogram nu net anders gestructureerd is  
 
 
 
@@ -129,6 +136,7 @@ plt.imshow(reconImagePCombined[0][:,:]), plt.title('Combined reconstructions (no
 
 
 '''
+#______________________________OUD____________________________
 
 # Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
