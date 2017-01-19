@@ -76,7 +76,6 @@ forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sino_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
-#plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 1'), plt.show()
 
 # Image reconstruction using OSMAPOSL 
 reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -90,21 +89,18 @@ s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
 reconImagePList.append(reconImagePRef)
-#plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 1'), plt.show()
 
 
+#_________________________SECOND RECONSTRUCTION________________________
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 forwardprojector.forward_project(measurement, phantomS[1])
 
 quadErrorSumList = [] 
-#### PROBLEEM: als je de code meerdere keren uitvoert doet het raar 
 for par1 in range(0, -60, -10): 
-    #_________________________SECOND RECONSTRUCTION________________________
     # Measurement/projections of inital time frame
-    measurement.write_to_file('sino_2.hs') # Hier gaat het mogelijk mis, als deze niet wordt overschreven maar toegevoegd bijvoorbeeld.
+    measurement.write_to_file('sino_2.hs') 
     measurementS = measurement.get_segment_by_sinogram(0)
     measurementP = stirextra.to_numpy(measurementS)
-    #plt.imshow(measurementP[0,:,:]), plt.title('Sinogram time frame 2'), plt.show()
 
     # Image reconstruction using OSMAPOSL 
     reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
