@@ -86,6 +86,7 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 reconImageS.fill(1)
 
 reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_1.par')
+s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImageP = stirextra.to_numpy(reconImage)
 reconImagePList.append(reconImageP)
@@ -108,6 +109,7 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 reconImageS.fill(1)
 
 reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat('config_2.par')
+s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImageP = stirextra.to_numpy(reconImage)
 reconImagePList.append(reconImageP)
