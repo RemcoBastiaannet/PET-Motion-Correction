@@ -6,8 +6,7 @@
     <ProjectGuid>59d053f2-2b6a-46e4-bbcb-15715950a3f6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>AnalyzingGATESimulations.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>AnalyzingGATESimulations</Name>

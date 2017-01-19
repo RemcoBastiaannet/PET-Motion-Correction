@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MLEMReconProject", "MLEMRec
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "LinearMotionModel", "LinearMotionModel\LinearMotionModel.pyproj", "{2AC47BDF-027A-4164-93B8-59293F26B413}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AnalyzingGATESimulations", "AnalyzingGATESimulations\AnalyzingGATESimulations.pyproj", "{59D053F2-2B6A-46E4-BBCB-15715950A3F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x64.ActiveCfg = Release|Any CPU
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x86.ActiveCfg = Release|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{59D053F2-2B6A-46E4-BBCB-15715950A3F6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
