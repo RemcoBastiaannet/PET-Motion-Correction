@@ -42,10 +42,10 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 fillStirSpace(originalImageS, originalImageP)
 
-#plt.figure(1)
-#plt.subplot(1,2,1), plt.title('Phantom frame 1'), plt.imshow(phantomP[0][0,:,:]) 
-#plt.subplot(1,2,2), plt.title('Phantom frame 2'), plt.imshow(phantomP[1][0,:,:]) 
-#plt.show()
+plt.figure(1)
+plt.subplot(1,2,1), plt.title('Phantom TF 1'), plt.imshow(phantomP[0][0,:,:]) 
+plt.subplot(1,2,2), plt.title('Phantom TF 2'), plt.imshow(phantomP[1][0,:,:]) 
+plt.show()
 
 phantomS = []
 for iFrame in range(nFrames): 
@@ -71,7 +71,6 @@ backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
 #_________________________FIRST RECONSTRUCTION________________________
 # Measurement/projections of inital time frame
-reconImagePList = []
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sino_1.hs')
@@ -89,8 +88,8 @@ MotionModel.setOffset(0.0)
 reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
-reconImageP = stirextra.to_numpy(reconImageS)
-reconImagePList.append(reconImageP)
+reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
+reconImagePList.append(reconImagePRef)
 #plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 1'), plt.show()
 
 
@@ -118,15 +117,19 @@ for par1 in range(0, -60, -10):
     s = reconOSMAPOSL.set_up(reconImageS)
     reconOSMAPOSL.reconstruct(reconImageS)
     reconImageP = stirextra.to_numpy(reconImageS)
-    reconImagePList.append(reconImageP)
-    plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL reconstruction time frame 2'), plt.show()
 
-    quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePList[0][0,:,:])**2)
+    quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePRef[0,:,:])**2)
         
     if quadErrorSum < 50: 
-        print 'Motion shift was found to be:', par1 
+        print 'Motion shift was found to be:', par1
         break; 
 
+plt.figure(2) 
+plt.subplot(1,3,1), plt.imshow(reconImagePRef[0,:,:]), plt.title('OSMAPOSL recon TF 1')
+plt.subplot(1,3,2), plt.imshow(phantomP[1][0,:,:]), plt.title('Phantom TF2')
+plt.subplot(1,3,3), plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL recon TF 2 MC')
+plt.show()
+
 #_________________________COMBINING RECONSTRUCTIONS________________________
-reconImagePCombined = [0.5*sum(x) for x in zip(reconImagePList[0], reconImagePList[1])]
-plt.imshow(reconImagePCombined[0][:,:]), plt.title('Combined reconstructions (with motion correction)'), plt.show() # [0][:,:] omdat het sinogram nu net anders gestructureerd is  
+reconImagePCombined = [0.5*sum(x) for x in zip(reconImageP[0,:,:], reconImagePRef[0,:,:])]
+plt.imshow(reconImagePCombined), plt.title('Combined reconstructions (with motion correction)'), plt.show() 
