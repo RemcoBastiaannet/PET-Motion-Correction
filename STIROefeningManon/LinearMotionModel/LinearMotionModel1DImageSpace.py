@@ -84,7 +84,7 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 reconImageS.fill(1) # moet er staan 
 
 MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_1.par')
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Image_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
@@ -108,7 +108,7 @@ for offset in range(0, -60, -10):
     # Image reconstruction using OSMAPOSL 
     reconImageS.fill(1) # moet er staan 
     MotionModel.setOffset(offset)
-    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_2.par')
+    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Image_2.par')
     reconOSMAPOSL.set_up(reconImageS)
     reconOSMAPOSL.reconstruct(reconImageS) 
     
