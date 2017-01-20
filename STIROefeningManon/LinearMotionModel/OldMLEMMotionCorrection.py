@@ -1,3 +1,8 @@
+'''
+HIER HOREN NOG WAT DINGEN BOVEN TE STAAN
+ZIE LinearMotionModel1DImageSpace 
+'''
+
 #______________________________OUD - motion correction tijdens MLEM, normalisatie werkt niet goed____________________________
 
 # Create projectors
