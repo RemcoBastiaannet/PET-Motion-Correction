@@ -88,39 +88,46 @@ reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
-reconImagePList.append(reconImagePRef)
 
 
 #_________________________SECOND RECONSTRUCTION________________________
+# Measurement/projections of inital time frame
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 forwardprojector.forward_project(measurement, phantomS[1])
+measurement.write_to_file('sino_2.hs') 
+measurementS = measurement.get_segment_by_sinogram(0)
+measurementP = stirextra.to_numpy(measurementS)
+
+reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
 quadErrorSumList = [] 
-for par1 in range(0, -60, -10): 
-    # Measurement/projections of inital time frame
-    measurement.write_to_file('sino_2.hs') 
-    measurementS = measurement.get_segment_by_sinogram(0)
-    measurementP = stirextra.to_numpy(measurementS)
-
+reconImagePList = []
+for offset in range(0, -60, -10): 
     # Image reconstruction using OSMAPOSL 
-    reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
     reconImageS.fill(1) # moet er staan 
-
-    MotionModel.setOffset(par1)
+    MotionModel.setOffset(offset)
     reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_2.par')
-    s = reconOSMAPOSL.set_up(reconImageS)
-    reconOSMAPOSL.reconstruct(reconImageS)
+    reconOSMAPOSL.set_up(reconImageS)
+    reconOSMAPOSL.reconstruct(reconImageS) 
+    
     reconImageP = stirextra.to_numpy(reconImageS)
+    reconImagePDict = {'recon' : reconImageP, 'offset' : offset}
+    reconImagePList.append(reconImagePDict)
 
     quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePRef[0,:,:])**2)
         
     if quadErrorSum < 50: 
-        print 'Motion shift was found to be:', par1
+        print 'Motion shift was found to be:', offset
         break; 
 
-plt.figure(2) 
+plt.figure(2)
+for i in range(len(reconImagePList)): 
+    plt.subplot(2,3,i+1), plt.imshow(reconImagePList[i]['recon'][0,:,:]), plt.title('TF2 offset: ' + str(reconImagePList[i]['offset'])) 
+plt.show()
+
+plt.figure(3) 
 plt.subplot(1,3,1), plt.imshow(reconImagePRef[0,:,:]), plt.title('OSMAPOSL recon TF 1')
 plt.subplot(1,3,2), plt.imshow(phantomP[1][0,:,:]), plt.title('Phantom TF2')
 plt.subplot(1,3,3), plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL recon TF 2 MC')
