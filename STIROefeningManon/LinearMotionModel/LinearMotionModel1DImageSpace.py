@@ -116,6 +116,7 @@ for offset in range(0, -60, -10):
     reconImagePDict = {'recon' : reconImageP, 'offset' : offset}
     reconImagePList.append(reconImagePDict)
 
+
     quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePRef[0,:,:])**2)
         
     if quadErrorSum < 50: 

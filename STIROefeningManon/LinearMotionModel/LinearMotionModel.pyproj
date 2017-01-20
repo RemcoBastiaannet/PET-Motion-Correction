@@ -4,8 +4,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2ac47bdf-027a-4164-93b8-59293f26b413</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>LinearMotionModel1D.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>LinearMotionModel1DImageSpace.py</StartupFile>
     <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -21,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LinearMotionModel1D.py" />
+    <Compile Include="LinearMotionModel1DImageSpace.py" />
     <Compile Include="OldMLEMMotionCorrection.py">
       <SubType>Code</SubType>
     </Compile>
