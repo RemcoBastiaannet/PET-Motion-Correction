@@ -10,6 +10,7 @@ from StirSupport import *
 from scipy.optimize import minimize
 from prompt_toolkit import input
 
+
 nVoxelsXY = 256
 nRings = 1
 nLOR = 10
@@ -18,12 +19,14 @@ span = 1 # No axial compression
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 40; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
+
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
 
 # Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
+
 
 #_______________________PHANTOM______________________________________
 # Python 
@@ -66,30 +69,81 @@ projmatrix.set_up(projdata_info, originalImageS)
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 
+
 #_________________________MEASUREMENT_______________________________
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-measurementList = [] 
+measurementListP = [] 
+
 ## First time frame 
 forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sinoMeas_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
-measurementList.append(measurementP) 
+measurementListP.append(measurementP) 
 
 ## Second time frame 
 forwardprojector.forward_project(measurement, phantomS[1])
 measurement.write_to_file('sinoMeas_2.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
-measurementList.append(measurementP) 
+measurementListP.append(measurementP) 
 
-'''Meting is dus een lijstje met daarin een sinogram van ieder time frame. Lijkt me prima?'''
 
-#_________________________INITIAL PHANTOM GUESS_______________________________
-guessS = imageS 
-guessS.fill(1) 
-guessP = stirextra.to_numpy(guessS)
-plt.imshow(guessP[0,:,:]), plt.title('Initial guess phantom'), plt.show()
+#_________________________PROJECTIONS OF GUESS __________________
+'''Negeer voor nu het initial estimate, reconstrueer in één keer het blokje en focus op het vinden van de beweging van dit blokje'''
+projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
+reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+reconImageS.fill(1) # moet er staan 
+
+MotionModel.setOffset(0.0)
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+reconOSMAPOSL.set_up(reconImageS)
+recon = reconOSMAPOSL.reconstruct(reconImageS)
+guessS = recon
+guessP = stirextra.to_numpy(reconImageS)
+plt.imshow(guessP[0,:,:]), plt.title('Initial guess'), plt.show() 
+
+## Second time frame
+quadErrorSumList = [] 
+for offset in range(0, -60, -10):
+    MotionModel.setOffset(-offset) 
+    forwardprojector.forward_project(projection, guessS)
+    projection.write_to_file('sinoGuess_1.hs')
+    projectionS = projection.get_segment_by_sinogram(0)
+    projectionP = stirextra.to_numpy(projectionS)
+
+    plt.figure(2) 
+    plt.subplot(1,2,1), plt.imshow(projectionP[0,:,:]), plt.title('Current proj TF2')
+    plt.subplot(1,2,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement TF2')
+    plt.show() 
+
+    # Dit gaat nog niet goed 
+    # Je moet de combinatie van de projectie van TF1 en de projectie van TF2 vergelijken met de meting
+    # Nu wordt alleen de projectie van TF2 gebruikt 
+    quadErrorSum = np.sum((projectionP[0,:,:] - measurementListP[1][0,:,:])**2)
+    quadErrorSumList.append(quadErrorSum)
+    if quadErrorSum < 50: 
+        print 'Motion shift was found to be:', offset
+        break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #_________________________FIRST RECONSTRUCTION________________________
@@ -107,7 +161,7 @@ reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 reconImageS.fill(1) # moet er staan 
 
 MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_1.par')
+reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
 s = reconOSMAPOSL.set_up(reconImageS)
 reconOSMAPOSL.reconstruct(reconImageS)
 reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
@@ -131,7 +185,7 @@ for offset in range(0, -60, -10):
     # Image reconstruction using OSMAPOSL 
     reconImageS.fill(1) # moet er staan 
     MotionModel.setOffset(offset)
-    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_2.par')
+    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
     reconOSMAPOSL.set_up(reconImageS)
     reconOSMAPOSL.reconstruct(reconImageS) 
     
@@ -154,6 +208,7 @@ plt.subplot(1,3,1), plt.imshow(reconImagePRef[0,:,:]), plt.title('OSMAPOSL recon
 plt.subplot(1,3,2), plt.imshow(phantomP[1][0,:,:]), plt.title('Phantom TF2')
 plt.subplot(1,3,3), plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL recon TF 2 MC')
 plt.show()
+
 
 #_________________________COMBINING RECONSTRUCTIONS________________________
 reconImagePCombined = [0.5*sum(x) for x in zip(reconImageP[0,:,:], reconImagePRef[0,:,:])]
