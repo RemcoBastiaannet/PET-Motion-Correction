@@ -22,7 +22,7 @@ projector pair type := Matrix
 
 end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
 
-initial estimate:= some_image
+initial estimate:= output_2_4.hv
 output filename prefix := output_2
 
 number of subsets:= 1
