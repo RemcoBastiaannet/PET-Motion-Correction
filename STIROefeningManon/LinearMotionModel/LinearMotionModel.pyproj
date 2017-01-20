@@ -6,7 +6,7 @@
     <ProjectGuid>2ac47bdf-027a-4164-93b8-59293f26b413</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>LinearMotionModel1DImageSpace.py</StartupFile>
+    <StartupFile>LinearMotionModel1DProjSpace.py</StartupFile>
     <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
