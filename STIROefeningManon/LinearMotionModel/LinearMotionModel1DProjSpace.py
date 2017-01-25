@@ -17,7 +17,7 @@ nLOR = 10
 nFrames = 2
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 40; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 
 # Setup the scanner
@@ -49,12 +49,18 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 fillStirSpace(originalImageS, originalImageP)
 
 phantomS = []
-imageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+
+image1S      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                 stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-for iFrame in range(nFrames): 
-    fillStirSpace(imageS, phantomP[iFrame])
-    phantomS.append(imageS)
+fillStirSpace(image1S, phantomP[0])
+phantomS.append(image1S)
+
+image2S      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+fillStirSpace(image2S, phantomP[1])
+phantomS.append(image2S)
 
 
 #_______________________PROJ MATRIX AND PROJECTORS______________________
@@ -75,6 +81,7 @@ measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 measurementListP = [] 
 
 ## First time frame 
+MotionModel.setOffset(0.0)
 forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sinoMeas_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
@@ -82,6 +89,7 @@ measurementP = stirextra.to_numpy(measurementS)
 measurementListP.append(measurementP) 
 
 ## Second time frame 
+MotionModel.setOffset(0.0) # Beweging zit al in het plaatje 
 forwardprojector.forward_project(measurement, phantomS[1])
 measurement.write_to_file('sinoMeas_2.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
@@ -89,127 +97,76 @@ measurementP = stirextra.to_numpy(measurementS)
 measurementListP.append(measurementP) 
 
 
-#_________________________PROJECTIONS OF GUESS __________________
-'''Negeer voor nu het initial estimate, reconstrueer in één keer het blokje en focus op het vinden van de beweging van dit blokje'''
+#_________________________GUESS_______________________________
+'''Negeer voor nu het initial estimate'''
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
-reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+reconGuess1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+reconGuess2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-reconImageS.fill(1) # moet er staan 
 
 MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-reconOSMAPOSL.set_up(reconImageS)
-recon = reconOSMAPOSL.reconstruct(reconImageS)
-guessS = recon
-guessP = stirextra.to_numpy(reconImageS)
+reconGuess1S.fill(1) # moet er staan
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+recon1.set_up(reconGuess1S)
+recon1.reconstruct(reconGuess1S)
+
+MotionModel.setOffset(0.0)
+reconGuess2S.fill(1) # moet er staan
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
+recon2.set_up(reconGuess2S)
+recon2.reconstruct(reconGuess2S)
+
+guess1P = stirextra.to_numpy(reconGuess1S)
+guess2P = stirextra.to_numpy(reconGuess2S)
+guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:]), plt.title('Initial guess'), plt.show() 
 
-## Second time frame
-quadErrorSumList = [] 
-for offset in range(0, -60, -10):
-    MotionModel.setOffset(-offset) 
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+fillStirSpace(guessS, guessP)
+
+
+#_________________________MOTION MODEL OPTIMIZATION_______________________________
+quadErrorSumList = []
+
+for offset in range(3,8,1): 
+    projectionPList = []
+
+    MotionModel.setOffset(offset) 
     forwardprojector.forward_project(projection, guessS)
-    projection.write_to_file('sinoGuess_1.hs')
+    projection.write_to_file('sino_1.hs')
     projectionS = projection.get_segment_by_sinogram(0)
     projectionP = stirextra.to_numpy(projectionS)
+    projectionPList.append(projectionP)
 
-    plt.figure(2) 
-    plt.subplot(1,2,1), plt.imshow(projectionP[0,:,:]), plt.title('Current proj TF2')
-    plt.subplot(1,2,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement TF2')
-    plt.show() 
+    MotionModel.setOffset(-offset) 
+    forwardprojector.forward_project(projection, guessS)
+    projection.write_to_file('sino_2.hs')
+    projectionS = projection.get_segment_by_sinogram(0)
+    projectionP = stirextra.to_numpy(projectionS)
+    projectionPList.append(projectionP)
 
-    # Dit gaat nog niet goed 
-    # Je moet de combinatie van de projectie van TF1 en de projectie van TF2 vergelijken met de meting
-    # Nu wordt alleen de projectie van TF2 gebruikt 
-    quadErrorSum = np.sum((projectionP[0,:,:] - measurementListP[1][0,:,:])**2)
-    quadErrorSumList.append(quadErrorSum)
-    if quadErrorSum < 50: 
-        print 'Motion shift was found to be:', offset
-        break
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#_________________________FIRST RECONSTRUCTION________________________
-# Measurement/projections of inital time frame
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(measurement, guessS)
-measurement.write_to_file('sino_1.hs')
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-
-# Image reconstruction using OSMAPOSL 
-reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-reconImageS.fill(1) # moet er staan 
-
-MotionModel.setOffset(0.0)
-reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-s = reconOSMAPOSL.set_up(reconImageS)
-reconOSMAPOSL.reconstruct(reconImageS)
-reconImagePRef = stirextra.to_numpy(reconImageS) # reference time frame
-
-
-#_________________________SECOND RECONSTRUCTION________________________
-# Measurement/projections of inital time frame
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-forwardprojector.forward_project(measurement, guessS)
-measurement.write_to_file('sino_2.hs') 
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-
-reconImageS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-quadErrorSumList = [] 
-reconImagePList = []
-for offset in range(0, -60, -10): 
-    # Image reconstruction using OSMAPOSL 
-    reconImageS.fill(1) # moet er staan 
-    MotionModel.setOffset(offset)
-    reconOSMAPOSL = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-    reconOSMAPOSL.set_up(reconImageS)
-    reconOSMAPOSL.reconstruct(reconImageS) 
+    quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
     
-    reconImageP = stirextra.to_numpy(reconImageS)
-    reconImagePDict = {'recon' : reconImageP, 'offset' : offset}
-    reconImagePList.append(reconImagePDict)
+    quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
-    quadErrorSum = np.sum((reconImageP[0,:,:] - reconImagePRef[0,:,:])**2)
-    if quadErrorSum < 50: 
-        print 'Motion shift was found to be:', offset
-        break; 
+quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+for i in range(len(quadErrorSumList)): 
+    if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
+        offsetFound = quadErrorSumList[i]['offset']
 
-plt.figure(2)
-for i in range(len(reconImagePList)): 
-    plt.subplot(2,3,i+1), plt.imshow(reconImagePList[i]['recon'][0,:,:]), plt.title('TF2 offset: ' + str(reconImagePList[i]['offset'])) 
-plt.show()
+#_________________________MOTION COMPENSATION_______________________________
+reconGuess1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 
-plt.figure(3) 
-plt.subplot(1,3,1), plt.imshow(reconImagePRef[0,:,:]), plt.title('OSMAPOSL recon TF 1')
-plt.subplot(1,3,2), plt.imshow(phantomP[1][0,:,:]), plt.title('Phantom TF2')
-plt.subplot(1,3,3), plt.imshow(reconImageP[0,:,:]), plt.title('OSMAPOSL recon TF 2 MC')
-plt.show()
-
-
-#_________________________COMBINING RECONSTRUCTIONS________________________
-reconImagePCombined = [0.5*sum(x) for x in zip(reconImageP[0,:,:], reconImagePRef[0,:,:])]
-plt.imshow(reconImagePCombined), plt.title('Combined reconstructions (with motion correction)'), plt.show() 
+MotionModel.setOffset(-offsetFound) # Tegengestelde richting, want je corrigeert nu 
+reconGuess1S.fill(1) # moet er staan
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+recon1.set_up(reconGuess1S)
+recon1.reconstruct(reconGuess1S)
