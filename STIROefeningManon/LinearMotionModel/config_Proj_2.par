@@ -26,7 +26,7 @@ initial estimate:= some_image
 output filename prefix := output_2
 
 number of subsets:= 1
-number of subiterations:= 4
+number of subiterations:= 3
 Save estimates at subiteration intervals:= 1
 
 

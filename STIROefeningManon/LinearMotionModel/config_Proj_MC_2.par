@@ -19,14 +19,16 @@ input file := sino_MC.hs
    ; do_symmetry_90degrees_min_phi:=0
   ;End Ray tracing matrix parameters :=
   ;End Projector Pair Using Matrix Parameters :=
-
+recompute sensitivity := 1 
+subset sensitivity filenames := sensitivity%d.hv
+  
 end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
 
 initial estimate:= some_image
 output filename prefix := output_1
 
 number of subsets:= 1
-number of subiterations:= 4
+number of subiterations:= 2
 Save estimates at subiteration intervals:= 1
 
 
