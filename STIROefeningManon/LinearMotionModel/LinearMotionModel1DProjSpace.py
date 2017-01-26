@@ -17,7 +17,7 @@ nLOR = 10
 nFrames = 2
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 20; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 
 # Setup the scanner
@@ -134,7 +134,7 @@ fillStirSpace(guessS, guessP)
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
 
-for offset in range(3,8,1): 
+for offset in range(trueShiftPixels/2-1,trueShiftPixels/2+1,1): 
     projectionPList = []
 
     MotionModel.setOffset(offset) 
@@ -161,12 +161,27 @@ for i in range(len(quadErrorSumList)):
         offsetFound = quadErrorSumList[i]['offset']
 
 #_________________________MOTION COMPENSATION_______________________________
-reconGuess1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 
+MotionModel.setOffset(+offsetFound) # Tegengestelde richting, want je corrigeert nu 
+reconFrame1S.fill(1) # moet er staan
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_1.par')
+recon1.set_up(reconFrame1S)
+recon1.reconstruct(reconFrame1S)
+
+reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
 MotionModel.setOffset(-offsetFound) # Tegengestelde richting, want je corrigeert nu 
-reconGuess1S.fill(1) # moet er staan
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-recon1.set_up(reconGuess1S)
-recon1.reconstruct(reconGuess1S)
+reconFrame2S.fill(1) # moet er staan
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_2.par')
+recon2.set_up(reconFrame2S)
+recon2.reconstruct(reconFrame2S)
+
+reconFrame1P = stirextra.to_numpy(reconFrame1S)
+reconFrame2P = stirextra.to_numpy(reconFrame2S)
+
+plt.imshow(reconFrame2P[0,:,:]+reconFrame1P[0,:,:]), plt.title('Motion corrected reconstruction'), plt.show()
