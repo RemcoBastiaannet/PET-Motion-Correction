@@ -10,14 +10,19 @@ from StirSupport import *
 from scipy.optimize import minimize
 from prompt_toolkit import input
 
+import scipy as sp
+from skimage.io import imread
+from skimage import data_dir
+from skimage.transform import iradon, radon, rescale
 
-nVoxelsXY = 256
+
+#nVoxelsXY = 256
 nRings = 1
-nLOR = 10
+nLOR = 10 # ? 
 nFrames = 2
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 20; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 
 # Setup the scanner
@@ -31,15 +36,26 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 #_______________________PHANTOM______________________________________
 # Python 
 phantomP = [] 
+
+image = imread(data_dir + "/phantom.png", as_grey=True)
+image = rescale(image, scale=0.4)
+plt.imshow(image, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.show()
+
+Nx = np.shape(image)[0] # ik weet niet zeker welke x is en welke y, bij dit plaatje zijn ze gelijk! 
+Ny = np.shape(image)[1] 
+
 for iFrame in range(nFrames): 
-    tmp = np.zeros((1, 128, 128)) 
-    tmp[0, (10+iFrame*trueShiftPixels):(30+iFrame*trueShiftPixels), 60:80] = 1
+    shift = iFrame*trueShiftPixels
+    tmp = np.zeros((1, Ny, Nx))
+    tmp[0] = image  
+    tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+    tmp[0, 0:shift, :] = 0
     phantomP.append(tmp) 
 originalImageP = phantomP[0]
 
 plt.figure(1)
-plt.subplot(1,2,1), plt.title('Phantom TF 1'), plt.imshow(phantomP[0][0,:,:]) 
-plt.subplot(1,2,2), plt.title('Phantom TF 2'), plt.imshow(phantomP[1][0,:,:]) 
+plt.subplot(1,2,1), plt.title('Phantom TF 1'), plt.imshow(phantomP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.subplot(1,2,2), plt.title('Phantom TF 2 (shift 50 px)'), plt.imshow(phantomP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.show()
 
 # STIR 
@@ -123,7 +139,7 @@ recon2.reconstruct(reconGuess2S)
 guess1P = stirextra.to_numpy(reconGuess1S)
 guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
-plt.imshow(guessP[0,:,:]), plt.title('Initial guess'), plt.show() 
+plt.imshow(guessP[0,:,:]), plt.title('Initial guess', cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.show() 
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -134,7 +150,8 @@ fillStirSpace(guessS, guessP)
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
 
-for offset in range(trueShiftPixels/2-1,trueShiftPixels/2+1,1): 
+offSets = range(trueShiftPixels/2-5,trueShiftPixels/2+5,1)
+for offset in offSets: 
     projectionPList = []
 
     MotionModel.setOffset(offset) 
@@ -160,12 +177,15 @@ for i in range(len(quadErrorSumList)):
     if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
         offsetFound = quadErrorSumList[i]['offset']
 
+plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset'), plt.show()
+
+
 #_________________________MOTION COMPENSATION_______________________________
 reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 
-MotionModel.setOffset(+offsetFound) # Tegengestelde richting, want je corrigeert nu 
+MotionModel.setOffset(+offsetFound) 
 reconFrame1S.fill(1) # moet er staan
 recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_1.par')
 recon1.set_up(reconFrame1S)
@@ -175,7 +195,7 @@ reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-MotionModel.setOffset(-offsetFound) # Tegengestelde richting, want je corrigeert nu 
+MotionModel.setOffset(-offsetFound) 
 reconFrame2S.fill(1) # moet er staan
 recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_2.par')
 recon2.set_up(reconFrame2S)
@@ -184,4 +204,6 @@ recon2.reconstruct(reconFrame2S)
 reconFrame1P = stirextra.to_numpy(reconFrame1S)
 reconFrame2P = stirextra.to_numpy(reconFrame2S)
 
-plt.imshow(reconFrame2P[0,:,:]+reconFrame1P[0,:,:]), plt.title('Motion corrected reconstruction'), plt.show()
+guessP = 0.5*(reconFrame2P[0,:,:]+reconFrame1P[0,:,:])
+
+plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.show()
