@@ -39,7 +39,6 @@ phantomP = []
 
 image = imread(data_dir + "/phantom.png", as_grey=True)
 image = rescale(image, scale=0.4)
-plt.imshow(image, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.show()
 
 Nx = np.shape(image)[0] # ik weet niet zeker welke x is en welke y, bij dit plaatje zijn ze gelijk! 
 Ny = np.shape(image)[1] 
@@ -53,7 +52,6 @@ for iFrame in range(nFrames):
     phantomP.append(tmp) 
 originalImageP = phantomP[0]
 
-plt.figure(1)
 plt.subplot(1,2,1), plt.title('Phantom TF 1'), plt.imshow(phantomP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.subplot(1,2,2), plt.title('Phantom TF 2 (shift 50 px)'), plt.imshow(phantomP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.show()
@@ -137,9 +135,10 @@ recon2.set_up(reconGuess2S)
 recon2.reconstruct(reconGuess2S)
 
 guess1P = stirextra.to_numpy(reconGuess1S)
+plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
 guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
-plt.imshow(guessP[0,:,:]), plt.title('Initial guess', cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.show() 
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess'), plt.show() 
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
