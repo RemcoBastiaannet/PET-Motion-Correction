@@ -17,7 +17,7 @@ nLOR = 10 # ?
 nFrames = 2
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 6; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 20; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 
 # Setup the scanner
@@ -130,120 +130,85 @@ guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:]), plt.title('Initial guess'), plt.show() 
 
-#_________________________COMBINED MODEL OPTIMIZATION, MOTION CORRECTION AND IMAGE RECONSTRUCTION_______________________________
-
-for i in range(1): 
-    guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-    fillStirSpace(guessS, guessP)
-
-    #_________________________MOTION MODEL OPTIMIZATION_______________________________
-    quadErrorSumList = []
-
-    # Try different offsets to see which one fits the measurements best 
-    for offset in range(trueShiftPixels/2-1,trueShiftPixels/2+1,1): 
-        projectionPList = []
-
-        # Projection of the guess with shift +offset, this is our trial for the first time frame 
-        MotionModel.setOffset(offset) 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_1.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
-
-        # Projection of the guess with shift -offset, this is our trial for the first time frame
-        MotionModel.setOffset(-offset) 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_2.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
-
-        # Computing the quadratic error of these projections w.r.t. the measurements 
-        quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
-        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
-
-    # Determine the offset for which the quadratic error is at a minimum 
-    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-    for i in range(len(quadErrorSumList)): 
-        if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
-            offsetFound = quadErrorSumList[i]['offset']
+fillStirSpace(guessS, guessP)
 
 
-    #_________________________MOTION COMPENSATION_______________________________
+#_________________________MOTION MODEL OPTIMIZATION_______________________________
+quadErrorSumList = []
 
-    # Same code, but with the opposite of the offset that was actually found (correction) 
-    projPListMC = [] 
+# Try different offsets to see which one fits the measurements best 
+for offset in range(trueShiftPixels/2-1,trueShiftPixels/2+1,1): 
+    projectionPList = []
 
-    projUp = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    projDown = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+    # Projection of the guess with shift +offset, this is our trial for the first time frame 
+    MotionModel.setOffset(offset) 
+    forwardprojector.forward_project(projection, guessS)
+    projection.write_to_file('sino_1.hs')
+    projectionS = projection.get_segment_by_sinogram(0)
+    projectionP = stirextra.to_numpy(projectionS)
+    projectionPList.append(projectionP)
 
-    # Make new, corrected projection data for the first time frame
-    MotionModel.setOffset(-10) 
-    forwardprojector.forward_project(projDown, guessS)
-    projDown.write_to_file('sino_MC_1.hs')
-    projDownS = projection.get_segment_by_sinogram(0)
-    projDownP = stirextra.to_numpy(projDownS)
-    projPListMC.append(projDownP)
+    # Projection of the guess with shift -offset, this is our trial for the first time frame
+    MotionModel.setOffset(-offset) 
+    forwardprojector.forward_project(projection, guessS)
+    projection.write_to_file('sino_2.hs')
+    projectionS = projection.get_segment_by_sinogram(0)
+    projectionP = stirextra.to_numpy(projectionS)
+    projectionPList.append(projectionP)
 
-    # Make new, corrected projection data for the second time frame
-    MotionModel.setOffset(+10) 
-    forwardprojector.forward_project(projUp, guessS)
-    projUp.write_to_file('sino_MC_2.hs')
-    projUpS = projection.get_segment_by_sinogram(0)
-    projUpP = stirextra.to_numpy(projUpS)
-    projPListMC.append(projUpP)
+    # Computing the quadratic error of these projections w.r.t. the measurements 
+    quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
+    quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
-    # Add the sinograms of first and second time frame 
-    projSumMCP = np.add(projPListMC[0], projPListMC[1])
-    fillStirSpace(projUpS, projSumMCP) 
-    projUp.set_segment(projUpS) 
-    projUp.write_to_file('sino_MC.hs') 
+# Determine the offset for which the quadratic error is at a minimum 
+quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+for i in range(len(quadErrorSumList)): 
+    if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
+        offsetFound = quadErrorSumList[i]['offset']
 
 
-    #_________________________IMAGE RECONSTRUCTION_______________________________
-    ### TEST 
-    # OSMAPOSL reconstruction of the motion corrected and combined projection data 
-    reconMCS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-    reconMCS.fill(1) # moet er staan
+#_________________________MOTION COMPENSATION_______________________________
 
-    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_test1.par')
-    recon.set_up(reconMCS)
-    recon.reconstruct(reconMCS)
+# Same code, but with the opposite of the offset that was actually found (correction) 
+projectionPListMC = [] 
 
-    reconMCP = stirextra.to_numpy(reconMCS) 
-    plt.imshow(abs(guessP[0,:,:]-reconMCP[0,:,:])), plt.title('Test'), plt.show()
+# Make new, corrected projection data for the first time frame
+MotionModel.setOffset(-offsetFound) 
+forwardprojector.forward_project(projection, guessS)
+projection.write_to_file('sino_MC_1.hs')
+projectionS = projection.get_segment_by_sinogram(0)
+projectionP = stirextra.to_numpy(projectionS)
+projectionPListMC.append(projectionP)
 
-    # OSMAPOSL reconstruction of the motion corrected and combined projection data 
-    reconMCS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-    reconMCS.fill(1) # moet er staan
+# Make new, corrected projection data for the second time frame
+MotionModel.setOffset(+offsetFound) 
+forwardprojector.forward_project(projection, guessS)
+projection.write_to_file('sino_MC_2.hs')
+projectionS = projection.get_segment_by_sinogram(0)
+projectionP = stirextra.to_numpy(projectionS)
+projectionPListMC.append(projectionP)
 
-    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_test2.par')
-    recon.set_up(reconMCS)
-    recon.reconstruct(reconMCS)
+# Add the sinograms of first and second time frame 
+projectionSumMCP = np.add(projectionPListMC[0], projectionPListMC[1])
+fillStirSpace(projectionS, projectionSumMCP) 
+projection.set_segment(projectionS) 
+projection.write_to_file('sino_MC.hs') 
 
-    reconMCP = stirextra.to_numpy(reconMCS)
-    plt.imshow(abs(guessP[0,:,:]-reconMCP[0,:,:])), plt.title('Test'), plt.show()
-    ### 
 
-    # OSMAPOSL reconstruction of the motion corrected and combined projection data 
-    reconMCS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-    reconMCS.fill(1) # moet er staan
+#_________________________IMAGE RECONSTRUCTION_______________________________
 
-    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_MC.par')
-    recon.set_up(reconMCS)
-    recon.reconstruct(reconMCS)
+# OSMAPOSL reconstruction of the motion corrected and combined projection data 
+reconMCS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+reconMCS.fill(1) # moet er staan
 
-    reconMCP = stirextra.to_numpy(reconMCS)
-    plt.imshow(reconMCP[0,:,:]), plt.title('Motion corrected image'), plt.show()
+recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_MC.par')
+recon.set_up(reconMCS)
+recon.reconstruct(reconMCS)
 
-    #_________________________UPDATE GUESS_______________________________
-    guessP = reconMCP 
+reconMCP = stirextra.to_numpy(reconMCS)
+plt.imshow(reconMCP[0,:,:]), plt.show()
