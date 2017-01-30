@@ -36,8 +36,16 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 # Python 
 phantomP = [] 
 
+# Shepp-Logan phantom 
+'''
 image = imread(data_dir + "/phantom.png", as_grey=True)
 image = rescale(image, scale=0.4)
+'''
+
+# Block phantom 
+image = np.zeros((160,160))
+image[65:95, 65:95] = 1 
+plt.imshow(image), plt.show() 
 
 Nx = np.shape(image)[1] # Als het goed is kloppen x en y zo (maar het is een vierkant plaatje, dus je ziet het niet als het fout gaat...) 
 Ny = np.shape(image)[0] 
@@ -81,7 +89,7 @@ for i in range(nFrames):
 plt.savefig('./Plaatjes/sinusAllFrames.png')
 '''
 
-# Step function
+# Step function 
 nFrames = 2 
 for iFrame in range(nFrames): 
     shift = iFrame*trueShiftPixels # Let op: argument van de sinus varieert nu maar tussen 0 en pi, dus wordt bijv. nooit negatief. 
@@ -200,14 +208,14 @@ offSets = range(trueShiftPixels,0,1)
 for offset in offSets: 
     projectionPList = []
 
-    MotionModel.setOffset(+offset) 
+    MotionModel.setOffset(+offset) # Is this also the right sign if the real shift is negative? 
     forwardprojector.forward_project(projection, guessS)
     projection.write_to_file('sino_1.hs')
     projectionS = projection.get_segment_by_sinogram(0)
     projectionP = stirextra.to_numpy(projectionS)
     projectionPList.append(projectionP)
 
-    MotionModel.setOffset(-offset) 
+    MotionModel.setOffset(-offset) # Is this also the right sign if the real shift is negative? 
     forwardprojector.forward_project(projection, guessS)
     projection.write_to_file('sino_2.hs')
     projectionS = projection.get_segment_by_sinogram(0)
