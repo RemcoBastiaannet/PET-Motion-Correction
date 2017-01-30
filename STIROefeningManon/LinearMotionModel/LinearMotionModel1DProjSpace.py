@@ -3,6 +3,7 @@ import stir
 import stirextra
 import pylab
 import numpy as np
+import math 
 import os
 import time
 import matplotlib.pyplot as plt
@@ -15,14 +16,13 @@ from skimage.io import imread
 from skimage import data_dir
 from skimage.transform import iradon, radon, rescale
 
-
 #nVoxelsXY = 256
 nRings = 1
 nLOR = 10 # ? 
 nFrames = 2
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = 50; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
 
 
 # Setup the scanner
@@ -40,11 +40,36 @@ phantomP = []
 image = imread(data_dir + "/phantom.png", as_grey=True)
 image = rescale(image, scale=0.4)
 
-Nx = np.shape(image)[0] # ik weet niet zeker welke x is en welke y, bij dit plaatje zijn ze gelijk! 
-Ny = np.shape(image)[1] 
+Nx = np.shape(image)[1] # Als het goed is kloppen x en y zo (maar het is een vierkant plaatje, dus je ziet het niet als het fout gaat...) 
+Ny = np.shape(image)[0] 
 
+# Sinusoidal motion 
+nCycles = 3 # Wordt nu nog even niet gebruikt 
 for iFrame in range(nFrames): 
-    shift = iFrame*trueShiftPixels
+    shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
+    tmp = np.zeros((1, Ny, Nx))
+    tmp[0] = image  
+    
+    if shift > 0: 
+        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+        tmp[0, 0:shift, :] = 0
+       
+    if shift < 0: 
+        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+        tmp[0, (Ny+shift):Ny, :] = 0
+
+    phantomP.append(tmp) 
+originalImageP = phantomP[0]
+
+for i in range(nFrames):    
+    plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.show() 
+
+
+# Step function 
+'''
+for iFrame in range(nFrames): 
+    shift = iFrame*trueShiftPixels # Let op: argument van de sinus varieert nu maar tussen 0 en pi, dus wordt bijv. nooit negatief. 
     tmp = np.zeros((1, Ny, Nx))
     tmp[0] = image  
     tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
@@ -52,9 +77,11 @@ for iFrame in range(nFrames):
     phantomP.append(tmp) 
 originalImageP = phantomP[0]
 
-plt.subplot(1,2,1), plt.title('Phantom TF 1'), plt.imshow(phantomP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.subplot(1,2,2), plt.title('Phantom TF 2 (shift 50 px)'), plt.imshow(phantomP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.show()
+for i in range(nFrames):    
+    plt.subplot(1,2,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.show() 
+'''
+
 
 # STIR 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
