@@ -19,7 +19,7 @@ from skimage.transform import iradon, radon, rescale
 #nVoxelsXY = 256
 nRings = 1
 nLOR = 10 # ? 
-nFrames = 2
+nFrames = 30
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 50; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
@@ -45,8 +45,10 @@ Ny = np.shape(image)[0]
 
 # Sinusoidal motion 
 nCycles = 3 # Wordt nu nog even niet gebruikt 
+shiftList = [] 
 for iFrame in range(nFrames): 
     shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
+    shiftList.append(shift) 
     tmp = np.zeros((1, Ny, Nx))
     tmp[0] = image  
     
@@ -61,10 +63,21 @@ for iFrame in range(nFrames):
     phantomP.append(tmp) 
 originalImageP = phantomP[0]
 
+plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.savefig('./Plaatjes/shifts.png')
+plt.show()
+
+nFrames = 30 
+for i in range(nFrames):    
+    plt.figure(figsize=(5.0, 5.0))
+    plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+    plt.savefig('./Plaatjes/Movie/sinusFrame_{0}.png'.format(i))
+    
+nFrames = 30
+plt.figure(figsize=(23.0, 21.0))
 for i in range(nFrames):    
     plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.show() 
-
+plt.savefig('./Plaatjes/sinusAllFrames.png')
 
 # Step function 
 '''
@@ -72,8 +85,15 @@ for iFrame in range(nFrames):
     shift = iFrame*trueShiftPixels # Let op: argument van de sinus varieert nu maar tussen 0 en pi, dus wordt bijv. nooit negatief. 
     tmp = np.zeros((1, Ny, Nx))
     tmp[0] = image  
-    tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
-    tmp[0, 0:shift, :] = 0
+
+    if shift > 0: 
+        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+        tmp[0, 0:shift, :] = 0
+       
+    if shift < 0: 
+        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+        tmp[0, (Ny+shift):Ny, :] = 0
+
     phantomP.append(tmp) 
 originalImageP = phantomP[0]
 
@@ -81,7 +101,6 @@ for i in range(nFrames):
     plt.subplot(1,2,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.show() 
 '''
-
 
 # STIR 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
