@@ -19,10 +19,9 @@ from skimage.transform import iradon, radon, rescale
 #nVoxelsXY = 256
 nRings = 1
 nLOR = 10 # ? 
-nFrames = 30
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 50; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd)  
+trueShiftPixels = -50; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 
 
 # Setup the scanner
@@ -44,6 +43,8 @@ Nx = np.shape(image)[1] # Als het goed is kloppen x en y zo (maar het is een vie
 Ny = np.shape(image)[0] 
 
 # Sinusoidal motion 
+'''
+nFrames = 30
 nCycles = 3 # Wordt nu nog even niet gebruikt 
 shiftList = [] 
 for iFrame in range(nFrames): 
@@ -71,16 +72,17 @@ nFrames = 30
 for i in range(nFrames):    
     plt.figure(figsize=(5.0, 5.0))
     plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-    plt.savefig('./Plaatjes/Movie/sinusFrame_{0}.png'.format(i))
+    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{0}.png'.format(i))
     
 nFrames = 30
 plt.figure(figsize=(23.0, 21.0))
 for i in range(nFrames):    
     plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.savefig('./Plaatjes/sinusAllFrames.png')
-
-# Step function 
 '''
+
+# Step function
+nFrames = 2 
 for iFrame in range(nFrames): 
     shift = iFrame*trueShiftPixels # Let op: argument van de sinus varieert nu maar tussen 0 en pi, dus wordt bijv. nooit negatief. 
     tmp = np.zeros((1, Ny, Nx))
@@ -100,7 +102,6 @@ originalImageP = phantomP[0]
 for i in range(nFrames):    
     plt.subplot(1,2,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.show() 
-'''
 
 # STIR 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -195,11 +196,11 @@ fillStirSpace(guessS, guessP)
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
 
-offSets = range(trueShiftPixels/2-5,trueShiftPixels/2+5,1)
+offSets = range(trueShiftPixels,0,1)
 for offset in offSets: 
     projectionPList = []
 
-    MotionModel.setOffset(offset) 
+    MotionModel.setOffset(+offset) 
     forwardprojector.forward_project(projection, guessS)
     projection.write_to_file('sino_1.hs')
     projectionS = projection.get_segment_by_sinogram(0)
@@ -232,7 +233,7 @@ reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 
 MotionModel.setOffset(+offsetFound) 
 reconFrame1S.fill(1) # moet er staan
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_1.par')
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
 recon1.set_up(reconFrame1S)
 recon1.reconstruct(reconFrame1S)
 
@@ -242,7 +243,7 @@ reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 
 MotionModel.setOffset(-offsetFound) 
 reconFrame2S.fill(1) # moet er staan
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'sino_2.par')
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
 recon2.set_up(reconFrame2S)
 recon2.reconstruct(reconFrame2S)
 
