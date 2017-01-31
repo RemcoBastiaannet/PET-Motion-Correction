@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="LinearMotionModel1DImageSpace.py" />
+    <Compile Include="LinearMotionModel1DProjSpaceTEST.py" />
     <Compile Include="LinearMotionModel1DProjSpace.py">
       <SubType>Code</SubType>
     </Compile>

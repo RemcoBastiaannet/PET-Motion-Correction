@@ -23,10 +23,10 @@ projector pair type := Matrix
 end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
 
 initial estimate:= some_image
-output filename prefix := output_2
+output filename prefix := output_config_Proj_2
 
 number of subsets:= 1
-number of subiterations:= 4
+number of subiterations:= 8
 Save estimates at subiteration intervals:= 1
 
 

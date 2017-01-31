@@ -23,10 +23,10 @@ input file := sinoMeas_1.hs
 end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:=
 
 initial estimate:= some_image
-output filename prefix := output_1
+output filename prefix := output_config_Proj_1
 
 number of subsets:= 1
-number of subiterations:= 4
+number of subiterations:= 8
 Save estimates at subiteration intervals:= 1
 
 

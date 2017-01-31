@@ -21,7 +21,7 @@ nRings = 1
 nLOR = 10 # ? 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = -50; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 
 
 # Setup the scanner
@@ -205,6 +205,7 @@ fillStirSpace(guessS, guessP)
 quadErrorSumList = []
 
 offSets = range(trueShiftPixels,0,1)
+
 for offset in offSets: 
     projectionPList = []
 
