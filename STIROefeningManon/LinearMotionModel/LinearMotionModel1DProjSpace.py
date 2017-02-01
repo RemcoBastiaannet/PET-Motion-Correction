@@ -16,13 +16,12 @@ from skimage.io import imread
 from skimage import data_dir
 from skimage.transform import iradon, radon, rescale
 
-#nVoxelsXY = 256
+nVoxelsXY = 256 #? 
 nRings = 1
 nLOR = 10 # ? 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -37,17 +36,25 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 phantomP = [] 
 
 # Shepp-Logan phantom 
-'''
-image = imread(data_dir + "/phantom.png", as_grey=True)
-image = rescale(image, scale=0.4)
-'''
+imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
+imageSmall = rescale(imageSmall, scale=0.4)
+
+tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
+image = np.concatenate((tmpY, imageSmall), axis = 0)
+image = np.concatenate((image, tmpY), axis = 0)
+
+tmpX = np.zeros((np.shape(image)[0], 50))
+image = np.concatenate((tmpX, image), axis = 1)
+image = np.concatenate((image, tmpX), axis = 1)
 
 # Block phantom 
+'''
 image = np.zeros((160,160))
 image[65:95, 65:95] = 1 
-plt.imshow(image), plt.show() 
+'''
 
-Nx = np.shape(image)[1] # Als het goed is kloppen x en y zo (maar het is een vierkant plaatje, dus je ziet het niet als het fout gaat...) 
+# Image shape 
+Nx = np.shape(image)[1] 
 Ny = np.shape(image)[0] 
 
 # Sinusoidal motion 
@@ -80,7 +87,7 @@ nFrames = 30
 for i in range(nFrames):    
     plt.figure(figsize=(5.0, 5.0))
     plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{0}.png'.format(i))
+    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{}.png'.format(i))
     
 nFrames = 30
 plt.figure(figsize=(23.0, 21.0))
@@ -92,7 +99,7 @@ plt.savefig('./Plaatjes/sinusAllFrames.png')
 # Step function 
 nFrames = 2 
 for iFrame in range(nFrames): 
-    shift = iFrame*trueShiftPixels # Let op: argument van de sinus varieert nu maar tussen 0 en pi, dus wordt bijv. nooit negatief. 
+    shift = iFrame*trueShiftPixels
     tmp = np.zeros((1, Ny, Nx))
     tmp[0] = image  
 
@@ -108,7 +115,7 @@ for iFrame in range(nFrames):
 originalImageP = phantomP[0]
 
 for i in range(nFrames):    
-    plt.subplot(1,2,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+    plt.subplot(1,2,i+1), plt.title('Phantom at time {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.show() 
 
 # STIR 
@@ -190,10 +197,17 @@ recon2.set_up(reconGuess2S)
 recon2.reconstruct(reconGuess2S)
 
 guess1P = stirextra.to_numpy(reconGuess1S)
-plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
+#plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
 guess2P = stirextra.to_numpy(reconGuess2S)
+
+plt.subplot(1,2,1), plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 1')
+plt.subplot(1,2,2), plt.imshow(guess2P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 2')
+plt.show()
+
 guessP = 0.5*(guess1P + guess2P)
-plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess'), plt.show() 
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/sigaarInitialGuess.png'.format(trueShiftPixels))
+plt.show() 
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -262,3 +276,30 @@ reconFrame2P = stirextra.to_numpy(reconFrame2S)
 guessP = 0.5*(reconFrame2P[0,:,:]+reconFrame1P[0,:,:])
 
 plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.show()
+
+
+
+
+''' 
+# TEST:  Recons maken na verschillende OSMAPOSL iteraties -> som berekenen 
+testList = []
+sumList = [] 
+test      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(1,200,200)))  # Lengte moet je gokken/weten 
+
+for i in range(8): 
+    test = test.read_from_file('output_config_Proj_1_{0}.hv'.format(i+1))
+    testList.append(stirextra.to_numpy(test)) 
+    sumList.append(np.sum(stirextra.to_numpy(test)[0,:,:]))
+
+axisX = range(1,9,1)
+plt.plot(axisX, sumList, axisX, [np.sum(image)]*len(axisX)), plt.title('Sum of OSMAPOSL recon (blue), sum of original image (green)'), plt.xlabel('Iteration number')
+plt.savefig('./Plaatjes/OSMAPOSLSumAfterIterations.png')
+plt.show()
+
+for i in range(8): 
+    plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {0}'.format(i))
+plt.savefig('./Plaatjes/OSMAPOSLReconAfterIterations.png'.format(trueShiftPixels))
+plt.show() 
+'''
