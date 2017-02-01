@@ -31,17 +31,6 @@ scanner.set_num_rings(nRings)
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
 
 
-## Recons maken na verschillende iteraties -> som berekenen 
-'''
-test      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(1,160,160)))  # Lengte moet je gokken/weten 
-test = test.read_from_file('output_1_1.hv')
-plt.imshow(stirextra.to_numpy(test)[0,:,:]), plt.show()
-'''
-## 
-
-
 #_______________________PHANTOM______________________________________
 # Python 
 phantomP = [] 
@@ -63,6 +52,28 @@ image = np.concatenate((image, tmpX), axis = 1)
 image = np.zeros((160,160))
 image[65:95, 65:95] = 1 
 '''
+
+
+## TEST:  Recons maken na verschillende iteraties -> som berekenen 
+testList = []
+sumList = [] 
+test      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(1,200,200)))  # Lengte moet je gokken/weten 
+
+for i in range(8): 
+    test = test.read_from_file('output_config_Proj_1_{0}.hv'.format(i+1))
+    testList.append(stirextra.to_numpy(test)) 
+    sumList.append(np.sum(stirextra.to_numpy(test)[0,:,:]))
+
+axisX = range(1,9,1)
+plt.plot(axisX, sumList, axisX, [np.sum(image)]*len(axisX)), plt.title('Sum of OSMAPOSL recon at different iterations'), plt.xlabel('Iteration number'), plt.show()
+
+for i in range(8): 
+    plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon {0}'.format(i))
+plt.show() 
+## 
+
 
 # Image shape ## 
 Nx = np.shape(image)[1] # Als het goed is kloppen x en y zo (maar het is een vierkant plaatje, dus je ziet het niet als het fout gaat...) 
@@ -219,7 +230,7 @@ plt.show()
 
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/sigaarInitialGuess.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/sigaarInitialGuess.png'.format(trueShiftPixels))
 plt.show() 
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -235,7 +246,7 @@ quadErrorSumList = []
 offSets = range(trueShiftPixels,0,1)
 
 ##
-offset = 3
+offset = -5
 ## 
 
 ## for offset in offSets: 
@@ -265,15 +276,17 @@ quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset'),
 plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
 plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/sigaarShift{0}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/sigaarShift{}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
 plt.show()
 
 plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
 plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
 plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/sigaarShift{0}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/sigaarShift{}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
 plt.show() 
 ## 
+
+print quadErrorSum
 
 '''
 quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
@@ -283,14 +296,12 @@ for i in range(len(quadErrorSumList)):
 '''
 ## plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset'), plt.show()
 
-print quadErrorSum
 
 
 
 
-
-
-#_________________________TEST GUESS_______________________________ 
+'''
+#_________________________TEST GUESS PERFECT BLOKJE_______________________________ 
 
 ## 
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
@@ -298,7 +309,7 @@ projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 guessP = np.zeros((1, 160,160))
 guessP[0, (65+trueShiftPixels/2):(95+trueShiftPixels/2), 65:95] = 1 
 plt.imshow(guessP[0,:,:]), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/blokjeInitialGuess.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/blokjeInitialGuess.png'.format(trueShiftPixels))
 plt.show()
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -306,7 +317,36 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 fillStirSpace(guessS, guessP)
 ## 
+'''
 
+#_________________________TEST GUESS PERFECT SHEPP-LOGAN_______________________________ 
+## 
+projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
+shift = int(0.5*iFrame*trueShiftPixels)
+tmp = np.zeros((1, Ny, Nx))
+tmp[0] = image  
+
+if shift > 0: 
+    tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+    tmp[0, 0:shift, :] = 0
+       
+if shift < 0: 
+    tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+    tmp[0, (Ny+shift):Ny, :] = 0
+
+guessP = tmp
+
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectInitialGuess.png'.format(trueShiftPixels))
+plt.show()
+
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+fillStirSpace(guessS, guessP)
+
+## 
 
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
@@ -314,7 +354,7 @@ quadErrorSumList = []
 offSets = range(trueShiftPixels,0,1)
 
 ##
-offset = trueShiftPixels/2
+offset = 7
 ## 
 
 ## for offset in offSets: 
@@ -341,24 +381,27 @@ quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 ## END FOR 
 
 ## 
-plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset'),
+plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
 plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
 plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/blokjeShift{0}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
 plt.show() 
 
 plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
 plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
 plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/blokjeShift{0}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
 plt.show() 
 ## 
 
+print quadErrorSum
+
+'''
 quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
 for i in range(len(quadErrorSumList)): 
     if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
         offsetFound = quadErrorSumList[i]['offset']
-
+'''
 ## plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset'), plt.show()
 
 
