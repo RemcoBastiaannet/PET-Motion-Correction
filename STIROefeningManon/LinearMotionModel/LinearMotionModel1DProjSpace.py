@@ -35,66 +35,13 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 # Python 
 phantomP = [] 
 
-# Shepp-Logan phantom 
-imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-imageSmall = rescale(imageSmall, scale=0.4)
-
-tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
-image = np.concatenate((tmpY, imageSmall), axis = 0)
-image = np.concatenate((image, tmpY), axis = 0)
-
-tmpX = np.zeros((np.shape(image)[0], 50))
-image = np.concatenate((tmpX, image), axis = 1)
-image = np.concatenate((image, tmpX), axis = 1)
-
 # Block phantom 
-'''
 image = np.zeros((160,160))
 image[65:95, 65:95] = 1 
-'''
 
 # Image shape 
 Nx = np.shape(image)[1] 
 Ny = np.shape(image)[0] 
-
-# Sinusoidal motion 
-'''
-nFrames = 30
-nCycles = 3 # Wordt nu nog even niet gebruikt 
-shiftList = [] 
-for iFrame in range(nFrames): 
-    shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
-    shiftList.append(shift) 
-    tmp = np.zeros((1, Ny, Nx))
-    tmp[0] = image  
-    
-    if shift > 0: 
-        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
-        tmp[0, 0:shift, :] = 0
-       
-    if shift < 0: 
-        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
-        tmp[0, (Ny+shift):Ny, :] = 0
-
-    phantomP.append(tmp) 
-originalImageP = phantomP[0]
-
-plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.savefig('./Plaatjes/shifts.png')
-plt.show()
-
-nFrames = 30 
-for i in range(nFrames):    
-    plt.figure(figsize=(5.0, 5.0))
-    plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{}.png'.format(i))
-    
-nFrames = 30
-plt.figure(figsize=(23.0, 21.0))
-for i in range(nFrames):    
-    plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.savefig('./Plaatjes/sinusAllFrames.png')
-'''
 
 # Step function 
 nFrames = 2 
@@ -116,6 +63,7 @@ originalImageP = phantomP[0]
 
 for i in range(nFrames):    
     plt.subplot(1,2,i+1), plt.title('Phantom at time {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.savefig('./Plaatjes/Blokje/phantom.png')
 plt.show() 
 
 # STIR 
@@ -197,16 +145,10 @@ recon2.set_up(reconGuess2S)
 recon2.reconstruct(reconGuess2S)
 
 guess1P = stirextra.to_numpy(reconGuess1S)
-#plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
 guess2P = stirextra.to_numpy(reconGuess2S)
-
-plt.subplot(1,2,1), plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 1')
-plt.subplot(1,2,2), plt.imshow(guess2P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 2')
-plt.show()
-
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/sigaarInitialGuess.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/Blokje/TrueShift{0}_InitialGuess.png'.format(trueShiftPixels))
 plt.show() 
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -244,13 +186,13 @@ for offset in offSets:
     plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
     plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
     plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-    plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
+    plt.savefig('./Plaatjes/Blokje/TrueShift{}_Offset{}_ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
     plt.show() 
 
     plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
     plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
     plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-    plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
+    plt.savefig('./Plaatjes/Blokje/TrueShift{}_Offset{}_ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
     plt.show() 
 
 quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
@@ -259,7 +201,7 @@ for i in range(len(quadErrorSumList)):
         offsetFound = quadErrorSumList[i]['offset']
 
 plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/Shift{}QuadraticError.png'.format(trueShiftPixels, offset))
+plt.savefig('./Plaatjes/Blokje/TrueShift{}_QuadraticError.png'.format(trueShiftPixels))
 plt.show()
 
 
@@ -295,10 +237,65 @@ plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.
 
 
 
-
-
+#_________________________SINUSOIDAL MOTION_______________________________
 '''
-#_________________________GUESS PERFECT SHEPP-LOGAN_______________________________ 
+nFrames = 30
+nCycles = 3 # Wordt nu nog even niet gebruikt 
+shiftList = [] 
+for iFrame in range(nFrames): 
+    shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
+    shiftList.append(shift) 
+    tmp = np.zeros((1, Ny, Nx))
+    tmp[0] = image  
+    
+    if shift > 0: 
+        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+        tmp[0, 0:shift, :] = 0
+       
+    if shift < 0: 
+        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+        tmp[0, (Ny+shift):Ny, :] = 0
+
+    phantomP.append(tmp) 
+originalImageP = phantomP[0]
+
+plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.savefig('./Plaatjes/shifts.png')
+plt.show()
+
+nFrames = 30 
+for i in range(nFrames):    
+    plt.figure(figsize=(5.0, 5.0))
+    plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{}.png'.format(i))
+    
+nFrames = 30
+plt.figure(figsize=(23.0, 21.0))
+for i in range(nFrames):    
+    plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.savefig('./Plaatjes/sinusAllFrames.png')
+'''
+
+
+
+#_________________________SHEPP-LOGAN PHANTOM_______________________________
+'''
+imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
+imageSmall = rescale(imageSmall, scale=0.4)
+
+tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
+image = np.concatenate((tmpY, imageSmall), axis = 0)
+image = np.concatenate((image, tmpY), axis = 0)
+
+tmpX = np.zeros((np.shape(image)[0], 50))
+image = np.concatenate((tmpX, image), axis = 1)
+image = np.concatenate((image, tmpX), axis = 1)
+'''
+
+
+
+#_________________________GUESS PERFECT SHEPP-LOGAN_______________________________
+''' 
 ## 
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
@@ -328,9 +325,8 @@ fillStirSpace(guessS, guessP)
 
 
 
-
-'''
-#_________________________GUESS PERFECT BLOKJE_______________________________ 
+#_________________________GUESS PERFECT BLOKJE_______________________________
+''' 
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
 guessP = np.zeros((1, 160,160))
@@ -347,9 +343,8 @@ fillStirSpace(guessS, guessP)
 
 
 
-
-''' 
 #_________________________TEST OMSAPOSL AFTER DIFFERENT RECONS_______________________________ 
+''' 
 testList = []
 sumList = [] 
 test      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
