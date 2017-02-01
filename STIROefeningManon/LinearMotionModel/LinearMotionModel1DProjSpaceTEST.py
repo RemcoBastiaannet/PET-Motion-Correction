@@ -67,10 +67,13 @@ for i in range(8):
     sumList.append(np.sum(stirextra.to_numpy(test)[0,:,:]))
 
 axisX = range(1,9,1)
-plt.plot(axisX, sumList, axisX, [np.sum(image)]*len(axisX)), plt.title('Sum of OSMAPOSL recon at different iterations'), plt.xlabel('Iteration number'), plt.show()
+plt.plot(axisX, sumList, axisX, [np.sum(image)]*len(axisX)), plt.title('Sum of OSMAPOSL recon (blue), sum of original image (green)'), plt.xlabel('Iteration number')
+plt.savefig('./Plaatjes/OSMAPOSLSumAfterIterations.png')
+plt.show()
 
 for i in range(8): 
-    plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon {0}'.format(i))
+    plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {0}'.format(i))
+plt.savefig('./Plaatjes/OSMAPOSLReconAfterIterations.png'.format(trueShiftPixels))
 plt.show() 
 ## 
 
@@ -237,7 +240,7 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 fillStirSpace(guessS, guessP)
-## 
+
 
 
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
@@ -346,7 +349,7 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 fillStirSpace(guessS, guessP)
 
-## 
+##
 
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []

@@ -241,12 +241,28 @@ for offset in offSets:
     
     quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
+    plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
+    plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
+    plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
+    plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
+    plt.show() 
+
+    plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
+    plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
+    plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
+    plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectGuessShift{}ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
+    plt.show() 
+
 quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
 for i in range(len(quadErrorSumList)): 
     if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
         offsetFound = quadErrorSumList[i]['offset']
 
-plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset'), plt.show()
+plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/Shift{}QuadraticError.png'.format(trueShiftPixels, offset))
+plt.show()
+
+
 
 
 #_________________________MOTION COMPENSATION_______________________________
@@ -280,8 +296,60 @@ plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.
 
 
 
+
+'''
+#_________________________GUESS PERFECT SHEPP-LOGAN_______________________________ 
+## 
+projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
+shift = int(0.5*iFrame*trueShiftPixels)
+tmp = np.zeros((1, Ny, Nx))
+tmp[0] = image  
+
+if shift > 0: 
+    tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+    tmp[0, 0:shift, :] = 0
+       
+if shift < 0: 
+    tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+    tmp[0, (Ny+shift):Ny, :] = 0
+
+guessP = tmp
+
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectInitialGuess.png'.format(trueShiftPixels))
+plt.show()
+
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+fillStirSpace(guessS, guessP)
+'''
+
+
+
+
+'''
+#_________________________GUESS PERFECT BLOKJE_______________________________ 
+projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
+guessP = np.zeros((1, 160,160))
+guessP[0, (65+trueShiftPixels/2):(95+trueShiftPixels/2), 65:95] = 1 
+plt.imshow(guessP[0,:,:]), plt.title('Initial guess')
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/blokjeInitialGuess.png'.format(trueShiftPixels))
+plt.show()
+
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+fillStirSpace(guessS, guessP)
+'''
+
+
+
+
 ''' 
-# TEST:  Recons maken na verschillende OSMAPOSL iteraties -> som berekenen 
+#_________________________TEST OMSAPOSL AFTER DIFFERENT RECONS_______________________________ 
 testList = []
 sumList = [] 
 test      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
