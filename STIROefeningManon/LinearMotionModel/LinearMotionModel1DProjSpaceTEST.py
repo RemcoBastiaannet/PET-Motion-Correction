@@ -16,7 +16,7 @@ from skimage.io import imread
 from skimage import data_dir
 from skimage.transform import iradon, radon, rescale
 
-#nVoxelsXY = 256
+nVoxelsXY = 256 # ?
 nRings = 1
 nLOR = 10 # ? 
 span = 1 # No axial compression  
@@ -49,9 +49,14 @@ phantomP = []
 # Shepp-Logan phantom 
 imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
 imageSmall = rescale(imageSmall, scale=0.4)
-tmp = np.zeros((20, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
-tmp2 = np.concatenate((tmp, imageSmall), axis = 0)
-image = np.concatenate((tmp2, tmp), axis = 0)
+
+tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
+image = np.concatenate((tmpY, imageSmall), axis = 0)
+image = np.concatenate((image, tmpY), axis = 0)
+
+tmpX = np.zeros((np.shape(image)[0], 50))
+image = np.concatenate((tmpX, image), axis = 1)
+image = np.concatenate((image, tmpX), axis = 1)
 
 # Block phantom 
 '''
@@ -205,11 +210,13 @@ recon2.set_up(reconGuess2S)
 recon2.reconstruct(reconGuess2S)
 
 guess1P = stirextra.to_numpy(reconGuess1S)
-plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
+#plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Normal reconstruction, no motion'), plt.show() 
 guess2P = stirextra.to_numpy(reconGuess2S)
+
 plt.subplot(1,2,1), plt.imshow(guess1P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 1')
 plt.subplot(1,2,2), plt.imshow(guess2P[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Recon time frame 2')
 plt.show()
+
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
 plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{0}_true_shift/sigaarInitialGuess.png'.format(trueShiftPixels))
@@ -221,13 +228,14 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 fillStirSpace(guessS, guessP)
 ## 
 
+
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
 
 offSets = range(trueShiftPixels,0,1)
 
 ##
-offset = 5
+offset = 3
 ## 
 
 ## for offset in offSets: 
