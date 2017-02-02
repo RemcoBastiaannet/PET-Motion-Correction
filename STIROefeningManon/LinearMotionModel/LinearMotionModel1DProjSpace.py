@@ -16,12 +16,16 @@ from skimage.io import imread
 from skimage import data_dir
 from skimage.transform import iradon, radon, rescale
 
+plt.ioff() # Turn interactive plotting off 
+
 nVoxelsXY = 256 #? 
 nRings = 1
 nLOR = 10 # ? 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+numFigures = 0 
+nIt = 3 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -62,9 +66,11 @@ for iFrame in range(nFrames):
 originalImageP = phantomP[0]
 
 for i in range(nFrames):    
-    plt.subplot(1,2,i+1), plt.title('Phantom at time {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.savefig('./Plaatjes/Blokje/phantom.png')
-plt.show() 
+    plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.suptitle('Phantom')
+plt.savefig('./Plaatjes/Blokje/Fig{}_phantom.png'.format(numFigures))
+numFigures += 1 
+plt.close() 
 
 # STIR 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -148,8 +154,11 @@ guess1P = stirextra.to_numpy(reconGuess1S)
 guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Blokje/TrueShift{0}_InitialGuess.png'.format(trueShiftPixels))
-plt.show() 
+plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+numFigures += 1 
+plt.close() 
+
+#for iIt in range(nIt):
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -160,7 +169,7 @@ fillStirSpace(guessS, guessP)
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
 quadErrorSumList = []
 
-offSets = range(trueShiftPixels,0,1)
+offSets = range(0,trueShiftPixels,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
 for offset in offSets: 
     projectionPList = []
@@ -186,14 +195,17 @@ for offset in offSets:
     plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
     plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
     plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-    plt.savefig('./Plaatjes/Blokje/TrueShift{}_Offset{}_ProjectionFirstTimeFrame.png'.format(trueShiftPixels, offset))
-    plt.show() 
+    plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
+    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset))
+    plt.close() 
 
     plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
     plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
     plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-    plt.savefig('./Plaatjes/Blokje/TrueShift{}_Offset{}_ProjectionSecondTimeFrame.png'.format(trueShiftPixels, offset))
-    plt.show() 
+    plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
+    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset))
+    plt.close() 
+numFigures += 2 
 
 quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
 for i in range(len(quadErrorSumList)): 
@@ -201,11 +213,9 @@ for i in range(len(quadErrorSumList)):
         offsetFound = quadErrorSumList[i]['offset']
 
 plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-plt.savefig('./Plaatjes/Blokje/TrueShift{}_QuadraticError.png'.format(trueShiftPixels))
-plt.show()
-
-
-
+plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
+numFigures += 1 
+plt.close()
 
 #_________________________MOTION COMPENSATION_______________________________
 reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -233,7 +243,11 @@ reconFrame2P = stirextra.to_numpy(reconFrame2S)
 
 guessP = 0.5*(reconFrame2P[0,:,:]+reconFrame1P[0,:,:])
 
-plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.show()
+plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
+plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon.png'.format(numFigures, trueShiftPixels,offsetFound))
+numFigures += 1
+plt.close()
+
 
 
 
@@ -261,7 +275,7 @@ originalImageP = phantomP[0]
 
 plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.savefig('./Plaatjes/shifts.png')
-plt.show()
+plt.close()
 
 nFrames = 30 
 for i in range(nFrames):    
@@ -273,6 +287,7 @@ nFrames = 30
 plt.figure(figsize=(23.0, 21.0))
 for i in range(nFrames):    
     plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+plt.suptitle('Phantom')
 plt.savefig('./Plaatjes/sinusAllFrames.png')
 '''
 
@@ -315,7 +330,7 @@ guessP = tmp
 
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
 plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectInitialGuess.png'.format(trueShiftPixels))
-plt.show()
+plt.close()
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -333,7 +348,7 @@ guessP = np.zeros((1, 160,160))
 guessP[0, (65+trueShiftPixels/2):(95+trueShiftPixels/2), 65:95] = 1 
 plt.imshow(guessP[0,:,:]), plt.title('Initial guess')
 plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/blokjeInitialGuess.png'.format(trueShiftPixels))
-plt.show()
+plt.close()
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -359,10 +374,10 @@ for i in range(8):
 axisX = range(1,9,1)
 plt.plot(axisX, sumList, axisX, [np.sum(image)]*len(axisX)), plt.title('Sum of OSMAPOSL recon (blue), sum of original image (green)'), plt.xlabel('Iteration number')
 plt.savefig('./Plaatjes/OSMAPOSLSumAfterIterations.png')
-plt.show()
+plt.close()
 
 for i in range(8): 
     plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {0}'.format(i))
 plt.savefig('./Plaatjes/OSMAPOSLReconAfterIterations.png'.format(trueShiftPixels))
-plt.show() 
+plt.close() 
 '''
