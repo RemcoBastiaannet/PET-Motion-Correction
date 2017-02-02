@@ -25,7 +25,7 @@ span = 1 # No axial compression
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
-nIt = 3 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 2 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -158,95 +158,98 @@ plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_InitialGuess.png'.format(numFig
 numFigures += 1 
 plt.close() 
 
-#for iIt in range(nIt):
-
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-fillStirSpace(guessS, guessP)
 
 
-#_________________________MOTION MODEL OPTIMIZATION_______________________________
-quadErrorSumList = []
+#_________________________NESTED EM LOOP_______________________________
+for iIt in range(nIt):
 
-offSets = range(0,trueShiftPixels,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    fillStirSpace(guessS, guessP)
 
-for offset in offSets: 
-    projectionPList = []
+    #_________________________MOTION MODEL OPTIMIZATION_______________________________
+    quadErrorSumList = []
 
-    MotionModel.setOffset(+offset) # Is this also the right sign if the real shift is negative? 
-    forwardprojector.forward_project(projection, guessS)
-    projection.write_to_file('sino_1.hs')
-    projectionS = projection.get_segment_by_sinogram(0)
-    projectionP = stirextra.to_numpy(projectionS)
-    projectionPList.append(projectionP)
+    offSets = range(0,trueShiftPixels,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
-    MotionModel.setOffset(-offset) # Is this also the right sign if the real shift is negative? 
-    forwardprojector.forward_project(projection, guessS)
-    projection.write_to_file('sino_2.hs')
-    projectionS = projection.get_segment_by_sinogram(0)
-    projectionP = stirextra.to_numpy(projectionS)
-    projectionPList.append(projectionP)
+    for offset in offSets: 
+        projectionPList = []
 
-    quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
+        MotionModel.setOffset(+offset) # Is this also the right sign if the real shift is negative? 
+        forwardprojector.forward_project(projection, guessS)
+        projection.write_to_file('sino_1.hs')
+        projectionS = projection.get_segment_by_sinogram(0)
+        projectionP = stirextra.to_numpy(projectionS)
+        projectionPList.append(projectionP)
+
+        MotionModel.setOffset(-offset) # Is this also the right sign if the real shift is negative? 
+        forwardprojector.forward_project(projection, guessS)
+        projection.write_to_file('sino_2.hs')
+        projectionS = projection.get_segment_by_sinogram(0)
+        projectionP = stirextra.to_numpy(projectionS)
+        projectionPList.append(projectionP)
+
+        quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
     
-    quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
+        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
-    plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
-    plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
-    plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-    plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset))
-    plt.close() 
+        plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
+        plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
+        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
+        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
+        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))
+        plt.close() 
 
-    plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
-    plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
-    plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-    plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset))
-    plt.close() 
-numFigures += 2 
+        plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
+        plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
+        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
+        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
+        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
+        plt.close() 
+    numFigures += 2 
 
-quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-for i in range(len(quadErrorSumList)): 
-    if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
-        offsetFound = quadErrorSumList[i]['offset']
+    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+    for i in range(len(quadErrorSumList)): 
+        if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
+            offsetFound = quadErrorSumList[i]['offset']
 
-plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
-numFigures += 1 
-plt.close()
+    plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
+    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    numFigures += 1 
+    plt.close()
 
-#_________________________MOTION COMPENSATION_______________________________
-reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 
-MotionModel.setOffset(+offsetFound) 
-reconFrame1S.fill(1) # moet er staan
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-recon1.set_up(reconFrame1S)
-recon1.reconstruct(reconFrame1S)
+    #_________________________MOTION COMPENSATION_______________________________
+    reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
 
-reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+    MotionModel.setOffset(+offsetFound) 
+    reconFrame1S.fill(1) # moet er staan
+    recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+    recon1.set_up(reconFrame1S)
+    recon1.reconstruct(reconFrame1S)
 
-MotionModel.setOffset(-offsetFound) 
-reconFrame2S.fill(1) # moet er staan
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-recon2.set_up(reconFrame2S)
-recon2.reconstruct(reconFrame2S)
+    reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-reconFrame1P = stirextra.to_numpy(reconFrame1S)
-reconFrame2P = stirextra.to_numpy(reconFrame2S)
+    MotionModel.setOffset(-offsetFound) 
+    reconFrame2S.fill(1) # moet er staan
+    recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
+    recon2.set_up(reconFrame2S)
+    recon2.reconstruct(reconFrame2S)
 
-guessP = 0.5*(reconFrame2P[0,:,:]+reconFrame1P[0,:,:])
+    reconFrame1P = stirextra.to_numpy(reconFrame1S)
+    reconFrame2P = stirextra.to_numpy(reconFrame2S)
 
-plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
-plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon.png'.format(numFigures, trueShiftPixels,offsetFound))
-numFigures += 1
-plt.close()
+    guessP = 0.5*(reconFrame2P + reconFrame1P)
+
+    plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
+    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    numFigures += 1
+    plt.close()
 
 
 
