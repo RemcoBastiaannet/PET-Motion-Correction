@@ -23,8 +23,7 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 
 fillStirSpace(guessS, guessP) 
 
-recon = stir.OSMAPOSLReconstruction3DFloat('config_TEST.par')
-
+recon = stir.OSMAPOSLReconstruction3DFloat('config_TEST.par') # Uses sinoMeas_1.hs from LinearMotionModel1DProjSpace.py 
 poissonobj = recon.get_objective_function()
 poissonobj.set_recompute_sensitivity(True)
 
@@ -33,10 +32,15 @@ target = guessS
 recon.set_up(target);
 # Zonder attenuatie en scatter verandert de sensitiviteit (normalisatiemap) niet per iteratie, hij hangt nu alleen van dingen af als de scanner, dus die hoef je maar ��n keer te berekenen. 
 poissonobj.set_recompute_sensitivity(False) 
+
+# Je moet er nog steeds wel voor zorgen dat het mapje bestaat! 
+num_subsets = recon.get_num_subsets() 
+num_iterations = recon.get_num_subiterations() 
+
 for iter in range(1,10):
     recon.reconstruct(target);
 
     npimage = stirextra.to_numpy(target);
-    plt.imshow(npimage[0,:,:]), plt.title('Iteration {}'.format(iter))
-    plt.savefig('./Plaatjes/OSMAPOSL_LOOP_TEST/recon_{}.png'.format(iter))
+    plt.imshow(npimage[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {}'.format(iter))
+    plt.savefig('./Figures/Tests/OSMAPOSL_loop_test/{}_sub_{}_it/recon_{}.png'.format(num_subsets, num_iterations, iter))
     plt.show()
