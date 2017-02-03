@@ -18,14 +18,18 @@ from skimage.transform import iradon, radon, rescale
 
 plt.ioff() # Turn interactive plotting off 
 
-nVoxelsXY = 256 #? 
+nVoxelsXY = 256
 nRings = 1
-nLOR = 10 # ? 
+nLOR = 10 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
-nIt = 2 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 4 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+
+# Shepp-Logan or Block 
+phantom = 'Shepp-Logan' 
+#phantom = 'Block'
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -39,9 +43,21 @@ projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, 
 # Python 
 phantomP = [] 
 
-# Block phantom 
-image = np.zeros((160,160))
-image[65:95, 65:95] = 1 
+if (phantom == 'Block'): 
+    image = np.zeros((160,160))
+    image[65:95, 65:95] = 1 
+elif (phantom == 'Shepp-Logan'): 
+    imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
+    imageSmall = rescale(imageSmall, scale=0.4)
+
+    tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
+    image = np.concatenate((tmpY, imageSmall), axis = 0)
+    image = np.concatenate((image, tmpY), axis = 0)
+
+    tmpX = np.zeros((np.shape(image)[0], 50))
+    image = np.concatenate((tmpX, image), axis = 1)
+    image = np.concatenate((image, tmpX), axis = 1)
+
 
 # Image shape 
 Nx = np.shape(image)[1] 
@@ -68,7 +84,10 @@ originalImageP = phantomP[0]
 for i in range(nFrames):    
     plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.suptitle('Phantom')
-plt.savefig('./Plaatjes/Blokje/Fig{}_phantom.png'.format(numFigures))
+if (phantom == 'Block'): 
+    plt.savefig('./Plaatjes/Blokje/Fig{}_phantom.png'.format(numFigures))
+elif (phantom == 'Shepp-Logan'): 
+    plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_phantom.png'.format(numFigures))
 numFigures += 1 
 plt.close() 
 
@@ -154,7 +173,10 @@ guess1P = stirextra.to_numpy(reconGuess1S)
 guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+if (phantom == 'Block'):
+    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+elif (phantom == 'Shepp-Logan'):
+    plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close() 
 
@@ -162,10 +184,22 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
+reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+recon1.set_up(reconFrame1S)
+
+reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
+recon2.set_up(reconFrame2S)
 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
-
     fillStirSpace(guessS, guessP)
 
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
@@ -198,14 +232,20 @@ for iIt in range(nIt):
         plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))
+        if (phantom == 'Block'): 
+            plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))
+        elif (phantom == 'Shepp-Logan'):
+            plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))   
         plt.close() 
 
         plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
         plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
+        if (phantom == 'Block'):
+            plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
+        elif (phantom == 'Shepp-Logan'):
+            plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
         plt.close() 
     numFigures += 2 
 
@@ -215,30 +255,21 @@ for iIt in range(nIt):
             offsetFound = quadErrorSumList[i]['offset']
 
     plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    if (phantom == 'Block'):
+        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    elif (phantom == 'Shepp-Logan'):
+        plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
     numFigures += 1 
     plt.close()
 
 
     #_________________________MOTION COMPENSATION_______________________________
-    reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-
     MotionModel.setOffset(+offsetFound) 
     reconFrame1S.fill(1) # moet er staan
-    recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-    recon1.set_up(reconFrame1S)
     recon1.reconstruct(reconFrame1S)
-
-    reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
     MotionModel.setOffset(-offsetFound) 
     reconFrame2S.fill(1) # moet er staan
-    recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-    recon2.set_up(reconFrame2S)
     recon2.reconstruct(reconFrame2S)
 
     reconFrame1P = stirextra.to_numpy(reconFrame1S)
@@ -246,8 +277,11 @@ for iIt in range(nIt):
 
     guessP = 0.5*(reconFrame2P + reconFrame1P)
 
-    plt.imshow(guessP[:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
-    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
+    if (phantom == 'Block'):
+        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    elif (phantom == 'Shepp-Logan'):
+        plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
     numFigures += 1
     plt.close()
 
@@ -294,21 +328,6 @@ plt.suptitle('Phantom')
 plt.savefig('./Plaatjes/sinusAllFrames.png')
 '''
 
-
-
-#_________________________SHEPP-LOGAN PHANTOM_______________________________
-'''
-imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-imageSmall = rescale(imageSmall, scale=0.4)
-
-tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
-image = np.concatenate((tmpY, imageSmall), axis = 0)
-image = np.concatenate((image, tmpY), axis = 0)
-
-tmpX = np.zeros((np.shape(image)[0], 50))
-image = np.concatenate((tmpX, image), axis = 1)
-image = np.concatenate((image, tmpX), axis = 1)
-'''
 
 
 
