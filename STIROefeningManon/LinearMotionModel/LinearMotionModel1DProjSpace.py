@@ -32,6 +32,13 @@ phantom = 'Shepp-Logan'
 noise = True
 #noise = False
 
+if (phantom == 'Block'): 
+    if (noise): figSaveDir = './Plaatjes/Blokje_noise/'
+    else: figSaveDir = './Plaatjes/Blokje/'
+elif (phantom == 'Shepp-Logan'): 
+    if (noise): figSaveDir = './Plaatjes/Shepp-Logan_noise/'
+    else: figSaveDir = './Plaatjes/Shepp-Logan/'
+
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
 scanner.set_num_rings(nRings)
@@ -88,10 +95,7 @@ originalImageP = phantomP[0]
 for i in range(nFrames):    
     plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.suptitle('Phantom')
-if (phantom == 'Block'): 
-    plt.savefig('./Plaatjes/Blokje/Fig{}_phantom.png'.format(numFigures))
-elif (phantom == 'Shepp-Logan'): 
-    plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_phantom.png'.format(numFigures))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_tphantom.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close() 
 
@@ -177,10 +181,7 @@ guess1P = stirextra.to_numpy(reconGuess1S)
 guess2P = stirextra.to_numpy(reconGuess2S)
 guessP = 0.5*(guess1P + guess2P)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-if (phantom == 'Block'):
-    plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
-elif (phantom == 'Shepp-Logan'):
-    plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close() 
 
@@ -237,20 +238,14 @@ for iIt in range(nIt):
         plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        if (phantom == 'Block'): 
-            plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))
-        elif (phantom == 'Shepp-Logan'):
-            plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt))   
+        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt)) 
         plt.close() 
 
         plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
         plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        if (phantom == 'Block'):
-            plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
-        elif (phantom == 'Shepp-Logan'):
-            plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
+        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
         plt.close() 
     numFigures += 2 
 
@@ -260,10 +255,7 @@ for iIt in range(nIt):
             offsetFound = quadErrorSumList[i]['offset']
 
     plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-    if (phantom == 'Block'):
-        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
-    elif (phantom == 'Shepp-Logan'):
-        plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
     numFigures += 1 
     plt.close()
 
@@ -283,10 +275,7 @@ for iIt in range(nIt):
     guessP = 0.5*(reconFrame2P + reconFrame1P)
 
     plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
-    if (phantom == 'Block'):
-        plt.savefig('./Plaatjes/Blokje/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
-    elif (phantom == 'Shepp-Logan'):
-        plt.savefig('./Plaatjes/Shepp-Logan/Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
     numFigures += 1
     plt.close()
 
