@@ -31,7 +31,7 @@ poissonobj.set_recompute_sensitivity(True)
 target = guessS
 
 recon.set_up(target);
-# Zonder attenuatie en scatter verandert de sensitiviteit (normalisatiemap) niet per iteratie, hij hangt nu alleen van dingen af als de scanner, dus die hoef je maar één keer te berekenen. 
+# Zonder attenuatie en scatter verandert de sensitiviteit (normalisatiemap) niet per iteratie, hij hangt nu alleen van dingen af als de scanner, dus die hoef je maar ï¿½ï¿½n keer te berekenen. 
 poissonobj.set_recompute_sensitivity(False) 
 for iter in range(1,10):
     recon.reconstruct(target);
