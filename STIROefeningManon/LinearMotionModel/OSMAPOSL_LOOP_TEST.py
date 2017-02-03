@@ -6,6 +6,8 @@ import os
 from StirSupport import *
 import matplotlib.pyplot as plt
 
+plt.ioff() # Turn interactive plotting off 
+
 nRings = 1
 span = 1 
 max_ring_diff = 0 
