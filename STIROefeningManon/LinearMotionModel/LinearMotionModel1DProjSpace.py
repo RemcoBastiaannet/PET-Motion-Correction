@@ -27,9 +27,10 @@ trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden 
 numFigures = 0 
 nIt = 4 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
-# Shepp-Logan or Block 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
+noise = True
+#noise = False
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -57,6 +58,9 @@ elif (phantom == 'Shepp-Logan'):
     tmpX = np.zeros((np.shape(image)[0], 50))
     image = np.concatenate((tmpX, image), axis = 1)
     image = np.concatenate((image, tmpX), axis = 1)
+
+if (noise): 
+    image = sp.random.poisson(image)
 
 
 # Image shape 
@@ -180,32 +184,33 @@ elif (phantom == 'Shepp-Logan'):
 numFigures += 1 
 plt.close() 
 
+
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
-reconFrame1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+fillStirSpace(guessS, guessP)
 
 recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-recon1.set_up(reconFrame1S)
-
-reconFrame2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+recon1.set_up(guessS)
 
 recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-recon2.set_up(reconFrame2S)
+recon2.set_up(guessS)
 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
 
+    recon1.set_start_subiteration_num(iter)
+    recon1.set_num_subiterations(iter)
+
+    recon2.set_start_subiteration_num(iter)
+    recon2.set_num_subiterations(iter)
+
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(0,trueShiftPixels,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    offSets = range(trueShiftPixels/2-2,trueShiftPixels/2+2,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
     for offset in offSets: 
         projectionPList = []
@@ -266,14 +271,14 @@ for iIt in range(nIt):
     #_________________________MOTION COMPENSATION_______________________________
     MotionModel.setOffset(+offsetFound) 
     reconFrame1S.fill(1) # moet er staan
-    recon1.reconstruct(reconFrame1S)
+    recon1.reconstruct(guessS)
 
     MotionModel.setOffset(-offsetFound) 
     reconFrame2S.fill(1) # moet er staan
-    recon2.reconstruct(reconFrame2S)
+    recon2.reconstruct(guessS)
 
-    reconFrame1P = stirextra.to_numpy(reconFrame1S)
-    reconFrame2P = stirextra.to_numpy(reconFrame2S)
+    reconFrame1P = stirextra.to_numpy(guessS)
+    reconFrame2P = stirextra.to_numpy(guessS)
 
     guessP = 0.5*(reconFrame2P + reconFrame1P)
 
