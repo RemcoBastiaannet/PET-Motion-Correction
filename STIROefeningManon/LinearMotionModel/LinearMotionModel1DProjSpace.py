@@ -25,19 +25,21 @@ span = 1 # No axial compression
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
-nIt = 4 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 3 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
-phantom = 'Shepp-Logan' 
-#phantom = 'Block'
-noise = True
-#noise = False
+#phantom = 'Shepp-Logan' 
+phantom = 'Block'
+#noise = True
+noise = False
+motion = 'Step' 
 
-if (phantom == 'Block'): 
-    if (noise): figSaveDir = './Plaatjes/Blokje_noise/'
-    else: figSaveDir = './Plaatjes/Blokje/'
-elif (phantom == 'Shepp-Logan'): 
-    if (noise): figSaveDir = './Plaatjes/Shepp-Logan_noise/'
-    else: figSaveDir = './Plaatjes/Shepp-Logan/'
+# Make sure all possible directories exist! 
+figSaveDir = './Figures/Sigar/'
+if (motion == 'Step'): figSaveDir += 'Step/'
+if (phantom == 'Block'): figSaveDir += 'Block/'
+elif (phantom == 'Shepp-Logan'): figSaveDir += 'Shepp-Logan/'
+if (noise): figSaveDir += 'Noise/'
+else: figSaveDir+= 'No_Noise/'
 
 # Setup the scanner
 scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
@@ -68,7 +70,6 @@ elif (phantom == 'Shepp-Logan'):
 
 if (noise): 
     image = sp.random.poisson(image)
-
 
 # Image shape 
 Nx = np.shape(image)[1] 
@@ -154,6 +155,7 @@ measurementP = stirextra.to_numpy(measurementS)
 measurementListP.append(measurementP) 
 
 
+
 #_________________________GUESS_______________________________
 '''Negeer voor nu het initial estimate'''
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
@@ -185,33 +187,32 @@ plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures,
 numFigures += 1 
 plt.close() 
 
-
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
 
 fillStirSpace(guessS, guessP)
 
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+recon1 = stir.OSMAPOSLReconstruction3DFloat('config_Proj_1.par')
+poissonobj1 = recon1.get_objective_function()
+poissonobj1.set_recompute_sensitivity(True)
 recon1.set_up(guessS)
+poissonobj1.set_recompute_sensitivity(False) 
 
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
+recon2 = stir.OSMAPOSLReconstruction3DFloat('config_Proj_2.par')
+poissonobj2 = recon2.get_objective_function()
+poissonobj2.set_recompute_sensitivity(True)
 recon2.set_up(guessS)
+poissonobj2.set_recompute_sensitivity(False) 
 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
 
-    recon1.set_start_subiteration_num(iter)
-    recon1.set_num_subiterations(iter)
-
-    recon2.set_start_subiteration_num(iter)
-    recon2.set_num_subiterations(iter)
-
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftPixels/2-2,trueShiftPixels/2+2,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    offSets = range(trueShiftPixels/2-2,trueShiftPixels/2+3,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
     for offset in offSets: 
         projectionPList = []
@@ -259,20 +260,23 @@ for iIt in range(nIt):
     numFigures += 1 
     plt.close()
 
+    #### Tot hier alles oke
+    #### Probleem ligt niet aan het feit dat er een motion model is, want dat heeft de testversie inmiddels ook.... 
 
     #_________________________MOTION COMPENSATION_______________________________
-    MotionModel.setOffset(+offsetFound) 
-    reconFrame1S.fill(1) # moet er staan
+    MotionModel.setOffset(5) 
     recon1.reconstruct(guessS)
 
+    #### Hier is het niet meer oke.... De recon is ineens leeg (niet 0, maar leeg) 
+    plt.imshow(stirextra.to_numpy(guessS)[0,:,:]), plt.show() 
+
     MotionModel.setOffset(-offsetFound) 
-    reconFrame2S.fill(1) # moet er staan
     recon2.reconstruct(guessS)
 
     reconFrame1P = stirextra.to_numpy(guessS)
     reconFrame2P = stirextra.to_numpy(guessS)
 
-    guessP = 0.5*(reconFrame2P + reconFrame1P)
+    guessP = (reconFrame2P + reconFrame1P)/2
 
     plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))

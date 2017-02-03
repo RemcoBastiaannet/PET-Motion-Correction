@@ -30,6 +30,9 @@
     <Compile Include="OldMLEMMotionCorrection.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OSMAPOSL_LOOP_TEST.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
