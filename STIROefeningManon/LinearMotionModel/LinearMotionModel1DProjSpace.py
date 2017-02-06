@@ -205,7 +205,7 @@ poissonobj2.set_recompute_sensitivity(True)
 recon2.set_up(guessS)
 poissonobj2.set_recompute_sensitivity(False) 
 
-
+quadErrorSumListList = [] 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
@@ -259,10 +259,7 @@ for iIt in range(nIt):
         if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
             offsetFound = quadErrorSumList[i]['offset']
 
-    plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
-    numFigures += 1 
-    plt.close()
+    quadErrorSumListList.append(quadErrorSums)
 
     #_________________________MOTION COMPENSATION_______________________________
     MotionModel.setOffset(offsetFound)     
@@ -285,7 +282,11 @@ for iIt in range(nIt):
     numFigures += 1
     plt.close()
 
-
+for i in range(len(quadErrorSumListList)): 
+    plt.plot(offSets, quadErrorSumListList[i]), plt.title('Quadratic error vs. offset')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
+numFigures += 1 
+plt.show() 
 
 
 #_________________________SINUSOIDAL MOTION_______________________________
