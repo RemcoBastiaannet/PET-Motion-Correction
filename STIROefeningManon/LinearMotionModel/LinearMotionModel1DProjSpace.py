@@ -25,10 +25,10 @@ span = 1 # No axial compression
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
-nIt = 3 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 4 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
-#phantom = 'Shepp-Logan' 
-phantom = 'Block'
+phantom = 'Shepp-Logan' 
+#phantom = 'Block'
 #noise = True
 noise = False
 motion = 'Step' 
@@ -96,7 +96,7 @@ originalImageP = phantomP[0]
 for i in range(nFrames):    
     plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
 plt.suptitle('Phantom')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_tphantom.png'.format(numFigures, trueShiftPixels))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close() 
 
@@ -193,17 +193,18 @@ guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 
 fillStirSpace(guessS, guessP)
 
-recon1 = stir.OSMAPOSLReconstruction3DFloat('config_Proj_1.par')
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
 poissonobj1 = recon1.get_objective_function()
 poissonobj1.set_recompute_sensitivity(True)
 recon1.set_up(guessS)
 poissonobj1.set_recompute_sensitivity(False) 
 
-recon2 = stir.OSMAPOSLReconstruction3DFloat('config_Proj_2.par')
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
 poissonobj2 = recon2.get_objective_function()
 poissonobj2.set_recompute_sensitivity(True)
 recon2.set_up(guessS)
 poissonobj2.set_recompute_sensitivity(False) 
+
 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
@@ -212,7 +213,7 @@ for iIt in range(nIt):
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftPixels/2-2,trueShiftPixels/2+3,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    offSets = range(trueShiftPixels/2-4,trueShiftPixels/2+5,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
     for offset in offSets: 
         projectionPList = []
@@ -235,11 +236,13 @@ for iIt in range(nIt):
     
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
+        '''
         plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
         plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt)) 
+        numFigures += 1 
         plt.close() 
 
         plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
@@ -247,8 +250,9 @@ for iIt in range(nIt):
         plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
         plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
+        numFigures += 1 
         plt.close() 
-    numFigures += 2 
+        '''
 
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
@@ -260,21 +264,19 @@ for iIt in range(nIt):
     numFigures += 1 
     plt.close()
 
-    #### Tot hier alles oke
-    #### Probleem ligt niet aan het feit dat er een motion model is, want dat heeft de testversie inmiddels ook.... 
-
     #_________________________MOTION COMPENSATION_______________________________
-    MotionModel.setOffset(5) 
+    MotionModel.setOffset(offsetFound)     
+    #MotionModel.setOffset(0.0) 
     recon1.reconstruct(guessS)
 
-    #### Hier is het niet meer oke.... De recon is ineens leeg (niet 0, maar leeg) 
-    plt.imshow(stirextra.to_numpy(guessS)[0,:,:]), plt.show() 
-
-    MotionModel.setOffset(-offsetFound) 
+    MotionModel.setOffset(-offsetFound)     
+    #MotionModel.setOffset(0.0) 
     recon2.reconstruct(guessS)
 
     reconFrame1P = stirextra.to_numpy(guessS)
+    reconFrame1P[np.isnan(reconFrame1P)] = 0 # Door het verschuiven van de reconruimte schuift er een deel het beeld in waar je geen informatie over hebt, deze is leeg, om problemen te voorkomen kun je dit beter 0 maken.
     reconFrame2P = stirextra.to_numpy(guessS)
+    reconFrame2P[np.isnan(reconFrame2P)] = 0
 
     guessP = (reconFrame2P + reconFrame1P)/2
 
