@@ -33,7 +33,7 @@ image[0, 65:95, 65:95] = 1
 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(0, 160, 160)))  
+                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(1, 160, 160)))  
 fillStirSpace(originalImageS, image)
 
 guessP = np.ones((1, 160, 160)) # Voor het blokje 
@@ -67,7 +67,8 @@ num_subsets = recon.get_num_subsets()
 num_iterations = recon.get_num_subiterations() 
 
 for iter in range(1,5):
-    recon.reconstruct(target);
+    MotionModel.setOffset(20.0)
+    recon.reconstruct(target)
 
     npimage = stirextra.to_numpy(target);
     plt.imshow(npimage[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {}'.format(iter))
