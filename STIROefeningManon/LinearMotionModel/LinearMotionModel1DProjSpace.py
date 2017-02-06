@@ -25,7 +25,7 @@ span = 1 # No axial compression
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
-nIt = 4 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -206,6 +206,7 @@ recon2.set_up(guessS)
 poissonobj2.set_recompute_sensitivity(False) 
 
 quadErrorSumListList = [] 
+guessPList = []
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
@@ -261,6 +262,11 @@ for iIt in range(nIt):
 
     quadErrorSumListList.append(quadErrorSums)
 
+    plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    numFigures += 1 
+    plt.close()
+
     #_________________________MOTION COMPENSATION_______________________________
     MotionModel.setOffset(offsetFound)     
     #MotionModel.setOffset(0.0) 
@@ -277,16 +283,28 @@ for iIt in range(nIt):
 
     guessP = (reconFrame2P + reconFrame1P)/2
 
-    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction')
+    guessPList.append(guessP)
+
+    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.axis('off')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
     numFigures += 1
     plt.close()
 
+numFigures = 12 
+plt.figure(figsize = (23.0, 18.0)) 
+for i in range(len(guessPList)):
+    plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
+plt.suptitle('Motion compensated OSMAPOSL reconstruction')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels, offsetFound))
+numFigures += 1 
+plt.close()
+
 for i in range(len(quadErrorSumListList)): 
-    plt.plot(offSets, quadErrorSumListList[i]), plt.title('Quadratic error vs. offset')
+    plt.plot(offSets, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
-plt.show() 
+plt.close()
 
 
 #_________________________SINUSOIDAL MOTION_______________________________
