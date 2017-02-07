@@ -23,7 +23,7 @@ nRings = 1
 nLOR = 10 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 10; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueShiftPixels = 30; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
@@ -67,9 +67,6 @@ elif (phantom == 'Shepp-Logan'):
     tmpX = np.zeros((np.shape(image)[0], 50))
     image = np.concatenate((tmpX, image), axis = 1)
     image = np.concatenate((image, tmpX), axis = 1)
-
-if (noise): 
-    image = sp.random.poisson(image)
 
 # Image shape 
 Nx = np.shape(image)[1] 
@@ -144,6 +141,8 @@ forwardprojector.forward_project(measurement, phantomS[0])
 measurement.write_to_file('sinoMeas_1.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
+if (noise): 
+    measurementP = sp.random.poisson(measurementP)
 measurementListP.append(measurementP) 
 
 ## Second time frame 
@@ -152,6 +151,8 @@ forwardprojector.forward_project(measurement, phantomS[1])
 measurement.write_to_file('sinoMeas_2.hs')
 measurementS = measurement.get_segment_by_sinogram(0)
 measurementP = stirextra.to_numpy(measurementS)
+if (noise): 
+    measurementP = sp.random.poisson(measurementP)
 measurementListP.append(measurementP) 
 
 
@@ -207,6 +208,8 @@ poissonobj2.set_recompute_sensitivity(False)
 
 quadErrorSumListList = [] 
 guessPList = []
+offsetFoundList = []
+quadErrorSumFoundList = []
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
@@ -214,7 +217,7 @@ for iIt in range(nIt):
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftPixels/2-4,trueShiftPixels/2+5,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    offSets = range(trueShiftPixels/2-10,trueShiftPixels/2+11,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
 
     for offset in offSets: 
         projectionPList = []
@@ -259,10 +262,13 @@ for iIt in range(nIt):
     for i in range(len(quadErrorSumList)): 
         if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
             offsetFound = quadErrorSumList[i]['offset']
+            offsetFoundList.append(offsetFound)
+            quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
+            quadErrorSumFoundList.append(quadErrorSumFound) 
 
     quadErrorSumListList.append(quadErrorSums)
 
-    plt.plot(offSets, quadErrorSums), plt.title('Quadratic error vs. offset')
+    plt.plot(offSets, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
     numFigures += 1 
     plt.close()
@@ -290,7 +296,6 @@ for iIt in range(nIt):
     numFigures += 1
     plt.close()
 
-numFigures = 12 
 plt.figure(figsize = (23.0, 18.0)) 
 for i in range(len(guessPList)):
     plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
@@ -300,7 +305,9 @@ numFigures += 1
 plt.close()
 
 for i in range(len(quadErrorSumListList)): 
+    plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
     plt.plot(offSets, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+    plt.axvline(trueShiftPixels/2, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
