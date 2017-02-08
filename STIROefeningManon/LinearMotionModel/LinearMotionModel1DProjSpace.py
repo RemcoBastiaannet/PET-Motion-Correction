@@ -155,6 +155,13 @@ if (noise):
     measurementP = sp.random.poisson(measurementP)
 measurementListP.append(measurementP) 
 
+numFigures = 14
+plt.subplot(1,2,1), plt.imshow(measurementListP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF0')
+plt.subplot(1,2,2), plt.imshow(measurementListP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF1')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Measurements.png'.format(numFigures, trueShiftPixels)) 
+numFigures += 1 
+plt.close()
+
 
 
 #_________________________GUESS_______________________________
