@@ -23,7 +23,7 @@ nRings = 1
 nLOR = 10 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 30; # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 
@@ -31,11 +31,13 @@ phantom = 'Shepp-Logan'
 #phantom = 'Block'
 #noise = True
 noise = False
-motion = 'Step' 
+#motion = 'Step' 
+motion = 'Sine' 
 
 # Make sure all possible directories exist! 
 figSaveDir = './Figures/Sigar/'
 if (motion == 'Step'): figSaveDir += 'Step/'
+elif (motion == 'Sine'): figSaveDir += 'Sine/'
 if (phantom == 'Block'): figSaveDir += 'Block/'
 elif (phantom == 'Shepp-Logan'): figSaveDir += 'Shepp-Logan/'
 if (noise): figSaveDir += 'Noise/'
@@ -73,29 +75,69 @@ Nx = np.shape(image)[1]
 Ny = np.shape(image)[0] 
 
 # Step function 
-nFrames = 2 
-for iFrame in range(nFrames): 
-    shift = iFrame*trueShiftPixels
-    tmp = np.zeros((1, Ny, Nx))
-    tmp[0] = image  
+if (motion == 'Step'): 
+    nFrames = 2 
+    for iFrame in range(nFrames): 
+        shift = iFrame*trueShiftPixels
+        tmp = np.zeros((1, Ny, Nx))
+        tmp[0] = image  
 
-    if shift > 0: 
-        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
-        tmp[0, 0:shift, :] = 0
+        if shift > 0: 
+            tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+            tmp[0, 0:shift, :] = 0
        
-    if shift < 0: 
-        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
-        tmp[0, (Ny+shift):Ny, :] = 0
+        if shift < 0: 
+            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+            tmp[0, (Ny+shift):Ny, :] = 0
 
-    phantomP.append(tmp) 
-originalImageP = phantomP[0]
+        phantomP.append(tmp) 
+    originalImageP = phantomP[0]
 
-for i in range(nFrames):    
-    plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.suptitle('Phantom')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
-numFigures += 1 
-plt.close() 
+    for i in range(nFrames):    
+        plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+    plt.suptitle('Phantom')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
+    numFigures += 1 
+    plt.close() 
+
+# Sinusoidal motion
+if (motion == 'Sine'): 
+    nFrames = 30
+    nCycles = 3
+    shiftList = [] 
+    for iFrame in range(nFrames): 
+        shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
+        shiftList.append(shift) 
+        tmp = np.zeros((1, Ny, Nx))
+        tmp[0] = image  
+    
+        if shift > 0: 
+            tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
+            tmp[0, 0:shift, :] = 0
+       
+        if shift < 0: 
+            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+            tmp[0, (Ny+shift):Ny, :] = 0
+
+        phantomP.append(tmp) 
+    originalImageP = phantomP[0]
+
+    plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftPixels))
+    numFigures += 1 
+    plt.close()
+
+    for i in range(nFrames):    
+        plt.figure(figsize=(5.0, 5.0))
+        plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftPixels, i))
+    
+    plt.figure(figsize=(23.0, 21.0))
+    for i in range(nFrames):    
+        plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+    plt.suptitle('Phantom')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
+
 
 # STIR 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -155,7 +197,6 @@ if (noise):
     measurementP = sp.random.poisson(measurementP)
 measurementListP.append(measurementP) 
 
-numFigures = 14
 plt.subplot(1,2,1), plt.imshow(measurementListP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF0')
 plt.subplot(1,2,2), plt.imshow(measurementListP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF1')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Measurements.png'.format(numFigures, trueShiftPixels)) 
@@ -217,6 +258,7 @@ quadErrorSumListList = []
 guessPList = []
 offsetFoundList = []
 quadErrorSumFoundList = []
+
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
     fillStirSpace(guessS, guessP)
@@ -319,49 +361,6 @@ plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close()
-
-
-#_________________________SINUSOIDAL MOTION_______________________________
-'''
-nFrames = 30
-nCycles = 3 # Wordt nu nog even niet gebruikt 
-shiftList = [] 
-for iFrame in range(nFrames): 
-    shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
-    shiftList.append(shift) 
-    tmp = np.zeros((1, Ny, Nx))
-    tmp[0] = image  
-    
-    if shift > 0: 
-        tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
-        tmp[0, 0:shift, :] = 0
-       
-    if shift < 0: 
-        tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
-        tmp[0, (Ny+shift):Ny, :] = 0
-
-    phantomP.append(tmp) 
-originalImageP = phantomP[0]
-
-plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.savefig('./Plaatjes/shifts.png')
-plt.close()
-
-nFrames = 30 
-for i in range(nFrames):    
-    plt.figure(figsize=(5.0, 5.0))
-    plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-    plt.savefig('./Plaatjes/Plaatjes_voor_movieSinusAllFrames/sinusFrame_{}.png'.format(i))
-    
-nFrames = 30
-plt.figure(figsize=(23.0, 21.0))
-for i in range(nFrames):    
-    plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-plt.suptitle('Phantom')
-plt.savefig('./Plaatjes/sinusAllFrames.png')
-'''
-
-
 
 
 #_________________________GUESS PERFECT SHEPP-LOGAN_______________________________
