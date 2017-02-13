@@ -26,7 +26,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
-nFrames = 16
+nFrames = 10
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -130,12 +130,16 @@ if (motion == 'Sine'):
         plt.figure(figsize=(5.0, 5.0))
         plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftPixels, i))
+        numFigures += 1 
+        plt.close() 
     
     plt.figure(figsize=(23.0, 21.0))
     for i in range(nFrames):    
         plt.subplot(2,nFrames/2+1,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
     plt.suptitle('Phantom')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
+    numFigures += 1 
+    plt.close() 
 
 
 # STIR 
@@ -187,8 +191,79 @@ numFigures += 1
 plt.close()
 
 
+#_________________________CONFIG FILES_______________________________ 
+nFrames = 1
+for i in range(nFrames): 
+    file = open('config_Proj_{}.par'.format(i+1), 'w')
+    file.write('OSMAPOSLParameters := \n') 
+    file.write('objective function type:= PoissonLogLikelihoodWithLinearModelForMeanAndProjData \n') 
+    file.write('PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:= \n')
+    file.write('input file := sinoMeas_{}.hs \n'.format(i+1))
+    file.write('end PoissonLogLikelihoodWithLinearModelForMeanAndProjData Parameters:= \n')
+    file.write('initial estimate:= some_image \n')
+    file.write('output filename prefix := output_config_Proj_{} \n'.format(i+1))
+    file.write('number of subsets:= 1 \n')
+    file.write('number of subiterations:= 1 \n')
+    file.write('Save estimates at subiteration intervals:= 1 \n')
+    file.write('END := \n')
+
+
 #_________________________GUESS_______________________________
-'''Negeer voor nu het initial estimate'''
+#Negeer voor nu het initial estimate
+nFrames = 2 
+projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+MotionModel.setOffset(0.0)
+initialGuessPList = []
+for i in range(nFrames): 
+    reconGuessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+    reconGuessS.fill(1) # moet er staan
+
+    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_{}.par'.format(i+1)) # Let op: die config files worden niet automatisch gemaakt! 
+    recon.set_up(reconGuessS)
+    recon.reconstruct(reconGuessS)
+    initialGuessPtmp = stirextra.to_numpy(reconGuessS)
+    initialGuessPList.append(initialGuessPtmp) 
+
+guessP = np.mean(initialGuessPList, axis = 0)
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+numFigures += 1 
+plt.close() 
+
+
+
+
+
+
+guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+
+fillStirSpace(guessS, guessP)
+
+recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
+poissonobj1 = recon1.get_objective_function()
+poissonobj1.set_recompute_sensitivity(True)
+recon1.set_up(guessS)
+poissonobj1.set_recompute_sensitivity(False) 
+
+recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
+poissonobj2 = recon2.get_objective_function()
+poissonobj2.set_recompute_sensitivity(True)
+recon2.set_up(guessS)
+poissonobj2.set_recompute_sensitivity(False) 
+
+quadErrorSumListList = [] 
+guessPList = []
+offsetFoundList = []
+quadErrorSumFoundList = []
+
+
+'''
+#_________________________GUESS_______________________________
+#Negeer voor nu het initial estimate
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
 reconGuess1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -240,6 +315,8 @@ quadErrorSumListList = []
 guessPList = []
 offsetFoundList = []
 quadErrorSumFoundList = []
+'''
+
 
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt):
