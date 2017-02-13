@@ -192,7 +192,6 @@ plt.close()
 
 
 #_________________________CONFIG FILES_______________________________ 
-nFrames = 1
 for i in range(nFrames): 
     file = open('config_Proj_{}.par'.format(i+1), 'w')
     file.write('OSMAPOSLParameters := \n') 
@@ -206,11 +205,11 @@ for i in range(nFrames):
     file.write('number of subiterations:= 1 \n')
     file.write('Save estimates at subiteration intervals:= 1 \n')
     file.write('END := \n')
+    file.close() 
 
 
 #_________________________GUESS_______________________________
 #Negeer voor nu het initial estimate
-nFrames = 2 
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 MotionModel.setOffset(0.0)
 initialGuessPList = []
