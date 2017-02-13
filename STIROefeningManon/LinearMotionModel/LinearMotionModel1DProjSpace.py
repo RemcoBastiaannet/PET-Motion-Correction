@@ -233,88 +233,24 @@ plt.close()
 
 
 
-
-
-
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
 fillStirSpace(guessS, guessP)
 
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-poissonobj1 = recon1.get_objective_function()
-poissonobj1.set_recompute_sensitivity(True)
-recon1.set_up(guessS)
-poissonobj1.set_recompute_sensitivity(False) 
-
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-poissonobj2 = recon2.get_objective_function()
-poissonobj2.set_recompute_sensitivity(True)
-recon2.set_up(guessS)
-poissonobj2.set_recompute_sensitivity(False) 
+reconList = []
+for i in range(nFrames): 
+    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_{}.par'.format(i+1))
+    poissonobj = recon.get_objective_function()
+    poissonobj.set_recompute_sensitivity(True)
+    recon.set_up(guessS)
+    poissonobj.set_recompute_sensitivity(False) 
+    reconList.append(recon) 
 
 quadErrorSumListList = [] 
 guessPList = []
 offsetFoundList = []
 quadErrorSumFoundList = []
-
-
-'''
-#_________________________GUESS_______________________________
-#Negeer voor nu het initial estimate
-projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-
-reconGuess1S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-reconGuess2S = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-MotionModel.setOffset(0.0)
-reconGuess1S.fill(1) # moet er staan
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-recon1.set_up(reconGuess1S)
-recon1.reconstruct(reconGuess1S)
-
-MotionModel.setOffset(0.0)
-reconGuess2S.fill(1) # moet er staan
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-recon2.set_up(reconGuess2S)
-recon2.reconstruct(reconGuess2S)
-
-guess1P = stirextra.to_numpy(reconGuess1S)
-guess2P = stirextra.to_numpy(reconGuess2S)
-guessP = 0.5*(guess1P + guess2P)
-plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
-numFigures += 1 
-plt.close() 
-
-guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-fillStirSpace(guessS, guessP)
-
-recon1 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_1.par')
-poissonobj1 = recon1.get_objective_function()
-poissonobj1.set_recompute_sensitivity(True)
-recon1.set_up(guessS)
-poissonobj1.set_recompute_sensitivity(False) 
-
-recon2 = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_2.par')
-poissonobj2 = recon2.get_objective_function()
-poissonobj2.set_recompute_sensitivity(True)
-recon2.set_up(guessS)
-poissonobj2.set_recompute_sensitivity(False) 
-
-quadErrorSumListList = [] 
-guessPList = []
-offsetFoundList = []
-quadErrorSumFoundList = []
-'''
 
 
 #_________________________NESTED EM LOOP_______________________________
@@ -383,11 +319,11 @@ for iIt in range(nIt):
     #_________________________MOTION COMPENSATION_______________________________
     MotionModel.setOffset(offsetFound)     
     #MotionModel.setOffset(0.0) 
-    recon1.reconstruct(guessS)
+    reconList[0].reconstruct(guessS)
 
     MotionModel.setOffset(-offsetFound)     
     #MotionModel.setOffset(0.0) 
-    recon2.reconstruct(guessS)
+    reconList[1].reconstruct(guessS)
 
     reconFrame1P = stirextra.to_numpy(guessS)
     reconFrame1P[np.isnan(reconFrame1P)] = 0 # Door het verschuiven van de reconruimte schuift er een deel het beeld in waar je geen informatie over hebt, deze is leeg, om problemen te voorkomen kun je dit beter 0 maken.
