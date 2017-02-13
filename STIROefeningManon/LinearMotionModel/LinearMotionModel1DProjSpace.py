@@ -26,6 +26,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nFrames = 16
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -76,7 +77,7 @@ Ny = np.shape(image)[0]
 
 # Step function 
 if (motion == 'Step'): 
-    nFrames = 2 
+    nFrames = 2
     for iFrame in range(nFrames): 
         shift = iFrame*trueShiftPixels
         tmp = np.zeros((1, Ny, Nx))
@@ -101,12 +102,10 @@ if (motion == 'Step'):
     plt.close() 
 
 # Sinusoidal motion
-if (motion == 'Sine'): 
-    nFrames = 30
-    nCycles = 3
+if (motion == 'Sine'):
     shiftList = [] 
     for iFrame in range(nFrames): 
-        shift = int(math.sin(nCycles*2*math.pi*iFrame/(nFrames-1))*trueShiftPixels) # nFrames-1 since iFrame never equals nFrame
+        shift = int(trueShiftPixels * math.sin(2*math.pi*iFrame/9)) # nFrames-1 since iFrame never equals nFrame
         shiftList.append(shift) 
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image  
@@ -134,7 +133,7 @@ if (motion == 'Sine'):
     
     plt.figure(figsize=(23.0, 21.0))
     for i in range(nFrames):    
-        plt.subplot(3,10,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
+        plt.subplot(2,nFrames/2+1,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
     plt.suptitle('Phantom')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
 
@@ -146,18 +145,13 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 fillStirSpace(originalImageS, originalImageP)
 
 phantomS = []
-
-image1S      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-fillStirSpace(image1S, phantomP[0])
-phantomS.append(image1S)
-
-image2S      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-fillStirSpace(image2S, phantomP[1])
-phantomS.append(image2S)
+for i in range(nFrames): 
+    imageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
+    fillStirSpace(imageS, phantomP[i])
+    phantomS.append(imageS)
+    del(imageS) 
 
 
 #_______________________PROJ MATRIX AND PROJECTORS______________________
@@ -176,33 +170,21 @@ backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 #_________________________MEASUREMENT_______________________________
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 measurementListP = [] 
+MotionModel.setOffset(0.0) # De beweging zit al in phantomS[i] 
 
-## First time frame 
-MotionModel.setOffset(0.0)
-forwardprojector.forward_project(measurement, phantomS[0])
-measurement.write_to_file('sinoMeas_1.hs')
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-if (noise): 
-    measurementP = sp.random.poisson(measurementP)
-measurementListP.append(measurementP) 
+for i in range(nFrames):     
+    forwardprojector.forward_project(measurement, phantomS[i])
+    measurement.write_to_file('sinoMeas_{}.hs'.format(i+1))
+    measurementS = measurement.get_segment_by_sinogram(0)
+    measurementP = stirextra.to_numpy(measurementS)
+    if (noise): 
+        measurementP = sp.random.poisson(measurementP)
+    measurementListP.append(measurementP) 
+    plt.subplot(2,nFrames/2+1,i+1), plt.imshow(measurementP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF0')
 
-## Second time frame 
-MotionModel.setOffset(0.0) # Beweging zit al in het plaatje 
-forwardprojector.forward_project(measurement, phantomS[1])
-measurement.write_to_file('sinoMeas_2.hs')
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-if (noise): 
-    measurementP = sp.random.poisson(measurementP)
-measurementListP.append(measurementP) 
-
-plt.subplot(1,2,1), plt.imshow(measurementListP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF0')
-plt.subplot(1,2,2), plt.imshow(measurementListP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF1')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Measurements.png'.format(numFigures, trueShiftPixels)) 
 numFigures += 1 
 plt.close()
-
 
 
 #_________________________GUESS_______________________________
