@@ -26,7 +26,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 0 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
-nFrames = 10
+nFrames = 10 
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -120,6 +120,8 @@ if (motion == 'Sine'):
 
         phantomP.append(tmp) 
     originalImageP = phantomP[0]
+
+    surrogateSignal = [shiftList[i] + 1 for i in range(len(shiftList))]
 
     plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftPixels))
@@ -232,7 +234,7 @@ numFigures += 1
 plt.close() 
 
 
-
+## Could not yet test this part thoroughly!! 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
@@ -249,7 +251,7 @@ for i in range(nFrames):
 
 quadErrorSumListList = [] 
 guessPList = []
-offsetFoundList = []
+par1FoundList = []
 quadErrorSumFoundList = []
 
 
@@ -260,82 +262,53 @@ for iIt in range(nIt):
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftPixels/2-10,trueShiftPixels/2+11,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
-
-    for offset in offSets: 
+    par1List = [float(range(6, 15, 2)[i])*0.1 for i in range(5)]
+    
+    for par1 in par1List: 
         projectionPList = []
 
-        MotionModel.setOffset(+offset) # Is this also the right sign if the real shift is negative? 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_1.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
-
-        MotionModel.setOffset(-offset) # Is this also the right sign if the real shift is negative? 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_2.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
-
-        quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
+        quadErrorSum = 0 
+        for i in range(nFrames): 
+            MotionModel.setOffset(surrogateSignal[i] + par1) 
+            forwardprojector.forward_project(projection, guessS)
+            projection.write_to_file('sino_{}.hs'.format(i+1))
+            projectionS = projection.get_segment_by_sinogram(0)
+            projectionP = stirextra.to_numpy(projectionS)
+            projectionPList.append(projectionP)
+            quadErrorSum += np.sum((projectionP[0,:,:] - measurementListP[i][0,:,:])**2) 
     
-        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
-
-        '''
-        plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
-        plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
-        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt)) 
-        numFigures += 1 
-        plt.close() 
-
-        plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
-        plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
-        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
-        numFigures += 1 
-        plt.close() 
-        '''
+        quadErrorSumList.append({'par1' : par1, 'quadErrorSum' : quadErrorSum})
 
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
         if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
-            offsetFound = quadErrorSumList[i]['offset']
-            offsetFoundList.append(offsetFound)
+            par1Found = quadErrorSumList[i]['par1']
+            par1FoundList.append(par1Found)
             quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
             quadErrorSumFoundList.append(quadErrorSumFound) 
 
     quadErrorSumListList.append(quadErrorSums)
 
-    plt.plot(offSets, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
+    plt.plot(par1List, quadErrorSums, 'b-', par1Found, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
     numFigures += 1 
     plt.close()
 
     #_________________________MOTION COMPENSATION_______________________________
-    MotionModel.setOffset(offsetFound)     
-    #MotionModel.setOffset(0.0) 
-    reconList[0].reconstruct(guessS)
-
-    MotionModel.setOffset(-offsetFound)     
-    #MotionModel.setOffset(0.0) 
-    reconList[1].reconstruct(guessS)
-
-    reconFrame1P = stirextra.to_numpy(guessS)
-    reconFrame1P[np.isnan(reconFrame1P)] = 0 # Door het verschuiven van de reconruimte schuift er een deel het beeld in waar je geen informatie over hebt, deze is leeg, om problemen te voorkomen kun je dit beter 0 maken.
-    reconFrame2P = stirextra.to_numpy(guessS)
-    reconFrame2P[np.isnan(reconFrame2P)] = 0
-
-    guessP = (reconFrame2P + reconFrame1P)/2
+    reconFramePList = []
+    for i in range(nFrames): 
+        MotionModel.setOffset(surrogateSignal[i] + par1)     
+        reconList[i].reconstruct(guessS)
+        reconFrameP = stirextra.to_numpy(guessS) 
+        reconFrameP[np.isnan(reconFrameP)] = 0 # Door het verschuiven van de reconruimte schuift er een deel het beeld in waar je geen informatie over hebt, deze is leeg, om problemen te voorkomen kun je dit beter 0 maken.
+        reconFramePList.append(reconFrameP)
+    
+    guessP = np.mean(reconFramePList, axis = 0)
 
     guessPList.append(guessP)
 
     plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.axis('off')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_par1Found{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, par1Found, iIt))
     numFigures += 1
     plt.close()
 
@@ -343,13 +316,13 @@ plt.figure(figsize = (23.0, 18.0))
 for i in range(len(guessPList)):
     plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
 plt.suptitle('Motion compensated OSMAPOSL reconstruction')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels, offsetFound))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_par1Found{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels, par1Found))
 numFigures += 1 
 plt.close()
 
 for i in range(len(quadErrorSumListList)): 
-    plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
-    plt.plot(offSets, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+    plt.plot(par1FoundList, quadErrorSumFoundList, 'ro') 
+    plt.plot(par1List, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
     plt.axvline(trueShiftPixels/2, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
