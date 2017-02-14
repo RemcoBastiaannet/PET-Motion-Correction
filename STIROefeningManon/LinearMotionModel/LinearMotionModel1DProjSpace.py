@@ -233,6 +233,9 @@ plt.close()
 
 
 
+
+nFrames = 2
+
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
                     stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
@@ -251,6 +254,8 @@ quadErrorSumListList = []
 guessPList = []
 offsetFoundList = []
 quadErrorSumFoundList = []
+
+guessPList.append(guessP) # Dan zit je initial guess er ook in! 
 
 
 #_________________________NESTED EM LOOP_______________________________
@@ -334,16 +339,16 @@ for iIt in range(nIt):
 
     guessPList.append(guessP)
 
-    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction'), plt.axis('off')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, offsetFound, iIt))
+    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction, offset: {}'.format(offsetFound)), plt.axis('off')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
     numFigures += 1
     plt.close()
 
 plt.figure(figsize = (23.0, 18.0)) 
 for i in range(len(guessPList)):
     plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
-plt.suptitle('Motion compensated OSMAPOSL reconstruction')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_OffsetFound{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels, offsetFound))
+plt.suptitle('Motion compensated OSMAPOSL reconstruction, offset: {}'.format(offsetFound))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels))
 numFigures += 1 
 plt.close()
 
