@@ -24,9 +24,9 @@ nLOR = 10
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
 trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-numFigures = 0 
+numFigures = 18 
 nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
-nFrames = 10
+nFrames = 2
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -234,7 +234,7 @@ plt.close()
 
 
 
-nFrames = 2
+
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -270,41 +270,18 @@ for iIt in range(nIt):
     for offset in offSets: 
         projectionPList = []
 
-        MotionModel.setOffset(+offset) # Is this also the right sign if the real shift is negative? 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_1.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
-
-        MotionModel.setOffset(-offset) # Is this also the right sign if the real shift is negative? 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_2.hs')
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        projectionPList.append(projectionP)
+        surTMP = [1, -1] 
+        for iFrame in range(nFrames): 
+            MotionModel.setOffset(surTMP[iFrame]*offset) # Is this also the right sign if the real shift is negative? 
+            forwardprojector.forward_project(projection, guessS)
+            projection.write_to_file('sino_{}.hs'.format(iFrame+1))
+            projectionS = projection.get_segment_by_sinogram(0)
+            projectionP = stirextra.to_numpy(projectionS)
+            projectionPList.append(projectionP)
 
         quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
     
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
-
-        '''
-        plt.subplot(1,3,1), plt.imshow(projectionPList[0][0,:,:]), plt.title('Guess with + offset')
-        plt.subplot(1,3,2), plt.imshow(measurementListP[0][0,:,:]), plt.title('Measurement')
-        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[0][0,:,:]-projectionPList[0][0,:,:])), plt.title('Difference')
-        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_FirstTimeFrameProjection.png'.format(numFigures, trueShiftPixels, offset, iIt)) 
-        numFigures += 1 
-        plt.close() 
-
-        plt.subplot(1,3,1), plt.imshow(projectionPList[1][0,:,:]), plt.title('Guess with - offset')
-        plt.subplot(1,3,2), plt.imshow(measurementListP[1][0,:,:]), plt.title('Measurement')
-        plt.subplot(1,3,3), plt.imshow(abs(measurementListP[1][0,:,:]-projectionPList[1][0,:,:])), plt.title('Difference')
-        plt.suptitle('Motion model optimization, offset:  {}, true shift: {}'.format(offset, trueShiftPixels))
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Offset{}_Iteration{}_SecondTimeFrameProjection.png'.format(numFigures+1, trueShiftPixels, offset, iIt))
-        numFigures += 1 
-        plt.close() 
-        '''
 
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
@@ -355,7 +332,7 @@ plt.close()
 for i in range(len(quadErrorSumListList)): 
     plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
     plt.plot(offSets, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
-    plt.axvline(trueShiftPixels/2, color='k', linestyle='--')
+    plt.axvline(0.5*shiftList[1], color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
 numFigures += 1 
