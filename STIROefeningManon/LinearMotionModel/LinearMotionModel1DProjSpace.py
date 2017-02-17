@@ -26,7 +26,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 18 
 nIt = 3 # number of nested EM iterations
-nFrames = 4
+nFrames = 2
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -278,7 +278,9 @@ for iIt in range(nIt):
             projectionP = stirextra.to_numpy(projectionS)
             projectionPList.append(projectionP)
 
-        quadErrorSum = np.sum((projectionPList[0][0,:,:] - measurementListP[0][0,:,:])**2) + np.sum((projectionPList[1][0,:,:] - measurementListP[1][0,:,:])**2)
+        quadErrorSum = 0 
+        for iFrame in range(nFrames): 
+            quadErrorSum += np.sum((projectionPList[iFrame][0,:,:] - measurementListP[iFrame][0,:,:])**2)
     
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
