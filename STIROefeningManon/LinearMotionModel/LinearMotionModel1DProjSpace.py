@@ -23,9 +23,9 @@ nRings = 1
 nLOR = 10 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftPixels = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueShiftAmplitude = -30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 18 
-nIt = 5 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
+nIt = 6 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
 nFrames = 2
 
 phantom = 'Shepp-Logan' 
@@ -79,7 +79,7 @@ Ny = np.shape(image)[0]
 if (motion == 'Step'): 
     nFrames = 2
     for iFrame in range(nFrames): 
-        shift = iFrame*trueShiftPixels
+        shift = iFrame*trueShiftAmplitude
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image  
 
@@ -97,7 +97,7 @@ if (motion == 'Step'):
     for i in range(nFrames):    
         plt.subplot(1,2,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
     plt.suptitle('Phantom')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude))
     numFigures += 1 
     plt.close() 
 
@@ -105,7 +105,7 @@ if (motion == 'Step'):
 if (motion == 'Sine'):
     shiftList = [] 
     for iFrame in range(nFrames): 
-        shift = int(trueShiftPixels * math.sin(2*math.pi*iFrame/9)) # nFrames-1 since iFrame never equals nFrame
+        shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)) # nFrames-1 since iFrame never equals nFrame
         shiftList.append(shift) 
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image  
@@ -122,14 +122,14 @@ if (motion == 'Sine'):
     originalImageP = phantomP[0]
 
     plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftPixels))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude))
     numFigures += 1 
     plt.close()
 
     for i in range(nFrames):    
         plt.figure(figsize=(5.0, 5.0))
         plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftPixels, i))
+        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftAmplitude, i))
         numFigures += 1 
         plt.close() 
     
@@ -137,7 +137,7 @@ if (motion == 'Sine'):
     for i in range(nFrames):    
         plt.subplot(2,nFrames/2+1,i+1), plt.title('{0}'.format(i)), plt.imshow(phantomP[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0) 
     plt.suptitle('Phantom')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftPixels))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude))
     numFigures += 1 
     plt.close() 
 
@@ -186,7 +186,7 @@ for i in range(nFrames):
     measurementListP.append(measurementP) 
     plt.subplot(2,nFrames/2+1,i+1), plt.imshow(measurementP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Meas. TF0')
 
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Measurements.png'.format(numFigures, trueShiftPixels)) 
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Measurements.png'.format(numFigures, trueShiftAmplitude)) 
 numFigures += 1 
 plt.close()
 
@@ -227,14 +227,9 @@ for i in range(nFrames):
 
 guessP = np.mean(initialGuessPList, axis = 0)
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftPixels))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close() 
-
-
-
-
-
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                     stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -265,7 +260,7 @@ for iIt in range(nIt):
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftPixels/2-10,trueShiftPixels/2+11,1) # Let op: als de shift negatief is, moeten 0 en trueShiftPixels andersom staan! 
+    offSets = range(trueShiftAmplitude/2-10,trueShiftAmplitude/2+11,1) 
 
     for offset in offSets: 
         projectionPList = []
@@ -294,30 +289,32 @@ for iIt in range(nIt):
     quadErrorSumListList.append(quadErrorSums)
 
     plt.plot(offSets, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
     numFigures += 1 
     plt.close()
 
     #_________________________MOTION COMPENSATION_______________________________
-    MotionModel.setOffset(offsetFound)     
-    #MotionModel.setOffset(0.0) 
-    reconList[0].reconstruct(guessS)
+    for iFrame in range(nFrames): 
+        MotionModel.setOffset(surTMP[iFrame]*offsetFound) 
+        reconList[iFrame].reconstruct(guessS)
+    
+    reconFramePList = []
+    for iFrame in range(nFrames): 
+        reconFrameP = stirextra.to_numpy(guessS)
+        reconFrameP[np.isnan(reconFrameP)] = 0
+        reconFramePList.append(reconFrameP) 
 
-    MotionModel.setOffset(-offsetFound)     
-    #MotionModel.setOffset(0.0) 
-    reconList[1].reconstruct(guessS)
+    guessP = np.zeros(np.shape(originalImageP))
+    for iFrame in range(nFrames): 
+        guessP += reconFramePList[iFrame]
+    guessP /= len(reconFramePList)
 
-    reconFrame1P = stirextra.to_numpy(guessS)
-    reconFrame1P[np.isnan(reconFrame1P)] = 0 # Door het verschuiven van de reconruimte schuift er een deel het beeld in waar je geen informatie over hebt, deze is leeg, om problemen te voorkomen kun je dit beter 0 maken.
-    reconFrame2P = stirextra.to_numpy(guessS)
-    reconFrame2P[np.isnan(reconFrame2P)] = 0
-
-    guessP = (reconFrame2P + reconFrame1P)/2
+    #guessP = (reconFramePList[0] + reconFramePList[1])/2
 
     guessPList.append(guessP)
 
     plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction, offset: {}'.format(offsetFound)), plt.axis('off')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftPixels, iIt))
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
     numFigures += 1
     plt.close()
 
@@ -325,7 +322,7 @@ plt.figure(figsize = (23.0, 18.0))
 for i in range(len(guessPList)):
     plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
 plt.suptitle('Motion compensated OSMAPOSL reconstruction, offset: {}'.format(offsetFound))
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecons'.format(numFigures, trueShiftPixels))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecons'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close()
 
@@ -334,7 +331,7 @@ for i in range(len(quadErrorSumListList)):
     plt.plot(offSets, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
     plt.axvline(0.5*shiftList[1], color='k', linestyle='--')
 plt.legend()
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftPixels))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close()
 
@@ -344,7 +341,7 @@ plt.close()
 ## 
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
-shift = int(0.5*iFrame*trueShiftPixels)
+shift = int(0.5*iFrame*trueShiftAmplitude)
 tmp = np.zeros((1, Ny, Nx))
 tmp[0] = image  
 
@@ -359,7 +356,7 @@ if shift < 0:
 guessP = tmp
 
 plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectInitialGuess.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/perfectInitialGuess.png'.format(trueShiftAmplitude))
 plt.close()
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -375,9 +372,9 @@ fillStirSpace(guessS, guessP)
 projection = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 
 guessP = np.zeros((1, 160,160))
-guessP[0, (65+trueShiftPixels/2):(95+trueShiftPixels/2), 65:95] = 1 
+guessP[0, (65+trueShiftAmplitude/2):(95+trueShiftAmplitude/2), 65:95] = 1 
 plt.imshow(guessP[0,:,:]), plt.title('Initial guess')
-plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/blokjeInitialGuess.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/Testen_shift_vinden/8_iteraties_{}_true_shift/blokjeInitialGuess.png'.format(trueShiftAmplitude))
 plt.close()
 
 guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -408,6 +405,6 @@ plt.close()
 
 for i in range(8): 
     plt.subplot(2,4,i+1), plt.imshow(testList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Iteration {0}'.format(i))
-plt.savefig('./Plaatjes/OSMAPOSLReconAfterIterations.png'.format(trueShiftPixels))
+plt.savefig('./Plaatjes/OSMAPOSLReconAfterIterations.png'.format(trueShiftAmplitude))
 plt.close() 
 '''
