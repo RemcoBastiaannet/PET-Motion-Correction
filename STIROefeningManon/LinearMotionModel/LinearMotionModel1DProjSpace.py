@@ -23,10 +23,10 @@ nRings = 1
 nLOR = 10 
 span = 1 # No axial compression  
 max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-trueShiftAmplitude = -30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 18 
-nIt = 6 # number of nested EM iterations (model, OSMAPOSL, model, OSMAPOSL, etc.) 
-nFrames = 2
+nIt = 3 # number of nested EM iterations
+nFrames = 4
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -63,7 +63,7 @@ elif (phantom == 'Shepp-Logan'):
     imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
     imageSmall = rescale(imageSmall, scale=0.4)
 
-    tmpY = np.zeros((50, np.shape(imageSmall)[1])) # extend image in the  y-direction, to prevent problems with shifting the image
+    tmpY = np.zeros((50, np.shape(imageSmall)[1])) 
     image = np.concatenate((tmpY, imageSmall), axis = 0)
     image = np.concatenate((image, tmpY), axis = 0)
 
@@ -88,7 +88,7 @@ if (motion == 'Step'):
             tmp[0, 0:shift, :] = 0
        
         if shift < 0: 
-            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] 
             tmp[0, (Ny+shift):Ny, :] = 0
 
         phantomP.append(tmp) 
@@ -105,7 +105,7 @@ if (motion == 'Step'):
 if (motion == 'Sine'):
     shiftList = [] 
     for iFrame in range(nFrames): 
-        shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)) # nFrames-1 since iFrame never equals nFrame
+        shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)) 
         shiftList.append(shift) 
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image  
@@ -115,7 +115,7 @@ if (motion == 'Sine'):
             tmp[0, 0:shift, :] = 0
        
         if shift < 0: 
-            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] # Be careful with signs as the shift itself is now already negative 
+            tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :]
             tmp[0, (Ny+shift):Ny, :] = 0
 
         phantomP.append(tmp) 
@@ -174,7 +174,7 @@ backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
 #_________________________MEASUREMENT_______________________________
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
 measurementListP = [] 
-MotionModel.setOffset(0.0) # De beweging zit al in phantomS[i] 
+MotionModel.setOffset(0.0) 
 
 for i in range(nFrames):     
     forwardprojector.forward_project(measurement, phantomS[i])
@@ -219,7 +219,7 @@ for i in range(nFrames):
                         stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
     reconGuessS.fill(1) # moet er staan
 
-    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_{}.par'.format(i+1)) # Let op: die config files worden niet automatisch gemaakt! 
+    recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_{}.par'.format(i+1)) 
     recon.set_up(reconGuessS)
     recon.reconstruct(reconGuessS)
     initialGuessPtmp = stirextra.to_numpy(reconGuessS)
@@ -250,7 +250,7 @@ guessPList = []
 offsetFoundList = []
 quadErrorSumFoundList = []
 
-guessPList.append(guessP) # Dan zit je initial guess er ook in! 
+guessPList.append(guessP)
 
 
 #_________________________NESTED EM LOOP_______________________________
