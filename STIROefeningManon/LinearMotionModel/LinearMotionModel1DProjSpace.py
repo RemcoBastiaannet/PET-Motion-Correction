@@ -301,6 +301,8 @@ for iIt in range(nIt):
     plt.close()
 
     #_________________________MOTION COMPENSATION_______________________________
+    # surSignal = [0, 1] 
+    # offsetFound = 24 # offsetFound na de eerste iteratie was 12, dus dit werkt blijkbaar even goed! 
     for iFrame in range(nFrames): 
         MotionModel.setOffset(surTMP[iFrame]*offsetFound) 
         reconList[iFrame].reconstruct(guessS)
