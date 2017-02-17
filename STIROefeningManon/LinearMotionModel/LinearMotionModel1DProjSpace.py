@@ -27,6 +27,7 @@ trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worde
 numFigures = 18 
 nIt = 3 # number of nested EM iterations
 nFrames = 2
+trueOffset = 5
 
 phantom = 'Shepp-Logan' 
 #phantom = 'Block'
@@ -121,7 +122,7 @@ if (motion == 'Sine'):
         phantomP.append(tmp) 
     originalImageP = phantomP[0]
 
-    surSignal = [0.5*shiftList[i] for i in range(len(shiftList))] 
+    surSignal = [trueOffset + shiftList[i] for i in range(len(shiftList))] 
 
     plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
     plt.plot(range(nFrames), shiftList, label = 'True motion')
