@@ -121,7 +121,11 @@ if (motion == 'Sine'):
         phantomP.append(tmp) 
     originalImageP = phantomP[0]
 
-    plt.plot(shiftList), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+    surSignal = [0.5*shiftList[i] for i in range(len(shiftList))] 
+
+    plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+    plt.plot(range(nFrames), shiftList, label = 'True motion')
+    plt.legend(loc = 4)
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude))
     numFigures += 1 
     plt.close()
