@@ -236,13 +236,12 @@ plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures,
 numFigures += 1 
 plt.close() 
 
-guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                    stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                    stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-fillStirSpace(guessS, guessP)
-
 reconList = []
 for i in range(nFrames): 
+    guessS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
+                        stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
+                        stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+    fillStirSpace(guessS, guessP)
     recon = stir.OSMAPOSLReconstruction3DFloat(projmatrix, 'config_Proj_{}.par'.format(i+1))
     poissonobj = recon.get_objective_function()
     poissonobj.set_recompute_sensitivity(True)
