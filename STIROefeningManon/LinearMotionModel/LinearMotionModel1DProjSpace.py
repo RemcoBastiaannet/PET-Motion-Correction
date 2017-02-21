@@ -26,7 +26,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 numFigures = 18 
 nIt = 3 # number of nested EM iterations
-nFrames = 2
+nFrames = 5
 trueOffset = 5
 
 phantom = 'Shepp-Logan' 
@@ -122,7 +122,7 @@ if (motion == 'Sine'):
         phantomP.append(tmp) 
     originalImageP = phantomP[0]
 
-    surSignal = [trueOffset + shiftList[i] for i in range(len(shiftList))] 
+    surSignal = [0.5*shiftList[i] for i in range(len(shiftList))] 
 
     plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
     plt.plot(range(nFrames), shiftList, label = 'True motion')
@@ -186,6 +186,7 @@ for i in range(nFrames):
     measurement.write_to_file('sinoMeas_{}.hs'.format(i+1))
     measurementS = measurement.get_segment_by_sinogram(0)
     measurementP = stirextra.to_numpy(measurementS)
+    #measurementP /= np.sum(measurementP)
     if (noise): 
         measurementP = sp.random.poisson(measurementP)
     measurementListP.append(measurementP) 
@@ -231,7 +232,7 @@ for i in range(nFrames):
     initialGuessPList.append(initialGuessPtmp) 
 
 guessP = np.mean(initialGuessPList, axis = 0)
-plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Initial guess')
+plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = 0.5), plt.title('Initial guess')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close() 
@@ -264,19 +265,26 @@ for iIt in range(nIt):
     #_________________________MOTION MODEL OPTIMIZATION_______________________________
     quadErrorSumList = []
 
-    offSets = range(trueShiftAmplitude/2-10,trueShiftAmplitude/2+11,1) 
+    offSets = [-1, -2, -3]
 
     for offset in offSets: 
         projectionPList = []
 
-        surTMP = [1, -1] 
         for iFrame in range(nFrames): 
-            MotionModel.setOffset(surTMP[iFrame]*offset) # Is this also the right sign if the real shift is negative? 
+            MotionModel.setOffset(surSignal[iFrame]*offset) 
             forwardprojector.forward_project(projection, guessS)
             projection.write_to_file('sino_{}.hs'.format(iFrame+1))
             projectionS = projection.get_segment_by_sinogram(0)
             projectionP = stirextra.to_numpy(projectionS)
+            #projectionP /= np.sum(projectionP)
             projectionPList.append(projectionP)
+
+        plt.figure()
+        plt.subplot(1,2,1), plt.imshow(projectionPList[0][0,:,:]-measurementListP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None) 
+        plt.subplot(1,2,2), plt.imshow(projectionPList[1][0,:,:]-measurementListP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None)
+        plt.savefig(figSaveDir + 'Fig{}_TEST.png'.format(numFigures, trueShiftAmplitude)) 
+        numFigures += 1 
+        plt.close()
 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
@@ -303,8 +311,12 @@ for iIt in range(nIt):
     # surSignal = [0, 1] 
     # offsetFound = 24 # offsetFound na de eerste iteratie was 12, dus dit werkt blijkbaar even goed! 
     for iFrame in range(nFrames): 
-        MotionModel.setOffset(surTMP[iFrame]*offsetFound) 
+        MotionModel.setOffset(-surSignal[iFrame]*offsetFound) 
         reconList[iFrame].reconstruct(guessS)
+        tmp = stirextra.to_numpy(guessS)
+        tmp[np.isnan(tmp)] = 0
+        fillStirSpace(guessS, tmp)
+        
     
     reconFramePList = []
     for iFrame in range(nFrames): 
@@ -317,18 +329,22 @@ for iIt in range(nIt):
         guessP += reconFramePList[iFrame]
     guessP /= len(reconFramePList)
 
-    #guessP = (reconFramePList[0] + reconFramePList[1])/2
+    # Vanwege een probleempje met hoge pixelwaarden aan de rand van de recon space 
+    for iX in range(Nx): 
+        for iY in range(Ny): 
+            if ((iX-Nx/2)**2 + (iY-Ny/2)**2 > (min(Nx/2, Ny/2)-5)**2): 
+                guessP[0, iX, iY] = 0
 
     guessPList.append(guessP)
 
-    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.title('Motion corrected reconstruction, offset: {}'.format(offsetFound)), plt.axis('off')
+    plt.imshow(guessP[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = 0.5), plt.title('Motion corrected reconstruction, offset: {}'.format(offsetFound)), plt.axis('off')
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecon_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
     numFigures += 1
     plt.close()
 
 plt.figure(figsize = (23.0, 18.0)) 
 for i in range(len(guessPList)):
-    plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0), plt.axis('off')
+    plt.subplot(2, nIt/2+1, i+1), plt.title('Iteration {}'.format(i)), plt.imshow(guessPList[i][0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = 0.5), plt.axis('off')
 plt.suptitle('Motion compensated OSMAPOSL reconstruction, offset: {}'.format(offsetFound))
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_MotionCompensatedRecons'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
