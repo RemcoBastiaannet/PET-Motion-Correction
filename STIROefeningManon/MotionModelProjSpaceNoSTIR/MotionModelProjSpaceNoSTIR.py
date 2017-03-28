@@ -31,7 +31,7 @@ for i in range(128):
         if (i-40)*(i-40) + (j-40)*(j-40) + 10 < 30: 
             originalImageP[0, i, j] = 1 
 
-#plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
+plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
 
 # Stir data format instance with the size of the original image in python (not yet filled!) 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
@@ -132,10 +132,10 @@ for i in range(nIt):
     backprojector.back_project(normalizationS, normalizationSinogramS)
 
     normalizationP = stirextra.to_numpy(normalizationS)
-    if i == 0: plt.figure(6), plt.title('MLEM normalization'), plt.imshow(normalizationP[0,:,:]), plt.show()
+    #if i == 0: plt.figure(6), plt.title('MLEM normalization'), plt.imshow(normalizationP[0,:,:]), plt.show()
 
     diagonalProfile = normalizationP[0,:,:].diagonal()
-    if i == 0: plt.figure(7), plt.title('MLEM normalization diagonal'), plt.plot(diagonalProfile), plt.show()
+    #if i == 0: plt.figure(7), plt.title('MLEM normalization diagonal'), plt.plot(diagonalProfile), plt.show()
     #print diagonalProfile
 
     # Update guess 
