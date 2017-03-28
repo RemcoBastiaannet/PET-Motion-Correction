@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MLEMReconProject", "MLEMRec
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "LinearMotionModel", "LinearMotionModel\LinearMotionModel.pyproj", "{2AC47BDF-027A-4164-93B8-59293F26B413}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MotionModelProjSpaceNoSTIR", "MotionModelProjSpaceNoSTIR\MotionModelProjSpaceNoSTIR.pyproj", "{A1832C91-EAB8-411F-A923-2712BC698754}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x64.ActiveCfg = Release|Any CPU
 		{2AC47BDF-027A-4164-93B8-59293F26B413}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1832C91-EAB8-411F-A923-2712BC698754}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
