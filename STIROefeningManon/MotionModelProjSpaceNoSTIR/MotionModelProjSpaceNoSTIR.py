@@ -1,14 +1,15 @@
 import sys
-import stir
-import stirextra
+#import stir
+#import stirextra
 import pylab
 import numpy as np
 import os
 import time
 import matplotlib.pyplot as plt
-from StirSupport import *
+#from StirSupport import *
 from scipy.optimize import minimize
 
+'''
 nVoxelsXY = 256
 nRings = 1
 nLOR = 10
@@ -23,6 +24,7 @@ max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs
 
 #Setup projection data
 projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
+'''
 
 # Original image python dataformat  
 originalImageP = np.zeros((1, 128, 128)) # matrix 128 x 128 gevuld met 0'en
@@ -33,6 +35,7 @@ for i in range(128):
 
 plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
 
+'''
 # Stir data format instance with the size of the original image in python (not yet filled!) 
 originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
                 stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
@@ -40,7 +43,9 @@ originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
 
 # Filling the stir data format with the original image 
 fillStirSpace(originalImageS, originalImageP)
+'''
 
+'''
 # Initialize the projection matrix (using ray-tracing) 
 # Het motion model doet nu niets, maar is nodig omdat Stir anders flipt 
 MotionModel = stir.MotionModel() 
@@ -52,9 +57,11 @@ projmatrix.set_up(projdata_info, originalImageS)
 # Create projectors
 forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
 backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
+'''
 
 # Creating an instance for the sinogram (measurement), it is not yet filled 
 measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
+
 
 # Forward project originalImageS and store in measurement 
 forwardprojector.forward_project(measurement, originalImageS);  
