@@ -136,7 +136,7 @@ for i in range(nIt):
 
     diagonalProfile = normalizationP[0,:,:].diagonal()
     if i == 0: plt.figure(7), plt.title('MLEM normalization diagonal'), plt.plot(diagonalProfile), plt.show()
-    print diagonalProfile
+    #print diagonalProfile
 
     # Update guess 
     guessP = stirextra.to_numpy(guessS)
@@ -144,4 +144,4 @@ for i in range(nIt):
     guessP *= errorBackprP/normalizationP
 
     countIt = i+1 # counts the number of iterations (for nIt iterations, i = 0, ..., nIt-1)
-    #plt.figure(8), plt.title('Guess after {0} iteration(s)'.format(i+1)), plt.imshow(guessP[0,:,:]), plt.show()
+    plt.figure(8), plt.title('Guess after {0} iteration(s)'.format(i+1)), plt.imshow(guessP[0,:,:]), plt.show()

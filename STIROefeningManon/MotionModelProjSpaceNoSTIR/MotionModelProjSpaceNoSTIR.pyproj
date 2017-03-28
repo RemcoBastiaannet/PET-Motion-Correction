@@ -6,8 +6,7 @@
     <ProjectGuid>a1832c91-eab8-411f-a923-2712bc698754</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>MotionModelProjSpaceNoSTIR.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>MotionModelProjSpaceNoSTIR</Name>
