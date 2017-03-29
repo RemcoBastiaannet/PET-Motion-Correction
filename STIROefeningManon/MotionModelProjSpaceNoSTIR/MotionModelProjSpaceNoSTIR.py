@@ -1,118 +1,42 @@
 import sys
-#import stir
-#import stirextra
 import pylab
 import numpy as np
 import os
 import time
 import matplotlib.pyplot as plt
-#from StirSupport import *
 from scipy.optimize import minimize
+from skimage.transform import iradon, radon
 
-'''
-nVoxelsXY = 256
-nRings = 1
-nLOR = 10
-nFrames = 15
-nIt = 2 # number of MLEM iterations 
-
-#Now we setup the scanner
-scanner = stir.Scanner(stir.Scanner.Siemens_mMR)
-scanner.set_num_rings(nRings)
-span = 1 
-max_ring_diff = 0 # maximum ring difference between the rings of oblique LORs 
-
-#Setup projection data
-projdata_info = stir.ProjDataInfo.ProjDataInfoCTI(scanner, span, max_ring_diff, scanner.get_max_num_views(), scanner.get_max_num_non_arccorrected_bins(), False)
-'''
-
-# Original image python dataformat  
-originalImageP = np.zeros((1, 128, 128)) # matrix 128 x 128 gevuld met 0'en
+# Original image
+originalImage = np.zeros((128, 128)) # matrix 128 x 128 gevuld met 0'en
 for i in range(128): 
     for j in range(128): 
         if (i-40)*(i-40) + (j-40)*(j-40) + 10 < 30: 
-            originalImageP[0, i, j] = 1 
+            originalImage[i, j] = 1 
 
-plt.figure(1), plt.title('Original image'), plt.imshow(originalImageP[0,:,:]), plt.show()
+plt.figure(), plt.title('Original image'), plt.imshow(originalImage[:,:]), plt.show()
 
-'''
-# Stir data format instance with the size of the original image in python (not yet filled!) 
-originalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] )))  
-
-# Filling the stir data format with the original image 
-fillStirSpace(originalImageS, originalImageP)
-'''
-
-'''
-# Initialize the projection matrix (using ray-tracing) 
-# Het motion model doet nu niets, maar is nodig omdat Stir anders flipt 
-MotionModel = stir.MotionModel() 
-MotionModel.setOffset(0.0)
-projmatrix = stir.ProjMatrixByBinUsingRayTracing(MotionModel)
-projmatrix.set_num_tangential_LORs(nLOR)
-projmatrix.set_up(projdata_info, originalImageS)
-
-# Create projectors
-forwardprojector    = stir.ForwardProjectorByBinUsingProjMatrixByBin(projmatrix)
-backprojector       = stir.BackProjectorByBinUsingProjMatrixByBin(projmatrix)
-'''
-
-# Creating an instance for the sinogram (measurement), it is not yet filled 
-measurement = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-
-
-# Forward project originalImageS and store in measurement 
-forwardprojector.forward_project(measurement, originalImageS);  
-
-# Converting the stir sinogram to a numpy sinogram 
-measurementS = measurement.get_segment_by_sinogram(0)
-measurementP = stirextra.to_numpy(measurementS)
-
-#plt.figure(2), plt.title('Sinogram original image'), plt.imshow(measurementP[0,:,:]), plt.show()
-
-# Backprojecting the sinogram to get an image 
-finalImageS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
-
-backprojector.back_project(finalImageS, measurement) 
-finalImageP = stirextra.to_numpy(finalImageS)
-
-#plt.figure(3), plt.title('Backprojection original image'), plt.imshow(finalImageP[0,:,:]), plt.show()
-
-# MLEM reconstruction
+# Forward projection (measurement)
+iAngles = np.linspace(0, 360, 120)[:-1]
+measurement = radon(originalImage[:,:], iAngles)
+plt.figure(), plt.title('Measurement'), plt.imshow(measurement), plt.show()
 
 # Initial guess 
-guessP = np.ones(np.shape(originalImageP))
-guessS      = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
-                stir.FloatCartesianCoordinate3D(stir.make_FloatCoordinate(0,0,0)),
-                stir.IntCartesianCoordinate3D(stir.make_IntCoordinate(np.shape(originalImageP)[0],np.shape(originalImageP)[1],np.shape(originalImageP)[2] ))) 
+guess = np.ones(np.shape(originalImage))
+plt.figure(), plt.title('Initial guess MLEM'), plt.imshow(guess[:,:]), plt.show()
 
-#plt.figure(4), plt.title('Initial guess MLEM'), plt.imshow(guessP[0,:,:]), plt.show()
-
+# MLEM loop 
 for i in range(nIt): 
-    # update current guess 
-    fillStirSpace(guessS, guessP)
-
     # Forward project initial guess 
-    guessSinogram = stir.ProjDataInMemory(stir.ExamInfo(), projdata_info)
-    forwardprojector.forward_project(guessSinogram, guessS); 
-    guessSinogramS = guessSinogram.get_segment_by_sinogram(0)
-    guessSinogramP = stirextra.to_numpy(guessSinogramS)
-
-    #plt.figure(5), plt.title('Sinogram of current guess'), plt.imshow(guessSinogramP[0,:,:]), plt.show()    
+    guessSinogram = radon(guess, iAngles) 
+    plt.figure(), plt.title('Sinogram of current guess'), plt.imshow(guessSinogram[:,:]), plt.show()    
 
     # Compare guess to measurement 
-    errorP = measurementP/guessSinogramP
-    errorP[np.isnan(errorP)] = 0
-    errorP[np.isinf(errorP)] = 0
-    errorP[errorP > 1E10] = 0;
-    errorP[errorP < 1E-10] = 0;
-
-    fillStirSpace(guessSinogramS, errorP)
-    guessSinogram.set_segment(guessSinogramS)  
+    error = measurement/guessSinogram
+    error[np.isnan(error)] = 0
+    error[np.isinf(error)] = 0
+    error[error > 1E10] = 0;
+    error[error < 1E-10] = 0
 
     # Error terugprojecteren 
     errorBackprS = stir.FloatVoxelsOnCartesianGrid(projdata_info, 1,
