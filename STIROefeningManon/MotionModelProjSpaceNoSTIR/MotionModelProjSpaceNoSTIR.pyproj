@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ManonsFunctions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MotionModelProjSpaceNoSTIR.py" />
   </ItemGroup>
   <PropertyGroup>
