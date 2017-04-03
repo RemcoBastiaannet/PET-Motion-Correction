@@ -1,6 +1,6 @@
 def make_figSaveDir(motion, phantom, noise):
     # Make sure all possible directories exist! 
-    dir = './Figures/Sigar/'
+    dir = './Figures/'
     if (motion == 'Step'): dir += 'Step/'
     elif (motion == 'Sine'): dir += 'Sine/'
     if (phantom == 'Block'): dir += 'Block/'
@@ -40,8 +40,10 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, image):
 
     # Step function 
     if (motion == 'Step'): 
+        shiftList = []
         for iFrame in range(nFrames): 
             shift = iFrame*trueShiftAmplitude
+            shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
 
@@ -54,7 +56,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, image):
                 tmp[0, (Ny+shift):Ny, :] = 0
 
             phantomList.append(tmp) 
-        surSignal = 0 # Er moet iets staan 
+        surSignal = [0, 1] # Er moet iets staan 
 
     if (motion == 'Sine'):
         shiftList = [] 
@@ -77,4 +79,4 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, image):
 
         surSignal = [0.5*shiftList[i] for i in range(len(shiftList))]
 
-    return (phantomList, surSignal) 
+    return (phantomList, surSignal, shiftList) 
