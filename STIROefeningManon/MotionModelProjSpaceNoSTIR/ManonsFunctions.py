@@ -31,7 +31,7 @@ def make_Phantom(phantom):
         image = np.concatenate((image, tmpX), axis = 1)
     return image 
 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, image): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image): 
     phantomList = []
 
     # Image shape 
@@ -42,7 +42,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, image):
     if (motion == 'Step'): 
         shiftList = []
         for iFrame in range(nFrames): 
-            shift = iFrame*trueShiftAmplitude
+            shift = iFrame*trueShiftAmplitude + trueOffset 
             shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
@@ -77,6 +77,6 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, image):
             phantomList.append(tmp) 
         originalImageP = phantomList[0]
 
-        surSignal = [0.5*shiftList[i] for i in range(len(shiftList))]
+        surSignal = [0.5*shiftList[i] + trueOffset for i in range(len(shiftList))]
 
     return (phantomList, surSignal, shiftList) 

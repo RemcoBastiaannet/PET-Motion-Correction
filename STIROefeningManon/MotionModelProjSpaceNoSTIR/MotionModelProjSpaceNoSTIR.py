@@ -1,16 +1,7 @@
-import sys
-import pylab
 import math
-import os
-import time
 import matplotlib.pyplot as plt
-import scipy as sp
 import numpy as np
-from scipy.optimize import minimize
-from skimage.transform import iradon, radon, rescale
-from skimage import data_dir
-from skimage.io import imread
-from prompt_toolkit import input
+from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 
 #phantom = 'Block'
@@ -22,20 +13,20 @@ motion = 'Sine'
 
 nIt = 20 
 trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueOffset = 5
+trueOffset = 0
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 4
 
 figSaveDir = mf.make_figSaveDir(motion, phantom, noise)
 
-# Make phantom 
+#_________________________MAKE PHANTOM_______________________________
 image = mf.make_Phantom(phantom)
 plt.figure(), plt.title('Original image'), plt.imshow(image, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
  
-# Add motion 
-phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, image)
+#_________________________ADD MOTION_______________________________ 
+phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image)
 originalImage = phantomList[0]
 
 for i in range(nFrames):    
@@ -51,20 +42,20 @@ for i in range(nFrames):
     plt.figure(figsize=(5.0, 5.0)), plt.title('{0}'.format(i)), plt.imshow(phantomList[i][0,:,:], interpolation=None, vmin = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftAmplitude, i)), plt.close()
     numFigures += 1   
 
-# Forward projection (measurement)
+#_________________________MEASUREMENT_______________________________
 iAngles = np.linspace(0, 360, 120)[:-1]
 measurement = radon(originalImage[0,:,:], iAngles)
 
-# Initial guess 
+#_________________________INITIAL GUESS_______________________________ 
 guess = np.ones(np.shape(originalImage))
 
-# Normalization
+#_________________________NORMALIZATION_______________________________
 normSino = np.ones(np.shape(measurement))
 norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
 plt.figure(), plt.title('MLEM normalization'), plt.imshow(norm, interpolation = None, vmin = 0, vmax = 0.03), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_norm.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
 
-# MLEM loop 
+#_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt): 
     # Forward project initial guess 
     guessSinogram = radon(guess[0,:,:], iAngles) 
@@ -82,6 +73,7 @@ for iIt in range(nIt):
     # Update guess 
     guess *= errorBck/norm
     countIt = iIt+1 # counts the number of iterations
+
 plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess[0,:,:], interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
 
