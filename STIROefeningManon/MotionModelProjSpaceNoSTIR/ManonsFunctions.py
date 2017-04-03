@@ -32,13 +32,10 @@ def make_Phantom(phantom):
     return image 
 
 def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image): 
-    phantomList = []
-
-    # Image shape 
+    phantomList = [] 
     Nx = np.shape(image)[1] 
     Ny = np.shape(image)[0]
 
-    # Step function 
     if (motion == 'Step'): 
         shiftList = []
         for iFrame in range(nFrames): 
@@ -55,8 +52,8 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image):
                 tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] 
                 tmp[0, (Ny+shift):Ny, :] = 0
 
+            surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
             phantomList.append(tmp) 
-        surSignal = [0, 1] # Er moet iets staan 
 
     if (motion == 'Sine'):
         shiftList = [] 
@@ -75,8 +72,6 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image):
                 tmp[0, (Ny+shift):Ny, :] = 0
 
             phantomList.append(tmp) 
-        originalImageP = phantomList[0]
-
-        surSignal = [0.5*shiftList[i] + trueOffset for i in range(len(shiftList))]
+            surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
 
     return (phantomList, surSignal, shiftList) 
