@@ -110,6 +110,11 @@ for iIt in range(nIt):
 
     quadErrorSumListList.append(quadErrorSums)
 
+    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+    numFigures += 1 
+    plt.close()
+
     # Motion compensation 
     reconMovedList = []
     reconMovedCorList = [] 
@@ -118,13 +123,8 @@ for iIt in range(nIt):
         reconMovedList.append(reconMoved) 
         reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
         sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
-
-    guess = np.mean(reconMovedList, axis = 0)
-
-    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-    numFigures += 1 
-    plt.close()
+    
+    guess = np.mean(reconMovedCorList, axis = 0)
 
 plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
