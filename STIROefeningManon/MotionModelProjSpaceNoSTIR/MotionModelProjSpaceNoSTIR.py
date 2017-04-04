@@ -91,7 +91,7 @@ for iIt in range(nIt):
         quadErrorSum = 0 
         guessTMP = deepcopy(guess) 
         for iFrame in range(nFrames): 
-            guessMovedList.append(np.zeros(np.shape(guessTMP)))
+            guessMovedList.append(np.zeros(np.shape(guessTMP)))-
             sp.ndimage.shift(guessTMP, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
             guessMovedProj = radon(guessMovedList[iFrame], iAngles)
             guessMovedProjList.append(guessMovedProj) 
@@ -119,10 +119,10 @@ for iIt in range(nIt):
     reconMovedList = []
     reconMovedCorList = [] 
     for iFrame in range(nFrames):
-        reconMoved = iradon(guessMovedProjList[iFrame], iAngles)
+        reconMoved = iradon(guessMovedProjList[iFrame], iAngles) # FOUT 
         reconMovedList.append(reconMoved) 
         reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
-        sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
+        sp.ndimage.shift(reconMoved, (0, 0), reconMovedCorList[iFrame])
     
     guess = np.mean(reconMovedCorList, axis = 0)
 
