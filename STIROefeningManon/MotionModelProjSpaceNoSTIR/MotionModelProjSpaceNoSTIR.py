@@ -73,7 +73,7 @@ quadErrorSumListList = []
 for iIt in range(nIt): 
     # Normal MLEM 
     guessSinogram = radon(guess, iAngles) 
-    error = measList[0]/guessSinogram # Je neemt het eerste time frame als "het" phantoom (maakt niet uit, beweging ga je hierna pas zoeken) 
+    error = measList[0]/guessSinogram # Je neemt het eerste time frame als "het" fantoom (maakt niet uit, beweging ga je hierna pas zoeken) 
     error[np.isnan(error)] = 0
     error[np.isinf(error)] = 0
     error[error > 1E10] = 0;
@@ -86,12 +86,13 @@ for iIt in range(nIt):
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
-    offsetList = [trueOffset-2, trueOffset-1, trueOffset, trueOffset+1, trueOffset+2] 
+    offsetList = [trueOffset-1, trueOffset, trueOffset+1] 
     for offset in offsetList: 
         quadErrorSum = 0 
+        guessTMP = deepcopy(guess) 
         for iFrame in range(nFrames): 
-            guessMovedList.append(np.zeros(np.shape(guess)))
-            sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+            guessMovedList.append(np.zeros(np.shape(guessTMP)))
+            sp.ndimage.shift(guessTMP, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
             guessMovedProj = radon(guessMovedList[iFrame], iAngles)
             guessMovedProjList.append(guessMovedProj) 
             quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
@@ -110,22 +111,20 @@ for iIt in range(nIt):
     quadErrorSumListList.append(quadErrorSums)
 
     # Motion compensation 
-    # Alle measurements terugprojecteren
-    # Images veplaatsen en over elkaar heen leggen
     reconMovedList = []
     reconMovedCorList = [] 
-    for iFrame in range(nFrames) :
+    for iFrame in range(nFrames):
         reconMoved = iradon(guessMovedProjList[iFrame], iAngles)
         reconMovedList.append(reconMoved) 
         reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
         sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
 
-    guess = np.mean(reconList, axis = 0)
+    guess = np.mean(reconMovedList, axis = 0)
 
-plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-numFigures += 1 
-plt.close()
+    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+    numFigures += 1 
+    plt.close()
 
 plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
