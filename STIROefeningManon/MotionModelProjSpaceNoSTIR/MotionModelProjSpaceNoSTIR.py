@@ -4,6 +4,7 @@ import numpy as np
 from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 import scipy as sp
+from copy import deepcopy 
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
@@ -39,9 +40,11 @@ plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinu
 plt.plot(range(nFrames), shiftList, label = 'True motion'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
+'''
 for i in range(nFrames):    
     plt.figure(figsize=(5.0, 5.0)), plt.title('{0}'.format(i)), plt.imshow(phantomList[i][0,:,:], interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftAmplitude, i)), plt.close()
     numFigures += 1   
+'''
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
 iAngles = np.linspace(0, 360, 120)[:-1]
@@ -54,8 +57,8 @@ for iFrame in range(nFrames):
 reconList = []
 for iFrame in range(len(measList)): 
     reconList.append(iradon(measList[iFrame], iAngles)) 
-    plt.figure(), plt.title('Recon frame {}'.format(iFrame)), plt.imshow(reconList[iFrame], interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_ReconFrame{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
-    numFigures += 1 
+    #plt.figure(), plt.title('Recon frame {}'.format(iFrame)), plt.imshow(reconList[iFrame], interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_ReconFrame{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
+    #numFigures += 1 
 guess = np.mean(reconList, axis = 0)
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
@@ -79,13 +82,12 @@ for iIt in range(nIt):
     guess *= errorBck/norm
     countIt = iIt+1 
 
-    # Finding the motion by trying a bunch of shifts 
+    # Motion model optimization
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
     offsetList = [trueOffset-2, trueOffset-1, trueOffset, trueOffset+1, trueOffset+2] 
     for offset in offsetList: 
-        # Shift all frames and compute quadratic error (comparison with known images) 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
             guessMovedList.append(np.zeros(np.shape(guess)))
@@ -106,6 +108,19 @@ for iIt in range(nIt):
             quadErrorSumFoundList.append(quadErrorSumFound) 
 
     quadErrorSumListList.append(quadErrorSums)
+
+    # Motion compensation 
+    # Alle measurements terugprojecteren
+    # Images veplaatsen en over elkaar heen leggen
+    reconMovedList = []
+    reconMovedCorList = [] 
+    for iFrame in range(nFrames) :
+        reconMoved = iradon(guessMovedProjList[iFrame], iAngles)
+        reconMovedList.append(reconMoved) 
+        reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
+        sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
+
+    guess = np.mean(reconList, axis = 0)
 
 plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
