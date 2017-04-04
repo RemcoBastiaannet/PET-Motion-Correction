@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
+import scipy as sp
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
@@ -11,9 +12,9 @@ noise = False
 #motion = 'Step' 
 motion = 'Sine'
 
-nIt = 20 
+nIt = 3 
 trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueOffset = 10
+trueOffset = 20
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 3
@@ -65,9 +66,11 @@ plt.figure(), plt.title('MLEM normalization'), plt.imshow(norm, interpolation = 
 numFigures += 1  
 
 #_________________________NESTED EM LOOP_______________________________
+quadErrorSumListList = []
 for iIt in range(nIt): 
-    guessSinogram = radon(guess[0,:,:], iAngles) 
-    error = measurement/guessSinogram
+    # Normal MLEM 
+    guessSinogram = radon(guess, iAngles) 
+    error = measList[0]/guessSinogram # Je neemt het eerste time frame als "het" phantoom (maakt niet uit, beweging ga je hierna pas zoeken) 
     error[np.isnan(error)] = 0
     error[np.isinf(error)] = 0
     error[error > 1E10] = 0;
@@ -76,20 +79,49 @@ for iIt in range(nIt):
     guess *= errorBck/norm
     countIt = iIt+1 
 
-plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess[0,:,:], interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    # Finding the motion by trying a bunch of shifts 
+    guessMovedList = []
+    guessMovedProjList = []
+    quadErrorSumList = []   
+    offsetList = [trueOffset-2, trueOffset-1, trueOffset, trueOffset+1, trueOffset+2] 
+    for offset in offsetList: 
+        # Shift all frames and compute quadratic error (comparison with known images) 
+        quadErrorSum = 0 
+        for iFrame in range(nFrames): 
+            guessMovedList.append(np.zeros(np.shape(guess)))
+            sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+            guessMovedProj = radon(guessMovedList[iFrame], iAngles)
+            guessMovedProjList.append(guessMovedProj) 
+            quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
+        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
+
+    offsetFoundList = []
+    quadErrorSumFoundList = []
+    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+    for i in range(len(quadErrorSumList)): 
+        if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
+            offsetFound = quadErrorSumList[i]['offset']
+            offsetFoundList.append(offsetFound)
+            quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
+            quadErrorSumFoundList.append(quadErrorSumFound) 
+
+    quadErrorSumListList.append(quadErrorSums)
+
+plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+numFigures += 1 
+plt.close()
+
+plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = 1)
-plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess[0,:,:], interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
+plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
 
 # Oude STIR code die hier nu in moet komen te staan
 '''
 #_________________________MOTION MODEL OPTIMIZATION_______________________________
-quadErrorSumList = []
-
-offSets = [-1, -2, -3]
-
 for offset in offSets: 
     projectionPList = []
 
