@@ -69,6 +69,8 @@ plt.figure(), plt.title('MLEM normalization'), plt.imshow(norm, interpolation = 
 numFigures += 1  
 
 #_________________________NESTED EM LOOP_______________________________
+offsetFoundList = []
+quadErrorSumFoundList = []
 quadErrorSumListList = []
 for iIt in range(nIt): 
     # Normal MLEM 
@@ -89,17 +91,14 @@ for iIt in range(nIt):
     offsetList = [trueOffset-1, trueOffset, trueOffset+1] 
     for offset in offsetList: 
         quadErrorSum = 0 
-        guessTMP = deepcopy(guess) 
         for iFrame in range(nFrames): 
-            guessMovedList.append(np.zeros(np.shape(guessTMP)))-
-            sp.ndimage.shift(guessTMP, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+            guessMovedList.append(np.zeros(np.shape(guess)))
+            sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
             guessMovedProj = radon(guessMovedList[iFrame], iAngles)
             guessMovedProjList.append(guessMovedProj) 
             quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
 
-    offsetFoundList = []
-    quadErrorSumFoundList = []
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
         if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
@@ -119,10 +118,10 @@ for iIt in range(nIt):
     reconMovedList = []
     reconMovedCorList = [] 
     for iFrame in range(nFrames):
-        reconMoved = iradon(guessMovedProjList[iFrame], iAngles) # FOUT 
+        reconMoved = iradon(guessMovedProjList[iFrame], iAngles) # FOUT -> het moet de ONBEWOGEN projectie van je guess zijn + je guess moet 
         reconMovedList.append(reconMoved) 
         reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
-        sp.ndimage.shift(reconMoved, (0, 0), reconMovedCorList[iFrame])
+        sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
     
     guess = np.mean(reconMovedCorList, axis = 0)
 
@@ -132,47 +131,3 @@ numFigures += 1
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = 1)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
-
-# Oude STIR code die hier nu in moet komen te staan
-'''
-#_________________________MOTION MODEL OPTIMIZATION_______________________________
-for offset in offSets: 
-    projectionPList = []
-
-    for iFrame in range(nFrames): 
-        MotionModel.setOffset(surSignal[iFrame]*offset) 
-        forwardprojector.forward_project(projection, guessS)
-        projection.write_to_file('sino_{}.hs'.format(iFrame+1))
-        projectionS = projection.get_segment_by_sinogram(0)
-        projectionP = stirextra.to_numpy(projectionS)
-        #projectionP /= np.sum(projectionP)
-        projectionPList.append(projectionP)
-
-    plt.figure()
-    plt.subplot(1,2,1), plt.imshow(projectionPList[0][0,:,:]-measurementListP[0][0,:,:], cmap=plt.cm.Greys_r, interpolation=None) 
-    plt.subplot(1,2,2), plt.imshow(projectionPList[1][0,:,:]-measurementListP[1][0,:,:], cmap=plt.cm.Greys_r, interpolation=None)
-    plt.savefig(figSaveDir + 'Fig{}_TEST.png'.format(numFigures, trueShiftAmplitude)) 
-    numFigures += 1 
-    plt.close()
-
-    quadErrorSum = 0 
-    for iFrame in range(nFrames): 
-        quadErrorSum += np.sum((projectionPList[iFrame][0,:,:] - measurementListP[iFrame][0,:,:])**2)
-    
-    quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
-
-quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-for i in range(len(quadErrorSumList)): 
-    if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
-        offsetFound = quadErrorSumList[i]['offset']
-        offsetFoundList.append(offsetFound)
-        quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
-        quadErrorSumFoundList.append(quadErrorSumFound) 
-
-quadErrorSumListList.append(quadErrorSums)
-
-plt.plot(offSets, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-numFigures += 1 
-plt.close()
-'''
