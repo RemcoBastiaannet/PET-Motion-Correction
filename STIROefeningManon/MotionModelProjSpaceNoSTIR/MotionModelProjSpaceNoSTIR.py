@@ -115,15 +115,12 @@ for iIt in range(nIt):
     plt.close()
 
     # Motion compensation 
-    reconMovedList = []
-    reconMovedCorList = [] 
+    reconCorList = [] 
     for iFrame in range(nFrames):
-        reconMoved = iradon(guessMovedProjList[iFrame], iAngles) # FOUT -> het moet de ONBEWOGEN projectie van je guess zijn + je guess moet 
-        reconMovedList.append(reconMoved) 
-        reconMovedCorList.append(np.zeros(np.shape(reconMoved))) 
-        sp.ndimage.shift(reconMoved, (-surSignal[iFrame] + offsetFound, 0), reconMovedCorList[iFrame])
+        reconCorList.append(np.zeros(np.shape(guess))) 
+        sp.ndimage.shift(guess, (0, 0), reconCorList[iFrame]) # Moet dit wel echt guess zijn?    
     
-    guess = np.mean(reconMovedCorList, axis = 0)
+    guess = np.mean(reconCorList, axis = 0)
 
 plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1  
