@@ -13,9 +13,9 @@ noise = False
 #motion = 'Step' 
 motion = 'Sine'
 
-nIt = 3 
-trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueOffset = 20
+nIt = 5 
+trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueOffset = 5
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 3
@@ -72,23 +72,33 @@ numFigures += 1
 offsetFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
+offsetFound = trueOffset-1 # First guess 
+guessSum = []
+guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
     # Normal MLEM 
-    guessSinogram = radon(guess, iAngles) 
-    error = measList[0]/guessSinogram # Je neemt het eerste time frame als "het" fantoom (maakt niet uit, beweging ga je hierna pas zoeken) 
-    error[np.isnan(error)] = 0
-    error[np.isinf(error)] = 0
-    error[error > 1E10] = 0;
-    error[error < 1E-10] = 0
-    errorBck = iradon(error, iAngles, filter = None) 
-    guess *= errorBck/norm
+    for iFrame in range(nFrames): 
+        shiftedGuess = np.zeros(np.shape(guess))
+        sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
+        shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
+        error = measList[iFrame]/shiftedGuessSinogram 
+        error[np.isnan(error)] = 0
+        error[np.isinf(error)] = 0
+        error[error > 1E10] = 0;
+        error[error < 1E-10] = 0
+        errorBck = iradon(error, iAngles, filter = None) 
+        errorBckShifted = np.zeros(np.shape(errorBck))
+        sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
+        guess *= errorBckShifted
+    guess /= norm 
+    guessSum.append(np.sum(guess))
     countIt = iIt+1 
 
     # Motion model optimization
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
-    offsetList = [trueOffset-1, trueOffset, trueOffset+1] 
+    offsetList = range(trueOffset-2, trueOffset+3)
     for offset in offsetList: 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
@@ -118,13 +128,18 @@ for iIt in range(nIt):
     reconCorList = [] 
     for iFrame in range(nFrames):
         reconCorList.append(np.zeros(np.shape(guess))) 
-        sp.ndimage.shift(guess, (0, 0), reconCorList[iFrame]) # Moet dit wel echt guess zijn?    
+        sp.ndimage.shift(guess, (-surSignal[iFrame] + offsetFound, 0), reconCorList[iFrame]) 
     
     guess = np.mean(reconCorList, axis = 0)
+    guessSum.append(np.sum(guess))
 
-plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1  
+    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    numFigures += 1  
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = 1)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
+
+plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))
+numFigures += 1 
+plt.close() 
