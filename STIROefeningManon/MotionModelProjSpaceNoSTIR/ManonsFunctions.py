@@ -63,7 +63,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
         shiftList = [] 
         for iFrame in range(nFrames): 
             shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
-            if (stationary == 0 and (iFrame > nFrames/2)): 
+            if ((not stationary) and (iFrame > nFrames/2)): 
                 shift += int(0.5*trueShiftAmplitude) 
             shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
