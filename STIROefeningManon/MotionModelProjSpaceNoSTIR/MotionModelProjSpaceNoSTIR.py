@@ -13,7 +13,7 @@ noise = False
 #motion = 'Step' 
 motion = 'Sine'
 
-nIt = 5 
+nIt = 30 
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
@@ -128,7 +128,7 @@ for iIt in range(nIt):
     reconCorList = [] 
     for iFrame in range(nFrames):
         reconCorList.append(np.zeros(np.shape(guess))) 
-        sp.ndimage.shift(guess, (-surSignal[iFrame] + offsetFound, 0), reconCorList[iFrame]) 
+        sp.ndimage.shift(guess, (0, 0), reconCorList[iFrame]) 
     
     guess = np.mean(reconCorList, axis = 0)
     guessSum.append(np.sum(guess))
@@ -143,3 +143,12 @@ numFigures += 1
 plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close() 
+
+for i in range(len(quadErrorSumListList)): 
+    plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
+    plt.plot(offsetList, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+    plt.axvline(trueOffset, color='k', linestyle='--')
+plt.legend()
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
+numFigures += 1 
+plt.close()
