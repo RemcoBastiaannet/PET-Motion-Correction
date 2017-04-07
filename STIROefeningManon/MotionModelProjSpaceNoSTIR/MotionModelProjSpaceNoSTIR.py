@@ -8,12 +8,12 @@ from copy import deepcopy
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-noise = False
-#noise = True
+#noise = False
+noise = True
 #motion = 'Step' 
 motion = 'Sine'
 
-nIt = 30 
+nIt = 10 
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
@@ -24,8 +24,8 @@ else: nFrames = 3
 figSaveDir = mf.make_figSaveDir(motion, phantom, noise)
 
 #_________________________MAKE PHANTOM_______________________________
-image2D = mf.make_Phantom(phantom)
-plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+image2D = mf.make_Phantom(phantom, duration)
+plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
  
 #_________________________ADD MOTION_______________________________ 
@@ -33,7 +33,7 @@ phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAm
 originalImage = phantomList[0]
 
 for i in range(nFrames):    
-    plt.subplot(2,nFrames/2+1,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomList[i][0,:,:], interpolation=None, vmin = 0, vmax = 1) 
+    plt.subplot(2,nFrames/2+1,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(phantomList[i][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D)) 
 plt.suptitle('Phantom'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
  
@@ -53,6 +53,8 @@ iAngles = np.linspace(0, 360, 120)[:-1]
 measList = []
 for iFrame in range(nFrames):
     meas = radon(phantomList[iFrame][0,:,:], iAngles) 
+    if (noise): 
+        meas = sp.random.poisson(meas)
     measList.append(meas) 
 
 reconList = []
@@ -61,7 +63,7 @@ for iFrame in range(len(measList)):
     #plt.figure(), plt.title('Recon frame {}'.format(iFrame)), plt.imshow(reconList[iFrame], interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_ReconFrame{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
     #numFigures += 1 
 guess = np.mean(reconList, axis = 0)
-plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
 normSino = np.ones(np.shape(measList[0]))
@@ -134,11 +136,11 @@ for iIt in range(nIt):
     guess = np.mean(reconCorList, axis = 0)
     guessSum.append(np.sum(guess))
 
-    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
 
-plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = 1)
-plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
+plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D))
+plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
 
 plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))

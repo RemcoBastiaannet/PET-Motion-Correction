@@ -14,7 +14,7 @@ from skimage import data_dir
 from skimage.io import imread
 import numpy as np
 import math
-def make_Phantom(phantom): 
+def make_Phantom(phantom, duration): 
     if phantom == 'Block': 
         image = np.zeros((160,160))
         image[65:95, 65:95] = 1 
@@ -29,6 +29,9 @@ def make_Phantom(phantom):
         tmpX = np.zeros((np.shape(image)[0], 50))
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
+
+    image *= 1000*duration/np.sum(image) 
+
     return image 
 
 def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image): 
