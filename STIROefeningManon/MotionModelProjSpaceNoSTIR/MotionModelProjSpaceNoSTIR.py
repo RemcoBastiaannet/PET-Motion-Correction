@@ -4,14 +4,15 @@ import numpy as np
 from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 import scipy as sp
-from copy import deepcopy 
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-#noise = False
-noise = True
+noise = False
+#noise = True
 #motion = 'Step' 
 motion = 'Sine'
+#stationary = True 
+stationary = False # Only possible for sinusoidal motion 
 
 nIt = 10 
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
@@ -19,9 +20,9 @@ trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 3
+else: nFrames = 30
 
-figSaveDir = mf.make_figSaveDir(motion, phantom, noise)
+figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary)
 
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, duration)
@@ -29,7 +30,7 @@ plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = N
 numFigures += 1
  
 #_________________________ADD MOTION_______________________________ 
-phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D)
+phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary)
 originalImage = phantomList[0]
 
 for i in range(nFrames):    
@@ -41,12 +42,6 @@ plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinu
 plt.plot(range(nFrames), shiftList, label = 'True motion'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
-'''
-for i in range(nFrames):    
-    plt.figure(figsize=(5.0, 5.0)), plt.title('{0}'.format(i)), plt.imshow(phantomList[i][0,:,:], interpolation=None, vmin = 0, vmax = 1), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantomFrame{}.png'.format(numFigures, trueShiftAmplitude, i)), plt.close()
-    numFigures += 1   
-'''
-
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
 iAngles = np.linspace(0, 360, 120)[:-1]
 
@@ -55,7 +50,10 @@ for iFrame in range(nFrames):
     meas = radon(phantomList[iFrame][0,:,:], iAngles) 
     if (noise): 
         meas = sp.random.poisson(meas)
+    plt.subplot(2,nFrames/2+1,i+1), plt.title('Time frame {0}'.format(i)), plt.imshow(meas, interpolation=None, vmin = 0) 
     measList.append(meas) 
+plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurements.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+numFigures += 1 
 
 reconList = []
 for iFrame in range(len(measList)): 

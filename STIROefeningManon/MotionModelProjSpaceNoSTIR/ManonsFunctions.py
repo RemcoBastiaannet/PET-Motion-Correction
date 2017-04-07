@@ -1,4 +1,4 @@
-def make_figSaveDir(motion, phantom, noise):
+def make_figSaveDir(motion, phantom, noise, stationary):
     # Make sure all possible directories exist! 
     dir = './Figures/'
     if (motion == 'Step'): dir += 'Step/'
@@ -7,6 +7,7 @@ def make_figSaveDir(motion, phantom, noise):
     elif (phantom == 'Shepp-Logan'): dir += 'Shepp-Logan/'
     if (noise): dir += 'Noise/'
     else: dir += 'No_Noise/'
+    if (stationary == 0): dir += 'Non_Stationary/'
     return dir 
 
 from skimage.transform import iradon, radon, rescale
@@ -34,7 +35,7 @@ def make_Phantom(phantom, duration):
 
     return image 
 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, stationary): 
     phantomList = [] 
     Nx = np.shape(image)[1] 
     Ny = np.shape(image)[0]
@@ -61,7 +62,9 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image):
     if (motion == 'Sine'):
         shiftList = [] 
         for iFrame in range(nFrames): 
-            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)) 
+            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
+            if (stationary == 0 and (iFrame > nFrames/2)): 
+                shift += int(0.5*trueShiftAmplitude) 
             shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
