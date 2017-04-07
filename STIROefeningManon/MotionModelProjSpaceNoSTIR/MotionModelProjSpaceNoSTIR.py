@@ -17,6 +17,7 @@ nIt = 30
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
+duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 3
 
@@ -98,7 +99,7 @@ for iIt in range(nIt):
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
-    offsetList = range(trueOffset-2, trueOffset+3)
+    offsetList = range(trueOffset-4, trueOffset+5)
     for offset in offsetList: 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
@@ -145,9 +146,10 @@ numFigures += 1
 plt.close() 
 
 for i in range(len(quadErrorSumListList)): 
-    plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
-    plt.plot(offsetList, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
-    plt.axvline(trueOffset, color='k', linestyle='--')
+    if(i%(nIt/5) == 0):
+        plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
+        plt.plot(offsetList, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+        plt.axvline(trueOffset, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
