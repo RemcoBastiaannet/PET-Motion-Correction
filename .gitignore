@@ -247,6 +247,5 @@ ModelManifest.xml
 *.v
 *.hv
 *.ahv
-*.png
 *.s 
 *.hs
