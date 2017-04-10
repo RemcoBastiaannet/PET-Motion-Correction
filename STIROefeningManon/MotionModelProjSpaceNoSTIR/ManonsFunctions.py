@@ -81,3 +81,16 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
             surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
 
     return (phantomList, surSignal, shiftList) 
+
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames): 
+    file = open(figSaveDir + "Configuratie.txt", "w")
+    file.write("Phantom: {}\n".format(phantom))
+    file.write("Noise: {}\n".format(noise))
+    file.write("Motion: {}\n".format(motion))
+    file.write("Stationary: {}\n".format(stationary)) 
+    file.write("Number of iterations: {}\n".format(nIt))
+    file.write("True shift amplitude: {}\n".format(trueShiftAmplitude))
+    file.write("True offset (motion model): {}\n".format(trueOffset))
+    file.write("Scan duration: {}\n".format(duration))
+    file.write("Number of time frames: {}\n".format(nFrames))
+    file.close()
