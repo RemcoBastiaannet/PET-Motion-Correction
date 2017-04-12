@@ -37,15 +37,12 @@ numFigures += 1
 phantomList, surSignal, shiftList, gateMin, gateMax = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
 originalImage = phantomList[0]
 
-for iFrame in range(len(phantomList)):    
-    plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D)) 
-plt.suptitle('Phantom'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1 
- 
-plt.plot(range(len(surSignal)), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+x = np.arange(0, nFrames, 0.1)
+plt.plot(range(nFrames), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(len(shiftList)), shiftList, 'ro', label = 'True motion', markersize = 3) 
-plt.axhline(y = gateMin, color = 'g', label = 'Respiratory gating')
-plt.axhline(y = gateMax, color = 'g')
+plt.axhline(y = gateMin, color = 'grey', label = 'Respiratory gating')
+plt.axhline(y = gateMax, color = 'grey')
+plt.fill_between(x, gateMin, gateMax, color='grey', alpha='0.5')
 plt.legend(loc = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
@@ -59,10 +56,7 @@ for iFrame in range(nFrames):
     if (noise): 
         meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
-    plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(meas, interpolation=None, vmin = 0, vmax = 1000) 
     measList.append(meas) 
-plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurements.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1 
 
 plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = 1000)
 plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = 1000)
@@ -78,8 +72,6 @@ numFigures += 1
 
 normSino = np.ones(np.shape(measList[0]))
 norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
-plt.figure(), plt.title('MLEM normalization'), plt.imshow(norm, interpolation = None, vmin = 0, vmax = 0.03), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_norm.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1  
 
 #_________________________NESTED EM LOOP_______________________________
 offsetFoundList = []
@@ -132,10 +124,10 @@ for iIt in range(nIt):
 
     quadErrorSumListList.append(quadErrorSums)
 
-    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-    numFigures += 1 
-    plt.close()
+    #plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
+    #plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+    #numFigures += 1 
+    #plt.close()
 
     # Motion compensation 
     reconCorList = [] 
@@ -152,10 +144,6 @@ for iIt in range(nIt):
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D))
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
-
-plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))
-numFigures += 1 
-plt.close() 
 
 for i in range(len(quadErrorSumListList)): 
     if(i%(nIt/5) == 0):
