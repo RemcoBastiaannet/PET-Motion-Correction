@@ -14,17 +14,17 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-gating = True
-#gating = False 
-nIt = 3 
+#gating = True
+gating = False 
+nIt = 10 
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 40
+else: nFrames = 80
 
-figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary)
+figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary, gating)
 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
 
@@ -34,7 +34,7 @@ plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = N
 numFigures += 1
  
 #_________________________ADD MOTION_______________________________ 
-phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
+phantomList, surSignal, shiftList, gateMin, gateMax = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
 originalImage = phantomList[0]
 
 for iFrame in range(len(phantomList)):    
@@ -44,8 +44,8 @@ numFigures += 1
  
 plt.plot(range(len(surSignal)), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(len(shiftList)), shiftList, 'ro', label = 'True motion', markersize = 3) 
-plt.axhline(y = -trueShiftAmplitude + trueOffset, color = 'g', label = 'Respiratory gating')
-plt.axhline(y = -0.65*trueShiftAmplitude + trueOffset, color = 'g')
+plt.axhline(y = gateMin, color = 'g', label = 'Respiratory gating')
+plt.axhline(y = gateMax, color = 'g')
 plt.legend(loc = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
