@@ -2,7 +2,7 @@ Phantom: Shepp-Logan
 Noise: True
 Motion: Sine
 Stationary: False
-Respiratory gating: False
+Respiratory gating: True
 Number of iterations: 5
 True shift amplitude: 15
 True offset (motion model): 5
