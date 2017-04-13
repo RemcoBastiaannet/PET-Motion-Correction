@@ -27,12 +27,26 @@ if (motion == 'Step'): nFrames = 2
 else: nFrames = 10
 noiseLevel = 1000 
 
+stirOn = False 
+
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, gating)
 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating, noiseLevel)
 
 
+
+#_________________________PROJECTORS_______________________________
+if (not stirOn): 
+    def projector(image, angles):   
+        radon(image, angles)
+
+    def backProjectorNoFilter(image, angles): 
+        iradon(image, angles, filter = None) 
+ 
+    def backProjector(image, angles):   
+        iradon(image, angles) 
+        
 
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, duration, noiseLevel)
@@ -43,7 +57,6 @@ numFigures += 1
 
 #_________________________ADD MOTION_______________________________ 
 phantomList, surSignal, shiftList, gateMin, gateMax = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
-originalImage = phantomList[0]
 
 x = np.arange(0, len(phantomList), 0.1)
 plt.plot(range(len(surSignal)), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
@@ -62,7 +75,7 @@ iAngles = np.linspace(0, 360, 120)[:-1]
 
 measList = []
 for iFrame in range(len(phantomList)):
-    meas = radon(phantomList[iFrame][0,:,:], iAngles) 
+    meas = projector(phantomList[iFrame][0,:,:], iAngles) 
     if (iFrame == 0): measNoNoise = meas
     if (noise): 
         meas = sp.random.poisson(meas)
@@ -79,16 +92,16 @@ numFigures += 1
 #_________________________INITIAL GUESS_______________________________
 reconList = []
 for iFrame in range(len(measList)): 
-    reconList.append(iradon(measList[iFrame], iAngles)) 
+    reconList.append(backprojector(measList[iFrame], iAngles)) 
 guess = np.mean(reconList, axis = 0)
-plt.figure(), plt.title('Initial guess'), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.figure(), plt.title('Initial guess'), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1
 
 
 
 #_________________________NORMALIZATION_______________________________
 normSino = np.ones(np.shape(measList[0]))
-norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
+norm = backprojectorNoFilter(normSino, iAngles, filter = None) # We willen nu geen ramp filter
 
 
 
@@ -111,7 +124,7 @@ for iIt in range(nIt):
         error[np.isinf(error)] = 0
         error[error > 1E10] = 0;
         error[error < 1E-10] = 0
-        errorBck = iradon(error, iAngles, filter = None) 
+        errorBck = backProjectorNoFilter(error, iAngles, filter = None) 
         if (not gating): 
             errorBckShifted = np.zeros(np.shape(errorBck))
             sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
@@ -151,7 +164,7 @@ for iIt in range(nIt):
         plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
         numFigures += 1  
 
-plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = np.max(image2D))
+plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = np.max(image2D))
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
 
