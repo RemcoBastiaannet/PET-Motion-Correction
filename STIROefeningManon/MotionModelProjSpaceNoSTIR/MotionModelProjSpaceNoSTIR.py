@@ -45,6 +45,7 @@ if (not stirOn):
         return iradon(image, angles, filter = "ramp") 
         
 
+
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, duration, noiseLevel)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -98,7 +99,7 @@ numFigures += 1
 
 #_________________________NORMALIZATION_______________________________
 normSino = np.ones(np.shape(measList[0]))
-norm = backprojector(normSino, iAngles) # We willen nu geen ramp filter
+norm = backprojector(normSino, iAngles, filter = None) # We willen nu geen ramp filter
 
 
 
