@@ -95,7 +95,7 @@ norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
 offsetFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
-offsetFound = trueOffset-1 # First guess 
+offsetFound = 0 # First guess 
 guessSum = []
 guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
@@ -145,11 +145,6 @@ for iIt in range(nIt):
                 quadErrorSumFoundList.append(quadErrorSumFound) 
 
         quadErrorSumListList.append(quadErrorSums)
-
-        #plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
-        #plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-        #numFigures += 1 
-        #plt.close()
 
         # Motion compensation 
         reconCorList = [] 
