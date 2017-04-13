@@ -15,7 +15,7 @@ noise = True
 motion = 'Sine'
 stationary = True 
 #stationary = False # Only possible for sinusoidal motion 
-#gating = True
+#gating = True # Only possible for sinusoidal motion 
 gating = False 
 
 nIt = 10
@@ -146,15 +146,6 @@ for iIt in range(nIt):
                 quadErrorSumFoundList.append(quadErrorSumFound) 
 
         quadErrorSumListList.append(quadErrorSums)
-
-        # Motion compensation 
-        reconCorList = [] 
-        for iFrame in range(nFrames):
-            reconCorList.append(np.zeros(np.shape(guess))) 
-            sp.ndimage.shift(guess, (0, 0), reconCorList[iFrame]) 
-    
-        guess = np.mean(reconCorList, axis = 0)
-        guessSum.append(np.sum(guess))
 
         plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
         numFigures += 1  
