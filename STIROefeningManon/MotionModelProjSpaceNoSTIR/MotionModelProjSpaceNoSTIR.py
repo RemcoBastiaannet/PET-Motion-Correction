@@ -5,6 +5,9 @@ from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 import scipy as sp
 
+
+
+#_________________________CONFIGURATION_______________________________
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
 #noise = False
@@ -28,11 +31,15 @@ figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary, gating)
 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
 
+
+
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, duration)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
- 
+
+
+
 #_________________________ADD MOTION_______________________________ 
 phantomList, surSignal, shiftList, gateMin, gateMax = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
 originalImage = phantomList[0]
@@ -47,7 +54,9 @@ plt.fill_between(x, gateMin, gateMax, color='grey', alpha='0.5')
 plt.legend(loc = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
-#_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
+
+
+#_________________________MEASUREMENT_______________________________
 iAngles = np.linspace(0, 360, 120)[:-1]
 
 measList = []
@@ -64,6 +73,9 @@ plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, cmap=plt.
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
+
+
+#_________________________INITIAL GUESS_______________________________
 reconList = []
 for iFrame in range(len(measList)): 
     reconList.append(iradon(measList[iFrame], iAngles)) 
@@ -71,8 +83,13 @@ guess = np.mean(reconList, axis = 0)
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
 
+
+
+#_________________________NORMALIZATION_______________________________
 normSino = np.ones(np.shape(measList[0]))
 norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
+
+
 
 #_________________________NESTED EM LOOP_______________________________
 offsetFoundList = []
