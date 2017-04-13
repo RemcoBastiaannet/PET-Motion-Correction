@@ -39,13 +39,10 @@ mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, true
 #_________________________PROJECTORS_______________________________
 if (not stirOn): 
     def projector(image, angles):   
-        radon(image, angles)
-
-    def backProjectorNoFilter(image, angles): 
-        iradon(image, angles, filter = None) 
+        return radon(image, angles)
  
-    def backProjector(image, angles):   
-        iradon(image, angles) 
+    def backprojector(image, angles, filter = "ramp"):   
+        return iradon(image, angles, filter = "ramp") 
         
 
 #_________________________MAKE PHANTOM_______________________________
@@ -101,7 +98,7 @@ numFigures += 1
 
 #_________________________NORMALIZATION_______________________________
 normSino = np.ones(np.shape(measList[0]))
-norm = backprojectorNoFilter(normSino, iAngles, filter = None) # We willen nu geen ramp filter
+norm = backprojector(normSino, iAngles) # We willen nu geen ramp filter
 
 
 
@@ -124,7 +121,7 @@ for iIt in range(nIt):
         error[np.isinf(error)] = 0
         error[error > 1E10] = 0;
         error[error < 1E-10] = 0
-        errorBck = backProjectorNoFilter(error, iAngles, filter = None) 
+        errorBck = backprojector(error, iAngles, filter = None) 
         if (not gating): 
             errorBckShifted = np.zeros(np.shape(errorBck))
             sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
