@@ -7,8 +7,8 @@ import scipy as sp
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-#noise = False
-noise = True
+noise = False
+#noise = True
 #motion = 'Step' 
 motion = 'Sine'
 #stationary = True 
@@ -69,7 +69,7 @@ reconList = []
 for iFrame in range(len(measList)): 
     reconList.append(iradon(measList[iFrame], iAngles)) 
 guess = np.mean(reconList, axis = 0)
-guess = reconList[0] # Added
+#guess = reconList[0] # Added
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
@@ -116,9 +116,6 @@ for iIt in range(nIt):
     numFigures += 1 
     plt.close()
 
-    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-    numFigures += 1  
-
     # Normal MLEM 
     for iFrame in range(nFrames): 
         shiftedGuess = np.zeros(np.shape(guess))
@@ -136,6 +133,9 @@ for iIt in range(nIt):
     guess /= norm 
     guessSum.append(np.sum(guess))
     countIt = iIt+1 
+
+    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    numFigures += 1  
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D))
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
