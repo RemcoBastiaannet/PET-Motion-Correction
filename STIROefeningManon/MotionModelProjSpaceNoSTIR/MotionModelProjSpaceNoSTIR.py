@@ -25,17 +25,16 @@ numFigures = 0
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 10
-noiseLevel = 1000 
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, gating)
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating, noiseLevel)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
 
 
 
 #_________________________MAKE PHANTOM_______________________________
-image2D = mf.make_Phantom(phantom, duration, noiseLevel)
+image2D = mf.make_Phantom(phantom, duration)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, cmap=plt.cm.Greys_r, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
 
@@ -69,8 +68,8 @@ for iFrame in range(len(phantomList)):
     if (iFrame == 0): measWithNoise = meas
     measList.append(meas) 
 
-plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = noiseLevel)
-plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = noiseLevel)
+plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = 1)
+plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, cmap=plt.cm.Greys_r, interpolation=None, vmin = 0, vmax = 1)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 

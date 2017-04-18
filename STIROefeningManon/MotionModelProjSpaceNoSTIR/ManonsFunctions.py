@@ -12,7 +12,7 @@ from skimage import data_dir
 from skimage.io import imread
 import numpy as np
 import math
-def make_Phantom(phantom, duration, noiseLevel): 
+def make_Phantom(phantom, duration): 
     if phantom == 'Shepp-Logan': 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
         imageSmall = rescale(imageSmall, scale=0.4)
@@ -25,7 +25,7 @@ def make_Phantom(phantom, duration, noiseLevel):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= noiseLevel*duration/np.sum(image) 
+    image *= 1000*duration/np.sum(image) 
 
     return image 
 
@@ -92,7 +92,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
 
     return (phantomList, surSignal, shiftList, gateMin, gateMax) 
 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating, noiseLevel): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating): 
     file = open(figSaveDir + "Configuration.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -104,5 +104,4 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("True offset (motion model): {}\n".format(trueOffset))
     file.write("Scan duration: {}\n".format(duration))
     file.write("Number of time frames: {}\n".format(nFrames))
-    file.write("Noise level: {}\n".format(noiseLevel))
     file.close()
