@@ -34,7 +34,7 @@ def make_Phantom(phantom, duration):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= duration/np.sum(image) 
+    image *= 1000*duration/np.sum(image) 
 
     return image 
 
