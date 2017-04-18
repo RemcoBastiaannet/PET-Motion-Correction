@@ -102,7 +102,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
     return (phantomList, surSignal, shiftList, gateMin, gateMax) 
 
 def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating): 
-    file = open(figSaveDir + "Configuration.txt", "w")
+    file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
     file.write("Motion: {}\n".format(motion))
