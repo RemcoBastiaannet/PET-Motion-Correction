@@ -103,7 +103,6 @@ for iIt in range(nIt):
     for iFrame in range(len(surSignal)): 
         shiftedGuess = np.zeros(np.shape(guess))
         if (not gating): sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
-        if (gating): shiftedGuess = guess 
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
