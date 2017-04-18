@@ -14,13 +14,13 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-nIt = 3
+nIt = 10
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 3
+else: nFrames = 10
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
@@ -115,15 +115,6 @@ for iIt in range(nIt):
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
     numFigures += 1 
     plt.close()
-
-    # Motion compensation 
-    reconCorList = [] 
-    for iFrame in range(nFrames):
-        reconCorList.append(np.zeros(np.shape(guess))) 
-        sp.ndimage.shift(guess, (0, 0), reconCorList[iFrame]) 
-    
-    guess = np.mean(reconCorList, axis = 0)
-    guessSum.append(np.sum(guess))
 
     plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
