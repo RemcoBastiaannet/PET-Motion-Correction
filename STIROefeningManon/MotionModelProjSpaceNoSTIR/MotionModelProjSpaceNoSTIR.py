@@ -14,19 +14,17 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-gating = True
-#gating = False 
-nIt = 3 
+nIt = 10 
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 40
+else: nFrames = 10
 
 figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary)
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames)
 
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, duration)
@@ -34,19 +32,16 @@ plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = N
 numFigures += 1
  
 #_________________________ADD MOTION_______________________________ 
-phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary, gating)
+phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary)
 originalImage = phantomList[0]
 
-for iFrame in range(len(phantomList)):    
+for iFrame in range(nFrames):    
     plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D)) 
 plt.suptitle('Phantom'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
  
-plt.plot(range(len(surSignal)), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(range(len(shiftList)), shiftList, 'ro', label = 'True motion', markersize = 3) 
-plt.axhline(y = -trueShiftAmplitude + trueOffset, color = 'g', label = 'Respiratory gating')
-plt.axhline(y = -0.65*trueShiftAmplitude + trueOffset, color = 'g')
-plt.legend(loc = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(range(nFrames), shiftList, label = 'True motion'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________

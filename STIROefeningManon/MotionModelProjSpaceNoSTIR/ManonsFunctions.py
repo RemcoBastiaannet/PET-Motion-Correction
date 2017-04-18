@@ -35,7 +35,7 @@ def make_Phantom(phantom, duration):
 
     return image 
 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, stationary, gating): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, stationary): 
     phantomList = [] 
     Nx = np.shape(image)[1] 
     Ny = np.shape(image)[0]
@@ -61,12 +61,11 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
 
     if (motion == 'Sine'):
         shiftList = [] 
-        surSignal = [] 
         for iFrame in range(nFrames): 
-            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/19))
+            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
             if ((not stationary) and (iFrame > nFrames/2)): 
-                shift -= int(0.5*trueShiftAmplitude) 
-
+                shift += int(0.5*trueShiftAmplitude) 
+            shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
     
@@ -78,26 +77,17 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
                 tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :]
                 tmp[0, (Ny+shift):Ny, :] = 0
 
-            phase = shift + trueOffset
-            if (gating): 
-                if ((phase >= -trueShiftAmplitude + trueOffset) and (phase <= -0.65*trueShiftAmplitude + trueOffset)): 
-                    phantomList.append(tmp) 
-                    surSignal.append(phase) 
-                    shiftList.append(shift) 
-            else: 
-                phantomList.append(tmp) 
-                surSignal.append(phase)
-                shiftList.append(shift) 
+            phantomList.append(tmp) 
+            surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
 
     return (phantomList, surSignal, shiftList) 
 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
     file.write("Motion: {}\n".format(motion))
     file.write("Stationary: {}\n".format(stationary)) 
-    file.write("Respiratory gating: {}\n".format(gating)) 
     file.write("Number of iterations: {}\n".format(nIt))
     file.write("True shift amplitude: {}\n".format(trueShiftAmplitude))
     file.write("True offset (motion model): {}\n".format(trueOffset))
