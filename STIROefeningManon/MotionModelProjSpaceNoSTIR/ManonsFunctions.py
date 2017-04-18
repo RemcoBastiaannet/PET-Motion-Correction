@@ -1,10 +1,16 @@
-def make_figSaveDir(dir, motion, phantom, noise, stationary, gating):
+def make_figSaveDir(motion, phantom, noise, stationary, gating):
     # Make sure all possible directories exist! 
-    dir += '{}/'.format(motion)
-    dir += '{}/'.format(phantom)
-    dir += 'Noise_{}/'.format(noise)
-    dir += 'Stationary_{}/'.format(stationary)
-    dir += 'Gating_{}/'.format(gating)
+    dir = './Figures/'
+    if (motion == 'Step'): dir += 'Step/'
+    elif (motion == 'Sine'): dir += 'Sine/'
+    if (phantom == 'Block'): dir += 'Block/'
+    elif (phantom == 'Shepp-Logan'): dir += 'Shepp-Logan/'
+    if (noise): dir += 'Noise/'
+    else: dir += 'No_Noise/'
+    if (stationary): dir += 'Stationary/'
+    else: dir += 'Non_Stationary/'
+    if (gating): dir += 'Gating/'
+    else: dir += 'No_Gating/'
     return dir 
 
 from skimage.transform import iradon, radon, rescale
@@ -13,7 +19,10 @@ from skimage.io import imread
 import numpy as np
 import math
 def make_Phantom(phantom, duration): 
-    if phantom == 'Shepp-Logan': 
+    if phantom == 'Block': 
+        image = np.zeros((160,160))
+        image[65:95, 65:95] = 1 
+    elif phantom == 'Shepp-Logan': 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
         imageSmall = rescale(imageSmall, scale=0.4)
 
@@ -25,7 +34,7 @@ def make_Phantom(phantom, duration):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= 1000*duration/np.sum(image) 
+    image *= duration/np.sum(image) 
 
     return image 
 

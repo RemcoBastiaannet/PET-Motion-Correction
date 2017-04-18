@@ -8,6 +8,7 @@ import scipy as sp
 
 
 #_________________________CONFIGURATION_______________________________
+#phantom = 'Block'
 phantom = 'Shepp-Logan' 
 #noise = False
 noise = True
@@ -26,8 +27,7 @@ duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 10
 
-dir = './Figures/'
-figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, gating)
+figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary, gating)
 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
 
