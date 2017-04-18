@@ -14,15 +14,16 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-nIt = 10 
+nIt = 3
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 10
+else: nFrames = 3
 
-figSaveDir = mf.make_figSaveDir(motion, phantom, noise, stationary)
+dir = './Figures/'
+figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames)
 
@@ -68,6 +69,7 @@ reconList = []
 for iFrame in range(len(measList)): 
     reconList.append(iradon(measList[iFrame], iAngles)) 
 guess = np.mean(reconList, axis = 0)
+guess = reconList[0] # Added
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
@@ -80,28 +82,10 @@ numFigures += 1
 offsetFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
-offsetFound = trueOffset-1 # First guess 
+#offsetFound = trueOffset-2 # First guess 
 guessSum = []
 guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
-    # Normal MLEM 
-    for iFrame in range(nFrames): 
-        shiftedGuess = np.zeros(np.shape(guess))
-        sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
-        shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
-        error = measList[iFrame]/shiftedGuessSinogram 
-        error[np.isnan(error)] = 0
-        error[np.isinf(error)] = 0
-        error[error > 1E10] = 0;
-        error[error < 1E-10] = 0
-        errorBck = iradon(error, iAngles, filter = None) 
-        errorBckShifted = np.zeros(np.shape(errorBck))
-        sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
-        guess *= errorBckShifted
-    guess /= norm 
-    guessSum.append(np.sum(guess))
-    countIt = iIt+1 
-
     # Motion model optimization
     guessMovedList = []
     guessMovedProjList = []
@@ -144,6 +128,24 @@ for iIt in range(nIt):
     plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
 
+    # Normal MLEM 
+    for iFrame in range(nFrames): 
+        shiftedGuess = np.zeros(np.shape(guess))
+        sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
+        shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
+        error = measList[iFrame]/shiftedGuessSinogram 
+        error[np.isnan(error)] = 0
+        error[np.isinf(error)] = 0
+        error[error > 1E10] = 0;
+        error[error < 1E-10] = 0
+        errorBck = iradon(error, iAngles, filter = None) 
+        errorBckShifted = np.zeros(np.shape(errorBck))
+        sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
+        guess *= errorBckShifted
+    guess /= norm 
+    guessSum.append(np.sum(guess))
+    countIt = iIt+1 
+
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D))
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
@@ -153,10 +155,9 @@ numFigures += 1
 plt.close() 
 
 for i in range(len(quadErrorSumListList)): 
-    if(i%(nIt/5) == 0):
-        plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
-        plt.plot(offsetList, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
-        plt.axvline(trueOffset, color='k', linestyle='--')
+    plt.plot(offsetFoundList, quadErrorSumFoundList, 'ro') 
+    plt.plot(offsetList, quadErrorSumListList[i], label = 'Iteration {}'.format(i)), plt.title('Quadratic error vs. offset')
+    plt.axvline(trueOffset, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 

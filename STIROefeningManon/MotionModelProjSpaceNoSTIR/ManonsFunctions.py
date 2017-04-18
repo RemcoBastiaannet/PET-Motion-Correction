@@ -1,13 +1,9 @@
-def make_figSaveDir(motion, phantom, noise, stationary):
+def make_figSaveDir(dir, motion, phantom, noise, stationary):
     # Make sure all possible directories exist! 
-    dir = './Figures/'
-    if (motion == 'Step'): dir += 'Step/'
-    elif (motion == 'Sine'): dir += 'Sine/'
-    if (phantom == 'Block'): dir += 'Block/'
-    elif (phantom == 'Shepp-Logan'): dir += 'Shepp-Logan/'
-    if (noise): dir += 'Noise/'
-    else: dir += 'No_Noise/'
-    if (stationary == 0): dir += 'Non_Stationary/'
+    dir += '{}/'.format(motion)
+    dir += '{}/'.format(phantom)
+    dir += 'Noise_{}/'.format(noise)
+    dir += 'Stationary_{}/'.format(stationary)
     return dir 
 
 from skimage.transform import iradon, radon, rescale
