@@ -1,4 +1,4 @@
-def make_figSaveDir(motion, phantom, noise, stationary, gating):
+def make_figSaveDir(motion, phantom, noise, stationary):
     # Make sure all possible directories exist! 
     dir = './Figures/'
     if (motion == 'Step'): dir += 'Step/'
@@ -7,10 +7,7 @@ def make_figSaveDir(motion, phantom, noise, stationary, gating):
     elif (phantom == 'Shepp-Logan'): dir += 'Shepp-Logan/'
     if (noise): dir += 'Noise/'
     else: dir += 'No_Noise/'
-    if (stationary): dir += 'Stationary/'
-    else: dir += 'Non_Stationary/'
-    if (gating): dir += 'Gating/'
-    else: dir += 'No_Gating/'
+    if (stationary == 0): dir += 'Non_Stationary/'
     return dir 
 
 from skimage.transform import iradon, radon, rescale
@@ -64,12 +61,11 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
 
     if (motion == 'Sine'):
         shiftList = [] 
-        surSignal = []
-        drift = -int(0.5*trueShiftAmplitude)
+        surSignal = [] 
         for iFrame in range(nFrames): 
             shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/19))
             if ((not stationary) and (iFrame > nFrames/2)): 
-                shift += drift 
+                shift -= int(0.5*trueShiftAmplitude) 
 
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
@@ -83,14 +79,8 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
                 tmp[0, (Ny+shift):Ny, :] = 0
 
             phase = shift + trueOffset
-            minSurSignal = -trueShiftAmplitude + trueOffset
-            maxSurSignal = trueShiftAmplitude + trueOffset
-            if (drift >= 0): maxSurSignal += drift      
-            else: minSurSignal += drift 
-            gateMin = minSurSignal
-            gateMax = minSurSignal + 0.35*(maxSurSignal - minSurSignal)
             if (gating): 
-                if ((phase <= gateMax) and (phase >= gateMin)): 
+                if ((phase >= -trueShiftAmplitude + trueOffset) and (phase <= -0.65*trueShiftAmplitude + trueOffset)): 
                     phantomList.append(tmp) 
                     surSignal.append(phase) 
                     shiftList.append(shift) 
@@ -99,7 +89,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
                 surSignal.append(phase)
                 shiftList.append(shift) 
 
-    return (phantomList, surSignal, shiftList, gateMin, gateMax) 
+    return (phantomList, surSignal, shiftList) 
 
 def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating): 
     file = open(figSaveDir + "Configuratie.txt", "w")
