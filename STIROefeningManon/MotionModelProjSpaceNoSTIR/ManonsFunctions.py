@@ -19,11 +19,11 @@ def make_Phantom(phantom, duration):
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
         imageSmall = rescale(imageSmall, scale=0.4)
 
-        tmpY = np.zeros((50, np.shape(imageSmall)[1])) 
+        tmpY = np.zeros((150, np.shape(imageSmall)[1])) 
         image = np.concatenate((tmpY, imageSmall), axis = 0)
         image = np.concatenate((image, tmpY), axis = 0)
 
-        tmpX = np.zeros((np.shape(image)[0], 50))
+        tmpX = np.zeros((np.shape(image)[0], 150))
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
