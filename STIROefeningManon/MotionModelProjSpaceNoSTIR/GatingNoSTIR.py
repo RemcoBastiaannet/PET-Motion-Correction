@@ -15,19 +15,20 @@ motion = 'Sine'
 stationary = True 
 #stationary = False # Only possible for sinusoidal motion 
 
-nIt = 10
+nIt = 1
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 10
+else: nFrames = 30
+gating = True
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 figSaveDir += 'Gating/'
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -37,15 +38,29 @@ numFigures += 1
 
 
 #_________________________ADD MOTION_______________________________ 
-phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary,)
+nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary)
+
+maxSurSignal = np.max(nonGatedSurSignal) 
+minSurSignal = np.min(nonGatedSurSignal)
+gateMin = minSurSignal
+gateMax = minSurSignal + 0.35*(maxSurSignal - minSurSignal)
+
+surSignal = []
+phantomList = []
+shiftList = []
+for i in range(len(nonGatedSurSignal)): 
+    if ((nonGatedSurSignal[i] <= gateMax) and (nonGatedSurSignal[i] >= gateMin)): 
+        surSignal.append(nonGatedSurSignal[i])
+        phantomList.append(nonGatedPhantomList[i])
+        shiftList.append(nonGatedShiftList[i])
 
 # Visualization of gating 
-x = np.arange(0, len(phantomList), 0.1)
-plt.plot(range(len(surSignal)), surSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(range(len(shiftList)), shiftList, 'ro', label = 'True motion', markersize = 3) 
+x = np.arange(0, len(nonGatedPhantomList), 0.1)
+plt.plot(range(len(nonGatedSurSignal)), nonGatedSurSignal, 'bo', label = 'Surrogate signal', markersize = 3), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(range(len(nonGatedShiftList)), nonGatedShiftList, 'ro', label = 'True motion', markersize = 3) 
 plt.axhline(y = gateMin, color = 'grey', label = 'Respiratory gating')
 plt.axhline(y = gateMax, color = 'grey')
-plt.axis([0, len(phantomList), -trueShiftAmplitude - 5, trueShiftAmplitude + trueOffset])
+plt.axis([0, len(nonGatedPhantomList), -trueShiftAmplitude - 5, trueShiftAmplitude + trueOffset])
 plt.fill_between(x, gateMin, gateMax, color='grey', alpha='0.5')
 plt.legend(loc = 0), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
