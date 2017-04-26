@@ -7,3 +7,4 @@ True shift amplitude: 15
 True offset (motion model): 5
 Scan duration: 60
 Number of time frames: 10
+Gating: False

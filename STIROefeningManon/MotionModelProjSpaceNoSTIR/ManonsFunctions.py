@@ -27,7 +27,7 @@ def make_Phantom(phantom, duration):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= 1000*duration/np.sum(image) 
+    image *= 10*duration/np.sum(image) # number of total counts per second times duration divided by the sum of the image 
 
     return image 
 
