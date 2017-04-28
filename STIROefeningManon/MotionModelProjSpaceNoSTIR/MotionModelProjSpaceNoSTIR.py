@@ -8,12 +8,12 @@ import scipy as sp
 
 #_________________________CONFIGURATION_______________________________
 phantom = 'Shepp-Logan' 
-#noise = False
-noise = True
+noise = False
+#noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = False # Only possible for sinusoidal motion 
+stationary = True 
+#stationary = False # Only possible for sinusoidal motion 
 
 nIt = 10
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
@@ -21,7 +21,7 @@ trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 40
+else: nFrames = 10
 gating = False
 
 dir = './Figures/'
@@ -65,8 +65,8 @@ for iFrame in range(nFrames):
 plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurements.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
-plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = 10)
-plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = 10)
+plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = 1000)
+plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = 1000)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
