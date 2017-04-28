@@ -123,7 +123,8 @@ for iIt in range(nIt):
     # Normal MLEM 
     for iFrame in range(nFrames): 
         shiftedGuess = np.zeros(np.shape(guess))
-        sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
+        shiftedGuess = guess
+        #sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
@@ -132,7 +133,8 @@ for iIt in range(nIt):
         error[error < 1E-10] = 0
         errorBck = iradon(error, iAngles, filter = None) 
         errorBckShifted = np.zeros(np.shape(errorBck))
-        sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
+        #sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
+        errorBckShifted = errorBck
         guess *= errorBckShifted
     guess /= norm 
     guessSum.append(np.sum(guess))
