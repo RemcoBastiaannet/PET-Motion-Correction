@@ -91,15 +91,3 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("Number of time frames: {}\n".format(nFrames))
     file.write("Gating: {}\n".format(gating))
     file.close()
-
-def gating(nonGatedSurSignal, nonGatedPhantomList, nonGatedShiftList, gateMin, gateMax): 
-    surSignal = []
-    phantomList = []
-    shiftList = []
-    for i in range(len(nonGatedSurSignal)): 
-        if ((nonGatedSurSignal[i] <= gateMax) and (nonGatedSurSignal[i] >= gateMin)): 
-            surSignal.append(nonGatedSurSignal[i])
-            phantomList.append(nonGatedPhantomList[i])
-            shiftList.append(nonGatedShiftList[i])
-    
-    return (surSignal, phantomList, shiftList) 
