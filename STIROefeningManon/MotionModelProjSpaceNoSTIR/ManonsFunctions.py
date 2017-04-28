@@ -11,7 +11,7 @@ from skimage import data_dir
 from skimage.io import imread
 import numpy as np
 import math
-def make_Phantom(phantom, duration): 
+def make_Phantom(phantom, duration, noiseLevel): 
     if phantom == 'Block': 
         image = np.zeros((160,160))
         image[65:95, 65:95] = 1 
@@ -27,7 +27,7 @@ def make_Phantom(phantom, duration):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= 1000*duration/np.sum(image) 
+    image *= noiseLevel*duration/np.sum(image) # number of total counts per second times duration divided by the sum of the image 
 
     return image 
 
@@ -78,7 +78,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
 
     return (phantomList, surSignal, shiftList) 
 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -89,4 +89,17 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("True offset (motion model): {}\n".format(trueOffset))
     file.write("Scan duration: {}\n".format(duration))
     file.write("Number of time frames: {}\n".format(nFrames))
+    file.write("Gating: {}\n".format(gating))
     file.close()
+
+def gating(nonGatedSurSignal, nonGatedPhantomList, nonGatedShiftList, gateMin, gateMax): 
+    surSignal = []
+    phantomList = []
+    shiftList = []
+    for i in range(len(nonGatedSurSignal)): 
+        if ((nonGatedSurSignal[i] <= gateMax) and (nonGatedSurSignal[i] >= gateMin)): 
+            surSignal.append(nonGatedSurSignal[i])
+            phantomList.append(nonGatedPhantomList[i])
+            shiftList.append(nonGatedShiftList[i])
+    
+    return (surSignal, phantomList, shiftList) 
