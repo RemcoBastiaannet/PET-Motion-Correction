@@ -1,10 +1,10 @@
 Phantom: Shepp-Logan
-Noise: True
+Noise: False
 Motion: Sine
-Stationary: False
+Stationary: True
 Number of iterations: 10
 True shift amplitude: 15
 True offset (motion model): 5
 Scan duration: 60
-Number of time frames: 40
+Number of time frames: 10
 Gating: True
