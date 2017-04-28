@@ -4,23 +4,24 @@ import numpy as np
 from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 import scipy as sp
+import pyvpx
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-noise = False
-#noise = True
+#noise = False
+noise = True
 #motion = 'Step' 
 motion = 'Sine'
-stationary = True 
-#stationary = False # Only possible for sinusoidal motion 
+#stationary = True 
+stationary = False # Only possible for sinusoidal motion 
 
-nIt = 10
+nIt = 5
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 40
+else: nFrames = 20
 noiseLevel = 10 
 gating = False 
 
@@ -33,6 +34,10 @@ mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, true
 image2D = mf.make_Phantom(phantom, duration, noiseLevel)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
+
+image2DTMP = np.zeros((1, 460, 460))
+image2DTMP[0,:,:] = image2D
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'image2D.vpx') 
  
 #_________________________ADD MOTION_______________________________ 
 phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image2D, stationary)
@@ -62,6 +67,11 @@ for iFrame in range(nFrames):
 plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurements.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
+measListTMP = np.zeros((1, 651, 119))
+measListTMP[0,:,:] = measList[0]
+pyvpx.numpy2vpx(measListTMP, figSaveDir + 'measurementTF1.vpx')
+
+
 plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = noiseLevel)
 plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = noiseLevel)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -69,7 +79,6 @@ numFigures += 1
 
 reconList = []
 for iFrame in range(len(measList)): 
-
     reconList.append(iradon(measList[iFrame], iAngles)) 
 guess = np.mean(reconList, axis = 0)
 #guess = reconList[0] # Added
@@ -89,20 +98,22 @@ quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
+    '''
     # Motion model optimization
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
-    offsetList = range(trueOffset-4, trueOffset+5)
+    offsetList = range(trueOffset-2, trueOffset+3)
     for offset in offsetList: 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
-            guessMovedList.append(np.zeros(np.shape(guess)))
+            guessMovedList.append(np.zeros(np.shape(guess))) 
             sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
             guessMovedProj = radon(guessMovedList[iFrame], iAngles)
             guessMovedProjList.append(guessMovedProj) 
             quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
+        print 'Offset: {}'.format(offset), 'Quadratic error: {}'.format(quadErrorSum)
 
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
@@ -117,19 +128,36 @@ for iIt in range(nIt):
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
     numFigures += 1 
     plt.close()
+    '''
+    offsetFound = 5
 
     # Normal MLEM 
     for iFrame in range(nFrames): 
         shiftedGuess = np.zeros(np.shape(guess))
         #shiftedGuess = guess
         sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
+        guessTMP = np.zeros((1, 460, 460))
+        guessTMP[0,:,:] = guess
+        pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guessIteration{}.vpx'.format(iIt))
+        shiftedGuessTMP = np.zeros((1, 460, 460))
+        shiftedGuessTMP[0,:,:] = shiftedGuess
+        pyvpx.numpy2vpx(shiftedGuessTMP, figSaveDir + 'shiftedGuessIteration{}.vpx'.format(iIt))
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
+        shiftedGuessSinogramTMP = np.zeros((1, 651, 119))
+        shiftedGuessSinogramTMP[0,:,:] = shiftedGuessSinogram 
+        pyvpx.numpy2vpx(shiftedGuessSinogramTMP, (figSaveDir + 'shiftedGuessSinogramIteration{}.vpx'.format(iIt)))
         error = measList[iFrame]/shiftedGuessSinogram 
+        errorTMP = np.zeros((1, 651, 119))
+        errorTMP[0,:,:] = error 
+        pyvpx.numpy2vpx(errorTMP, figSaveDir + 'errorIteration{}.vpx'.format(iIt))
         error[np.isnan(error)] = 0
         error[np.isinf(error)] = 0
-        error[error > 1E10] = 0;
+        error[error > 1E10] = 0
         error[error < 1E-10] = 0
         errorBck = iradon(error, iAngles, filter = None) 
+        errorBckTMP = np.zeros((1, 460, 460))
+        errorBckTMP[0,:,:] = errorBck 
+        pyvpx.numpy2vpx(errorBckTMP, figSaveDir + 'errorBck{}.vpx'.format(iIt))
         errorBckShifted = np.zeros(np.shape(errorBck))
         sp.ndimage.shift(errorBck, (-surSignal[iFrame] + offsetFound, 0), errorBckShifted)
         #errorBckShifted = errorBck
