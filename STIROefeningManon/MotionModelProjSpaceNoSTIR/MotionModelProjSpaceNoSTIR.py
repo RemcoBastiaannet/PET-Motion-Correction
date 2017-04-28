@@ -22,12 +22,11 @@ numFigures = 0
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 10
-gating = False
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames, gating)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueOffset, duration, nFrames)
 
 
 #_________________________MAKE PHANTOM_______________________________
