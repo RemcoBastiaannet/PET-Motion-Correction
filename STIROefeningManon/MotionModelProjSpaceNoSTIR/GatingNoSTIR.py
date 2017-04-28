@@ -9,20 +9,20 @@ import scipy as sp
 #_________________________CONFIGURATION_______________________________
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-#noise = False
-noise = True
+noise = False
+#noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = False # Only possible for sinusoidal motion 
+stationary = True 
+#stationary = False # Only possible for sinusoidal motion 
 
-nIt = 5
+nIt = 10
 trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 20
+else: nFrames = 40
 noiseLevel = 10
 gating = True
 
