@@ -69,8 +69,7 @@ numFigures += 1
 
 reconList = []
 for iFrame in range(len(measList)): 
-
-    reconList.append(iradon(measList[iFrame], iAngles)) 
+    reconList.append(iradon(measList[iFrame], iAngles, filter = None)) 
 guess = np.mean(reconList, axis = 0)
 #guess = reconList[0] # Added
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -93,7 +92,7 @@ for iIt in range(nIt):
     guessMovedList = []
     guessMovedProjList = []
     quadErrorSumList = []   
-    offsetList = range(trueOffset-4, trueOffset+5)
+    offsetList = range(trueOffset-3, trueOffset+4)
     for offset in offsetList: 
         quadErrorSum = 0 
         for iFrame in range(nFrames): 
@@ -103,6 +102,7 @@ for iIt in range(nIt):
             guessMovedProjList.append(guessMovedProj) 
             quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
         quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
+    print 'Offset: {}'.format(offset), 'Quadratic error: {}'.format(quadErrorSum)
 
     quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
     for i in range(len(quadErrorSumList)): 
