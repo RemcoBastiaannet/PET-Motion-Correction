@@ -85,10 +85,6 @@ guess = np.mean(reconList, axis = 0)
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
-guessTMP = np.zeros((1, 460, 460))
-guessTMP[0,:,:] = guess
-pyvpx.numpy2vpx(guessTMP, (figSaveDir + 'guess.vpx'))
-
 normSino = np.ones(np.shape(measList[0]))
 norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
 plt.figure(), plt.title('MLEM normalization'), plt.imshow(norm, interpolation = None, vmin = 0, vmax = 0.03), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_norm.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -140,6 +136,9 @@ for iIt in range(nIt):
         shiftedGuess = np.zeros(np.shape(guess))
         #shiftedGuess = guess
         sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
+        guessTMP = np.zeros((1, 460, 460))
+        guessTMP[0,:,:] = guess
+        pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guessIteration{}.vpx'.format(iIt))
         shiftedGuessTMP = np.zeros((1, 460, 460))
         shiftedGuessTMP[0,:,:] = shiftedGuess
         pyvpx.numpy2vpx(shiftedGuessTMP, figSaveDir + 'shiftedGuessIteration{}.vpx'.format(iIt))
