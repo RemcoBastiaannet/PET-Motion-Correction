@@ -16,13 +16,13 @@ motion = 'Sine'
 stationary = True 
 #stationary = False # Only possible for sinusoidal motion 
 
-nIt = 5
-trueShiftAmplitude = 15 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+nIt = 3
+trueShiftAmplitude = 30 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 10
+else: nFrames = 3
 noiseLevel = 10 
 gating = False 
 
@@ -76,6 +76,7 @@ plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpola
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
+'''
 reconList = []
 for iFrame in range(len(measList)): 
     reconList.append(iradon(copy.deepcopy(measList[iFrame]), iAngles, filter = None)) 
@@ -83,7 +84,8 @@ for iFrame in range(len(measList)):
     reconTMP[0,:,:] = reconList[iFrame]
     pyvpx.numpy2vpx(reconTMP, figSaveDir + 'reconGuess_{}.vpx'.format(iFrame)) 
 guess = np.mean(reconList, axis = 0)
-#guess = reconList[0] # Added
+'''
+guess = np.ones(np.shape(image2D))
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(guess), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 guessTMP = np.zeros((1, 460, 460))
@@ -102,17 +104,62 @@ pyvpx.numpy2vpx(normTMP, figSaveDir + 'norm.vpx')
 offsetFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
-#offsetFound = trueOffset-2 # First guess 
 guessSum = []
 guessSum.append(np.sum(guess))
-offsetFound = 0 # first guess 
 for iIt in range(nIt): 
-    # Normal MLEM 
+    if(iIt == 0): 
+        # Normal MLEM 
+        for iFrame in range(nFrames): 
+            error = measList[iFrame]/radon(guess, iAngles) 
+            error[np.isnan(error)] = 0
+            error[np.isinf(error)] = 0
+            error[error > 1E10] = 0;
+            error[error < 1E-10] = 0
+            errorBck = iradon(error, iAngles, filter = None) 
+            guess *= errorBck
+        guess /= norm 
+        guessTMP = np.zeros((1, 460, 460))
+        guessTMP[0,:,:] = guess
+        pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
+        guessSum.append(np.sum(guess))
+        countIt = iIt+1 
+
+        plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+        numFigures += 1 
+
+    # Motion model optimization
+    quadErrorSumList = []   
+    offsetList = range(trueOffset-2, trueOffset+3)
+    for offset in offsetList: 
+        quadErrorSum = 0 
+        for iFrame in range(nFrames): 
+            guessMoved = np.zeros(np.shape(guess))
+            sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMoved) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+            guessMovedProj = radon(guessMoved, iAngles)
+            quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
+        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
+        print 'Offset: {}'.format(offset), 'Quadratic error: {}'.format(quadErrorSum)
+
+    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+    for i in range(len(quadErrorSumList)): 
+        if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
+            offsetFound = quadErrorSumList[i]['offset']
+            offsetFoundList.append(offsetFound)
+            quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
+            quadErrorSumFoundList.append(quadErrorSumFound) 
+    quadErrorSumListList.append(quadErrorSums)
+
+    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+    numFigures += 1 
+    plt.close()
+
+    # Normal MLEM with motion compensation 
     for iFrame in range(nFrames): 
         shiftedGuess = np.zeros(np.shape(guess))
-        shiftedGuess = guess
+        #shiftedGuess = guess
         sp.ndimage.shift(guess, (surSignal[iFrame] - offsetFound, 0), shiftedGuess)
-        #shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
+        shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
         error[np.isinf(error)] = 0
@@ -130,38 +177,8 @@ for iIt in range(nIt):
     guessSum.append(np.sum(guess))
     countIt = iIt+1 
 
-    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
-
-    # Motion model optimization
-    guessMovedList = []
-    guessMovedProjList = []
-    quadErrorSumList = []   
-    offsetList = range(-trueOffset-3, trueOffset+4)
-    for offset in offsetList: 
-        quadErrorSum = 0 
-        for iFrame in range(nFrames): 
-            guessMovedList.append(np.zeros(np.shape(guess)))
-            sp.ndimage.shift(guess, (surSignal[iFrame] - offset, 0), guessMovedList[iFrame]) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
-            guessMovedProj = radon(guessMovedList[iFrame], iAngles)
-            guessMovedProjList.append(guessMovedProj) 
-            quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
-        quadErrorSumList.append({'offset' : offset, 'quadErrorSum' : quadErrorSum})
-    print 'Offset: {}'.format(offset), 'Quadratic error: {}'.format(quadErrorSum)
-
-    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-    for i in range(len(quadErrorSumList)): 
-        if(quadErrorSumList[i]['quadErrorSum'] == min(quadErrorSums)): 
-            offsetFound = quadErrorSumList[i]['offset']
-            offsetFoundList.append(offsetFound)
-            quadErrorSumFound = quadErrorSumList[i]['quadErrorSum']
-            quadErrorSumFoundList.append(quadErrorSumFound) 
-    quadErrorSumListList.append(quadErrorSums)
-
-    plt.plot(offsetList, quadErrorSums, 'b-', offsetFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. offset TEST')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-    numFigures += 1 
-    plt.close()
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
