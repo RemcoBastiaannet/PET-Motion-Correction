@@ -11,19 +11,22 @@ from skimage import data_dir
 from skimage.io import imread
 import numpy as np
 import math
+import scipy.ndimage as spim
+import copy
+
 def make_Phantom(phantom, duration, noiseLevel): 
     if phantom == 'Block': 
         image = np.zeros((160,160))
         image[65:95, 65:95] = 1 
     elif phantom == 'Shepp-Logan': 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-        imageSmall = rescale(imageSmall, scale=0.4)
+        imageSmall = rescale(imageSmall, scale=0.2)
 
-        tmpY = np.zeros((150, np.shape(imageSmall)[1])) 
+        tmpY = np.zeros((40, np.shape(imageSmall)[1])) 
         image = np.concatenate((tmpY, imageSmall), axis = 0)
         image = np.concatenate((image, tmpY), axis = 0)
 
-        tmpX = np.zeros((np.shape(image)[0], 150))
+        tmpX = np.zeros((np.shape(image)[0], 40))
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
@@ -44,6 +47,8 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
             tmp = np.zeros((1, Ny, Nx))
             tmp[0] = image  
 
+            #tmp = spim.shift(tmp, [0, shift, 0], cval = 0.0)
+            
             if shift > 0: 
                 tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
                 tmp[0, 0:shift, :] = 0
@@ -51,30 +56,25 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
             if shift < 0: 
                 tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :] 
                 tmp[0, (Ny+shift):Ny, :] = 0
+            
+            #surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
+            surSignal = [i + trueOffset for i in shiftList]
+            phantomList.append(copy.deepcopy(tmp))
 
-            surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
-            phantomList.append(tmp) 
-
-    if (motion == 'Sine'):
+    if 'Sine' in motion:
         shiftList = [] 
         for iFrame in range(nFrames): 
-            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
+            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/4))
             if ((not stationary) and (iFrame > nFrames/2)): 
-                shift += int(0.5*trueShiftAmplitude) 
+                shift += trueShiftAmplitude
             shiftList.append(shift) 
             tmp = np.zeros((1, Ny, Nx))
-            tmp[0] = image  
-    
-            if shift > 0: 
-                tmp[0, shift:Ny, :] = tmp[0, 0:(Ny-shift), :]
-                tmp[0, 0:shift, :] = 0
-       
-            if shift < 0: 
-                tmp[0, 0:(Ny+shift), :] = tmp[0, (-shift):Ny, :]
-                tmp[0, (Ny+shift):Ny, :] = 0
+            tmp[0] = image 
+            
+            tmp = spim.shift(tmp, [0, shift, 0], cval = 0.0)
 
-            phantomList.append(tmp) 
-            surSignal = [shiftList[i] + trueOffset for i in range(len(shiftList))]
+            phantomList.append(copy.deepcopy(tmp))
+            surSignal = [i + trueOffset for i in shiftList]
 
     return (phantomList, surSignal, shiftList) 
 
