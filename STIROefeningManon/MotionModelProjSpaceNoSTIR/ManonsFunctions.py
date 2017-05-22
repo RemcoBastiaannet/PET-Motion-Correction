@@ -22,11 +22,11 @@ def make_Phantom(phantom, duration, noiseLevel):
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
         imageSmall = rescale(imageSmall, scale=0.2)
 
-        tmpY = np.zeros((40, np.shape(imageSmall)[1])) 
+        tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
         image = np.concatenate((tmpY, imageSmall), axis = 0)
         image = np.concatenate((image, tmpY), axis = 0)
 
-        tmpX = np.zeros((np.shape(image)[0], 40))
+        tmpX = np.zeros((np.shape(image)[0], 80))
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
@@ -64,7 +64,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueOffset, image, station
     if 'Sine' in motion:
         shiftList = [] 
         for iFrame in range(nFrames): 
-            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/4))
+            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
             if ((not stationary) and (iFrame > nFrames/2)): 
                 shift += trueShiftAmplitude
             shiftList.append(shift) 
