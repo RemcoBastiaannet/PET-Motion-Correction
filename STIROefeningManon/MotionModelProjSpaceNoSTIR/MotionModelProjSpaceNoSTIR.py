@@ -8,23 +8,22 @@ import pyvpx
 import copy
 from scipy.optimize import curve_fit
 
-#phantom = 'Block'
+##phantom = 'Block'
 phantom = 'Shepp-Logan' 
 #noise = False
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = False # Only possible for sinusoidal motion 
+stationary = True 
+#stationary = False # Only possible for sinusoidal motion 
 
 nIt = 7 
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueSlope = 2.
-trueInvSlope = 1./trueSlope
+trueSlope = 0.5 
 numFigures = 0 
-duration = 60 # in seconds
-if (motion == 'Step'): nFrames = 2
-else: nFrames = 10 
+duration = 60 # in seconds 
+if (motion == 'Step'): nFrames = 2 
+else: nFrames = 10
 noiseLevel = 10 
 gating = False 
 
@@ -45,6 +44,10 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'image2D.vpx')
 phantomList, surSignal, shiftList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, image2D, stationary)
 originalImage = phantomList[0]
 
+imageTMP = np.zeros((1,) + np.shape(image2D))
+imageTMP[0,:,:] = phantomList[0]
+pyvpx.numpy2vpx(imageTMP, figSaveDir + 'image.vpx') 
+
 for iFrame in range(nFrames):    
     plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r) 
 plt.suptitle('Phantom'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -61,8 +64,7 @@ measList = []
 for iFrame in range(nFrames):
     meas = radon(copy.deepcopy(phantomList[iFrame])[0,:,:], iAngles) 
     if (iFrame == 0): measNoNoise = meas
-    if (noise): 
-        meas = sp.random.poisson(meas)
+    if (noise): meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
     plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(meas, interpolation=None, vmin = 0, vmax = 1000, cmap=plt.cm.Greys_r) 
     measList.append(meas) 
@@ -83,41 +85,43 @@ guessTMP[0,:,:] = guess
 pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx') 
 
 #_________________________NESTED EM LOOP_______________________________
-invSlopeFoundList = []
+slopeFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
-invSlopeFound = 0.0 # Initial guess  
+slopeFound = 0.0 # Initial guess  
 for iIt in range(nIt): 
     if (iIt >= 4):
         # Motion model optimization
         quadErrorSumList = []   
-        invSlopeList = np.linspace(trueInvSlope-1., trueInvSlope+1., 20)
-        for invSlope in invSlopeList: 
+        slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
+        for slope in slopeList: 
             quadErrorSum = 0 
             for iFrame in range(nFrames): 
                 guessMoved = np.zeros(np.shape(guess))
-                guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlope, 0)) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+                guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
                 guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
                 quadErrorSum += np.sum(abs(guessMovedProj - measList[iFrame]))
-            quadErrorSumList.append({'invSlope' : invSlope, 'quadErrorSum' : quadErrorSum})
-            print 'Inverse slope: {}'.format(invSlope), 'Quadratic error: {}'.format(quadErrorSum)
+            quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
+            print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
 
         quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
         quadErrorSumListList.append(quadErrorSums)
         index = quadErrorSums.index(np.min(quadErrorSums))
-        invSlopeFound = quadErrorSumList[index]['invSlope']
-        invSlopeFoundList.append(invSlopeFound)
+        slopeFound = quadErrorSumList[index]['slope']
+        slopeFoundList.append(slopeFound)
         quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
         quadErrorSumFoundList.append(quadErrorSumFound) 
 
+        '''
         def func(x, a, b, c): 
             return a * (x-b)**2 + c
-        popt, pcov = curve_fit(func, invSlopeList, quadErrorSums)
-        plt.plot(invSlopeList, func(invSlopeList, *popt), 'g-', label = 'fit')
+        popt, pcov = curve_fit(func, slopeList, quadErrorSums)
+        plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
+        '''
 
-        plt.plot(invSlopeList, quadErrorSums, 'b-', invSlopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. inverse slope')
+        plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
         numFigures += 1 
         plt.close()
@@ -126,16 +130,16 @@ for iIt in range(nIt):
     # MLEM with motion compensation 
     for iFrame in range(nFrames): 
         shiftedGuess = np.zeros(np.shape(guess)) 
-        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlopeFound, 0)) 
+        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slopeFound, 0)) 
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
         error[np.isinf(error)] = 0
-        error[error > 1E10] = 0;
+        error[error > 1E10] = 0
         error[error < 1E-10] = 0
         errorBck = iradon(error, iAngles, filter = None) 
         errorBckShifted = np.zeros(np.shape(errorBck)) 
-        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * invSlopeFound, 0)) 
+        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, 0)) 
         totalError += errorBckShifted   
     guess *= totalError/nFrames
     guess /= np.sum(guess) 
@@ -159,9 +163,9 @@ numFigures += 1
 plt.close() 
 
 for i in range(len(quadErrorSumListList)): 
-    plt.plot(invSlopeFoundList, quadErrorSumFoundList, 'ro') 
-    plt.plot(invSlopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. inverse slope')
-    plt.axvline(trueInvSlope, color='k', linestyle='--')
+    plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
+    plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
+    plt.axvline(trueSlope, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 

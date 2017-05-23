@@ -42,7 +42,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, image, stationa
 
     for iFrame in range(nFrames): 
         if 'Sine' in motion:
-            shift = int(trueShiftAmplitude * math.sin(2*math.pi*iFrame/9))
+            shift = trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)
             if ((not stationary) and (iFrame > nFrames/2)): 
                 shift += trueShiftAmplitude
         elif 'Step' in motion: 
@@ -53,10 +53,11 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, image, stationa
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image      
         tmp = spim.shift(tmp, [0, shift, 0], cval = 0.0)
+        tmp[tmp < 1E-10] = 0
 
         phantomList.append(copy.deepcopy(tmp))
     
-    surSignal = [trueSlope * elem for elem in shiftList]
+    surSignal = [elem/trueSlope for elem in shiftList]
 
     return (phantomList, surSignal, shiftList) 
 
