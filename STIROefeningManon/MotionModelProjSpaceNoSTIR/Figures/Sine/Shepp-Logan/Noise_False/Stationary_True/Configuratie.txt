@@ -2,9 +2,9 @@ Phantom: Shepp-Logan
 Noise: False
 Motion: Sine
 Stationary: True
-Number of iterations: 10
+Number of iterations: 7
 True shift amplitude: 10
-True slope (motion model): 2
+True slope (motion model): 2.0
 Scan duration: 60
 Number of time frames: 10
 Gating: False
