@@ -6,15 +6,16 @@ import ManonsFunctions as mf
 import scipy as sp
 import pyvpx
 import copy
+from scipy.optimize import curve_fit
 
 #phantom = 'Block'
 phantom = 'Shepp-Logan' 
-noise = False
-#noise = True
+#noise = False
+noise = True
 #motion = 'Step' 
 motion = 'Sine'
-stationary = True 
-#stationary = False # Only possible for sinusoidal motion 
+#stationary = True 
+stationary = False # Only possible for sinusoidal motion 
 
 nIt = 7 
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
@@ -92,7 +93,7 @@ for iIt in range(nIt):
     if (iIt >= 4):
         # Motion model optimization
         quadErrorSumList = []   
-        invSlopeList = np.linspace(trueInvSlope-2, trueInvSlope+3, 20)
+        invSlopeList = np.linspace(trueInvSlope-1., trueInvSlope+1., 20)
         for invSlope in invSlopeList: 
             quadErrorSum = 0 
             for iFrame in range(nFrames): 
@@ -111,6 +112,11 @@ for iIt in range(nIt):
         quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
         quadErrorSumFoundList.append(quadErrorSumFound) 
 
+        def func(x, a, b, c): 
+            return a * (x-b)**2 + c
+        popt, pcov = curve_fit(func, invSlopeList, quadErrorSums)
+        plt.plot(invSlopeList, func(invSlopeList, *popt), 'g-', label = 'fit')
+
         plt.plot(invSlopeList, quadErrorSums, 'b-', invSlopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. inverse slope')
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
         numFigures += 1 
@@ -119,17 +125,17 @@ for iIt in range(nIt):
     totalError = 0 
     # MLEM with motion compensation 
     for iFrame in range(nFrames): 
-        shiftedGuess = np.zeros(np.shape(guess)) ## 
-        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlopeFound, 0)) ## 
-        shiftedGuessSinogram = radon(shiftedGuess, iAngles) ## 
+        shiftedGuess = np.zeros(np.shape(guess)) 
+        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlopeFound, 0)) 
+        shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
         error[np.isinf(error)] = 0
         error[error > 1E10] = 0;
         error[error < 1E-10] = 0
         errorBck = iradon(error, iAngles, filter = None) 
-        errorBckShifted = np.zeros(np.shape(errorBck)) ## 
-        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * invSlopeFound, 0)) ## 
+        errorBckShifted = np.zeros(np.shape(errorBck)) 
+        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * invSlopeFound, 0)) 
         totalError += errorBckShifted   
     guess *= totalError/nFrames
     guess /= np.sum(guess) 
