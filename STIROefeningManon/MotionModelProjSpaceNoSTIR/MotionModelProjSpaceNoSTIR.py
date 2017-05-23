@@ -87,30 +87,8 @@ quadErrorSumFoundList = []
 quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
+invSlopeFound = 0.0 # Initial guess  
 for iIt in range(nIt): 
-    totalError = 0 
-    if(iIt < 4): 
-        # Normal MLEM 
-        for iFrame in range(nFrames): 
-            error = measList[iFrame]/radon(guess, iAngles) 
-            error[np.isnan(error)] = 0
-            error[np.isinf(error)] = 0
-            error[error > 1E10] = 0;
-            error[error < 1E-10] = 0
-            errorBck = iradon(error, iAngles, filter = None) 
-            totalError += errorBck
-        guess *= totalError/nFrames
-        guess /= np.sum(guess) 
-        guess *= np.sum(measList[-1])/np.shape(measList[-1])[1] 
-        guessTMP = np.zeros((1,) + np.shape(image2D))
-        guessTMP[0,:,:] = guess
-        pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
-        guessSum.append(np.sum(guess))
-        countIt = iIt+1 
-
-        plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-        numFigures += 1 
-
     if (iIt >= 4):
         # Motion model optimization
         quadErrorSumList = []   
@@ -138,32 +116,32 @@ for iIt in range(nIt):
         numFigures += 1 
         plt.close()
 
-        totalError = 0 
-        # Normal MLEM with motion compensation 
-        for iFrame in range(nFrames): 
-            shiftedGuess = np.zeros(np.shape(guess))
-            shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlopeFound, 0))
-            shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
-            error = measList[iFrame]/shiftedGuessSinogram 
-            error[np.isnan(error)] = 0
-            error[np.isinf(error)] = 0
-            error[error > 1E10] = 0;
-            error[error < 1E-10] = 0
-            errorBck = iradon(error, iAngles, filter = None) 
-            errorBckShifted = np.zeros(np.shape(errorBck))
-            errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * invSlopeFound, 0))
-            totalError += errorBckShifted   
-        guess *= totalError/nFrames
-        guess /= np.sum(guess) 
-        guess *= np.sum(measList[-1])/np.shape(measList[-1])[1] 
-        guessTMP = np.zeros((1,) + np.shape(image2D))
-        guessTMP[0,:,:] = guess
-        pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
-        guessSum.append(np.sum(guess))
-        countIt = iIt+1 
+    totalError = 0 
+    # MLEM with motion compensation 
+    for iFrame in range(nFrames): 
+        shiftedGuess = np.zeros(np.shape(guess)) ## 
+        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * invSlopeFound, 0)) ## 
+        shiftedGuessSinogram = radon(shiftedGuess, iAngles) ## 
+        error = measList[iFrame]/shiftedGuessSinogram 
+        error[np.isnan(error)] = 0
+        error[np.isinf(error)] = 0
+        error[error > 1E10] = 0;
+        error[error < 1E-10] = 0
+        errorBck = iradon(error, iAngles, filter = None) 
+        errorBckShifted = np.zeros(np.shape(errorBck)) ## 
+        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * invSlopeFound, 0)) ## 
+        totalError += errorBckShifted   
+    guess *= totalError/nFrames
+    guess /= np.sum(guess) 
+    guess *= np.sum(measList[-1])/np.shape(measList[-1])[1] 
+    guessTMP = np.zeros((1,) + np.shape(image2D))
+    guessTMP[0,:,:] = guess
+    pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
+    guessSum.append(np.sum(guess))
+    countIt = iIt+1 
 
-        plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-        numFigures += 1  
+    plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    numFigures += 1  
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
