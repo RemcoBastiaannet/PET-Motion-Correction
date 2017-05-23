@@ -44,7 +44,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, image, stationa
         if 'Sine' in motion:
             shift = trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)
             if ((not stationary) and (iFrame > nFrames/2)): 
-                shift += trueShiftAmplitude
+                shift += 2*trueShiftAmplitude
         elif 'Step' in motion: 
                 shift = iFrame*trueShiftAmplitude
     
