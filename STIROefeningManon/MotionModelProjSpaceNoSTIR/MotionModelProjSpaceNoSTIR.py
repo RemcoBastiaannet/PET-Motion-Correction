@@ -17,7 +17,7 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-nIt = 7 
+nIt = 10 
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueSlope = 0.5 
 numFigures = 0 
