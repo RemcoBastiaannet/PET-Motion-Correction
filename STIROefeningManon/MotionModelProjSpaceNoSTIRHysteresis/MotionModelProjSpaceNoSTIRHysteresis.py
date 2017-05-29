@@ -26,14 +26,15 @@ figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 nIt = 10 
 trueShiftAmplitude = 5 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 
-trueSquareSlope = 0.04 
+trueSlopeX = 1.0 
+trueSquareSlopeX = 0.04 
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 36
 noiseLevel = 10 
 
 # Store all settings in a text file 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSquareSlope, nFrames)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSquareSlopeX, nFrames)
 
 #_________________________MAKE PHANTOM_______________________________
 # Make phantom 
@@ -49,7 +50,7 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'OriginalImage.vpx')
  
 #_________________________ADD MOTION_______________________________ 
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSquareSlope, image2D, stationary)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSquareSlopeX, image2D, stationary)
 originalImage = phantomList[0]
 
 # Plot hysteresis on x-axis
