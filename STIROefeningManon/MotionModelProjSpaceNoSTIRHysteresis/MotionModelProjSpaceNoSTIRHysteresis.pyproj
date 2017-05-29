@@ -6,8 +6,7 @@
     <ProjectGuid>7e2d676d-24c9-4fed-a2c7-be7c6001b85f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>MotionModelProjSpaceNoSTIRHysteresis.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>MotionModelProjSpaceNoSTIRHysteresis</Name>
@@ -22,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ManonsFunctionsHysteresis.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MotionModelProjSpaceNoSTIRHysteresis.py" />
   </ItemGroup>
   <PropertyGroup>

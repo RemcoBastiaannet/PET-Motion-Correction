@@ -22,7 +22,7 @@ trueOffset = 5
 numFigures = 0 
 duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
-else: nFrames = 40
+else: nFrames = 6
 noiseLevel = 10
 gating = True # Voor gating is er andere code! Deze op false laten staan! 
 

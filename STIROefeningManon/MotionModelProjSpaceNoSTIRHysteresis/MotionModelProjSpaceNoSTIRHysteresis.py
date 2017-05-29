@@ -8,67 +8,83 @@ import pyvpx
 import copy
 from scipy.optimize import curve_fit
 
-#phantom = 'Block'
+#_________________________PARAMETER SETTINGS_______________________________
+# Parameters that influence the figure saving directory 
 phantom = 'Shepp-Logan'
 #noise = False
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
 stationary = True 
-#stationary = False # Only possible for sinusoidal motion 
+#stationary = False # False is only possible for sinusoidal motion! 
 
-nIt = 10 
-trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueSlope = 0.5 
-trueSquareSlope = 0.04
-numFigures = 0 
-duration = 60 # in seconds 
-if (motion == 'Step'): nFrames = 2 
-else: nFrames = 36
-noiseLevel = 10 
-gating = False # Voor gating is er andere code! Deze op false laten staan! 
-
+# Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, duration, nFrames, gating)
+# Parameters that do not influence the saving directory 
+nIt = 10 
+trueShiftAmplitude = 5 # Make sure this is not too large, activity moving out of the FOV will cause problems 
+trueSlope = 0.5 
+trueSquareSlope = 0.04 
+numFigures = 0 
+if (motion == 'Step'): nFrames = 2 
+else: nFrames = 36
+noiseLevel = 10 
+
+# Store all settings in a text file 
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSquareSlope, nFrames)
 
 #_________________________MAKE PHANTOM_______________________________
-image2D = mf.make_Phantom(phantom, duration, noiseLevel)
+# Make phantom 
+image2D = mf.make_Phantom(phantom, noiseLevel)
+
+# Plot phantom and store as vpx image 
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
+
 image2DTMP = np.zeros((1,) + np.shape(image2D) )
 image2DTMP[0,:,:] = image2D
-pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'image2D.vpx') 
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'OriginalImage.vpx') 
  
 #_________________________ADD MOTION_______________________________ 
+# Create surrogate signal and add motion to the phantom  
 phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSquareSlope, image2D, stationary)
 originalImage = phantomList[0]
 
+# Plot hysteresis on x-axis
 plt.figure() 
-plt.plot(surSignal, shiftXList), plt.title('Hysteresis x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
+plt.plot(surSignal, shiftXList), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 plt.show()
 numFigures += 1 
 
+# Plot hysteresis on y-axis
 plt.figure() 
 plt.plot(surSignal, shiftList), plt.title('Hysteresis (y-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion y-axis')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 plt.show()
 numFigures += 1 
 
-imageTMP = np.zeros((1,) + np.shape(image2D))
-imageTMP[0,:,:] = phantomList[0]
-pyvpx.numpy2vpx(imageTMP, figSaveDir + 'image.vpx') 
+# Plot a time series of the phantom 
+'''
+for iFrame in range(nFrames):    
+    plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom_TF{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
+    numFigures += 1 
+'''
 
-#for iFrame in range(nFrames):    
-#    plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r) 
-#plt.suptitle('Phantom'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-#numFigures += 1 
-
+# Plot surrogate signal and internal motion 
+# x-axis 
 plt.figure()
-plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Sinusoidal phantom shifts'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(range(nFrames), shiftXList, label = 'True motion'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (x-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(range(nFrames), shiftXList, label = 'True motion x-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftXList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+numFigures += 1 
+
+# y-axis
+plt.figure()
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
@@ -80,10 +96,7 @@ for iFrame in range(nFrames):
     if (iFrame == 0): measNoNoise = meas
     if (noise): meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
-    plt.subplot(2,nFrames/2+1,iFrame+1), plt.title('Time frame {0}'.format(iFrame)), plt.imshow(meas, interpolation=None, vmin = 0, vmax = 1000, cmap=plt.cm.Greys_r) 
     measList.append(meas) 
-plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurements.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1 
 
 plt.figure() 
 plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
