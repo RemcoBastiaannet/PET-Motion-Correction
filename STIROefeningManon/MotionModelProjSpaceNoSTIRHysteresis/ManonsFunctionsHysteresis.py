@@ -61,6 +61,10 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
             phase = 2*math.pi*iFrame/19
             sur = trueShiftAmplitude * math.sin(phase) 
             
+            # Add non-stationarity (upwards shift) half-way through the signal 
+            if ((not stationary) and (iFrame > nFrames/2)): 
+                sur += 2*trueShiftAmplitude
+
             # Create shift in the y-direction (using motion model) 
             shift = trueSlope*sur 
 
@@ -70,10 +74,6 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
                 shiftX = trueSlopeX*sur + trueSquareSlopeX*sur**2  
             else: # Inhale 
                 shiftX = trueSlopeX*sur - trueSquareSlopeX*sur**2 + 2*trueSquareSlopeX*trueShiftAmplitude**2   
-            
-            # Add non-stationarity (upwards shift) half-way through the signal 
-            if ((not stationary) and (iFrame > nFrames/2)): 
-                shift += 2*trueShiftAmplitude
 
         # Step function 
         elif 'Step' in motion: 
@@ -85,20 +85,18 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
         tmp[0] = image      
         tmp = spim.shift(tmp, [0.0, shift, 0.0], cval = 0.0)
         tmp[tmp < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
-        image = tmp 
 
         # Shift image in the x-direction
         tmpX = np.zeros((1, Ny, Nx))
-        tmpX[0] = image      
+        tmpX[0] = tmp       
         tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
         tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
-        image = tmpX 
 
         # Store the data in lists
         shiftList.append(shift) 
         shiftXList.append(shiftX)
         surSignal.append(sur) 
-        phantomList.append(copy.deepcopy(image))
+        phantomList.append(copy.deepcopy(tmpX))
 
     return (phantomList, surSignal, shiftList, shiftXList) 
 
