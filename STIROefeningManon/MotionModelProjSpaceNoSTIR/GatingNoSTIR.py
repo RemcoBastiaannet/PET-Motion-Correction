@@ -24,7 +24,7 @@ duration = 60 # in seconds
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 40
 noiseLevel = 10
-gating = True
+gating = True # Voor gating is er andere code! Deze op false laten staan! 
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
