@@ -243,9 +243,10 @@ ModelManifest.xml
 *.pyc
 
 *.vpx
-
+*.png
 *.v
 *.hv
 *.ahv
 *.s 
 *.hs
+*.txt
