@@ -85,23 +85,28 @@ for iFrame in range(nFrames):
 
 #_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
 surSignalDiff = np.diff(np.array(surSignal))
+shiftXListDiff = np.diff(np.array(shiftXList))
 inhaleSurSignal = [] 
 inhaleShiftXList = []
-inhaleXaxis = []
+inhaleSurAxis = []
+inhaleShiftXAxis = [] 
 exhaleSurSignal = [] 
 exhaleShiftXList = [] 
-exhaleXaxis = [] 
+exhaleSurAxis = [] 
+exhaleShiftXAxis = [] 
 for i in range(len(surSignalDiff)): 
     if (surSignalDiff[i] > 0): 
         inhaleSurSignal.append(surSignal[i])
-        inhaleShiftXList.append(shiftXList[i]) 
-        inhaleXaxis.append(i)
-        print surSignalDiff[i], 'inhale'
+        inhaleSurAxis.append(i)
     else: 
         exhaleSurSignal.append(surSignal[i]) 
+        exhaleSurAxis.append(i)
+    if (shiftXListDiff[i] > 0): 
+        inhaleShiftXList.append(shiftXList[i])          
+        inhaleShiftXAxis.append(i)
+    else: 
         exhaleShiftXList.append(shiftXList[i]) 
-        exhaleXaxis.append(i)
-        print surSignalDiff[i], 'exhale'
+        exhaleShiftXAxis.append(i)
 
 # Plot surrogate signal and internal motion 
 # y-axis
@@ -111,18 +116,18 @@ plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(lo
 numFigures += 1 
 # x-axis, inhale
 plt.figure() 
-plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Inhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(inhaleXaxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
-plt.plot(range(nFrames), shiftXList, label = 'Int. motion (x-axis)')
-plt.plot(inhaleXaxis, inhaleShiftXList, 'ro') 
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, inhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(inhaleSurAxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
+plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
+plt.plot(inhaleShiftXAxis, inhaleShiftXList, 'ro') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Inhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 # x-axis, exhale
 plt.figure() 
-plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Exhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(exhaleXaxis, exhaleSurSignal, 'go', label = 'Exhale') 
-plt.plot(range(nFrames), shiftXList, label = 'Int. motion (x-axis)')
-plt.plot(exhaleXaxis, exhaleShiftXList, 'go') 
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, exhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(exhaleSurAxis, exhaleSurSignal, 'go', label = 'Exhale') 
+plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
+plt.plot(exhaleShiftXAxis, exhaleShiftXList, 'go') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Exhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
