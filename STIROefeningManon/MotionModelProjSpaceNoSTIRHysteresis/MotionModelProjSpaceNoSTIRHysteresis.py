@@ -36,7 +36,7 @@ trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 36
-noiseLevel = 100
+noiseLevel = 500
 
 # Store all settings in a text file 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames)
@@ -167,8 +167,6 @@ numFigures += 1
 
 # Initial guess - image 
 guess = np.ones(np.shape(image2D))
-# Initial guess - model 
-slopeFound = 0.0 
 
 # Plot and save initial guess 
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(guess), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -176,7 +174,7 @@ numFigures += 1
 guessTMP = np.zeros((1,) + np.shape(image2D))
 guessTMP[0,:,:] = guess
 pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx') 
-
+    
 
 #_________________________NESTED EM LOOP_______________________________
 # Lists for storage 
@@ -185,6 +183,15 @@ quadErrorSumFoundList = []
 quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
+
+# Initial guess - model 
+slopeFound = 0.0 
+
+def computeQuadError():    
+    
+
+x0 = np.array([1.3, 0.7, 0.8, 1.9, 1.2])
+res = minimize(computeQuadError, x0, method='BFGS', options={'disp': True})
 
 for iIt in range(nIt): 
     # Motion model optimization
