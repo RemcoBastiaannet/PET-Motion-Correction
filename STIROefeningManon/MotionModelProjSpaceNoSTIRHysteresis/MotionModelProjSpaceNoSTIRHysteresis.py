@@ -84,8 +84,11 @@ for iFrame in range(nFrames):
 
 
 #_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
+# Derivatives, the sign of which distinguishes between inhale and exhale 
 surSignalDiff = np.diff(np.array(surSignal))
 shiftXListDiff = np.diff(np.array(shiftXList))
+
+# Lists for storage 
 inhaleSurSignal = [] 
 inhaleShiftXList = []
 inhaleSurAxis = []
@@ -94,6 +97,8 @@ exhaleSurSignal = []
 exhaleShiftXList = [] 
 exhaleSurAxis = [] 
 exhaleShiftXAxis = [] 
+
+# Distinguish inhale and exhale phases 
 for i in range(len(surSignalDiff)): 
     if (surSignalDiff[i] > 0): 
         inhaleSurSignal.append(surSignal[i])
@@ -133,8 +138,10 @@ numFigures += 1
 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
+# Angles for randon
 iAngles = np.linspace(0, 360, 120)[:-1]
 
+# Create sinograms of each frame and add Poisson noise to them 
 measList = []
 for iFrame in range(nFrames):
     meas = radon(copy.deepcopy(phantomList[iFrame])[0,:,:], iAngles) 
@@ -143,13 +150,19 @@ for iFrame in range(nFrames):
     if (iFrame == 0): measWithNoise = meas
     measList.append(meas) 
 
+# Plot sinogram of time frame 0 with and without noise  
 plt.figure() 
 plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
+# Initial guess - image 
 guess = np.ones(np.shape(image2D))
+# Initial guess - model 
+slopeFound = 0.0 
+
+# Plot and save initial guess 
 plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(guess), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 guessTMP = np.zeros((1,) + np.shape(image2D))
@@ -158,35 +171,43 @@ pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx')
 
 
 #_________________________NESTED EM LOOP_______________________________
+# Lists for storage 
 slopeFoundList = []
 quadErrorSumFoundList = []
 quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
-slopeFound = 0.0 # Initial guess  
+
 for iIt in range(nIt): 
+    # Motion model optimization
     if (iIt >= 4):
-        # Motion model optimization
         quadErrorSumList = []   
+        
+        # For each slope in slopeList, compute the quadratic error 
         slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
         for slope in slopeList: 
             quadErrorSum = 0 
             for iFrame in range(nFrames): 
                 guessMoved = np.zeros(np.shape(guess))
-                guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
+                guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) 
                 guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-                quadErrorSum += np.sum(abs(guessMovedProj - measList[iFrame]))
+                quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
+            
             quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
             print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
 
+        # Find the slope in slopeList that gives the minimum quadratic error 
         quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-        quadErrorSumListList.append(quadErrorSums)
         index = quadErrorSums.index(np.min(quadErrorSums))
         slopeFound = quadErrorSumList[index]['slope']
-        slopeFoundList.append(slopeFound)
         quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
+
+        # Store stuff 
+        quadErrorSumListList.append(quadErrorSums)
+        slopeFoundList.append(slopeFound)
         quadErrorSumFoundList.append(quadErrorSumFound) 
 
+        # Fit quadratic function to the quadratic error 
         '''
         def func(x, a, b, c): 
             return a * (x-b)**2 + c
@@ -194,6 +215,7 @@ for iIt in range(nIt):
         plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
         '''
 
+        # Plot 
         plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
         numFigures += 1 
@@ -202,39 +224,55 @@ for iIt in range(nIt):
     totalError = 0 
     # MLEM with motion compensation 
     for iFrame in range(nFrames): 
+        # Shift guess for the current model, in time frame iFrame, and forward project it 
         shiftedGuess = np.zeros(np.shape(guess)) 
         shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slopeFound, 0)) 
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
+
+        # Compute error between measured sinogram and guess
         error = measList[iFrame]/shiftedGuessSinogram 
         error[np.isnan(error)] = 0
         error[np.isinf(error)] = 0
         error[error > 1E10] = 0
         error[error < 1E-10] = 0
+
+        # Backproject error and shift back 
         errorBck = iradon(error, iAngles, filter = None) 
         errorBckShifted = np.zeros(np.shape(errorBck)) 
         errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, 0)) 
+
+        # Update total error 
         totalError += errorBckShifted   
+    
+    # Update guess with the error from all time frames
     guess *= totalError/nFrames
+
+    # Normalization 
     guess /= np.sum(guess) 
     guess *= np.sum(measList[-1])/np.shape(measList[-1])[1] 
-    guessTMP = np.zeros((1,) + np.shape(image2D))
-    guessTMP[0,:,:] = guess
-    pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
+
     guessSum.append(np.sum(guess))
     countIt = iIt+1 
 
+    # Save and plot current guess 
+    guessTMP = np.zeros((1,) + np.shape(image2D))
+    guessTMP[0,:,:] = guess
+    pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
     plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
 
+# Plot original image and reconstructed image 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
 
+# Plot some of guess as a function of iteration number 
 plt.figure() 
 plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close() 
 
+# Plot quadratic errors of all iterations
 for i in range(len(quadErrorSumListList)): 
     plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
     plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
