@@ -36,7 +36,7 @@ trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 36
-noiseLevel = 10 
+noiseLevel = 100
 
 # Store all settings in a text file 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames)
@@ -62,14 +62,14 @@ originalImage = phantomList[0]
 
 # Plot hysteresis on x-axis
 plt.figure() 
-plt.plot(surSignal, shiftXList), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
+plt.plot(surSignal, shiftXList, 'bo', markersize = 4.0), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 plt.show()
 numFigures += 1 
 
 # Plot hysteresis on y-axis
 plt.figure() 
-plt.plot(surSignal, shiftList), plt.title('Hysteresis (y-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion y-axis')
+plt.plot(surSignal, shiftList, 'bo', markersize = 4.0), plt.title('Hysteresis (y-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion y-axis')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 plt.show()
 numFigures += 1 
@@ -85,6 +85,8 @@ for iFrame in range(nFrames):
 
 #_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
 # Derivatives, the sign of which distinguishes between inhale and exhale 
+### 
+'''
 surSignalDiff = np.diff(np.array(surSignal))
 shiftXListDiff = np.diff(np.array(shiftXList))
 
@@ -112,6 +114,8 @@ for i in range(len(surSignalDiff)):
     else: 
         exhaleShiftXList.append(shiftXList[i]) 
         exhaleShiftXAxis.append(i)
+'''
+### 
 
 # Plot surrogate signal and internal motion 
 # y-axis
@@ -122,12 +126,14 @@ numFigures += 1
 # x-axis, inhale
 plt.figure() 
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, inhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(inhaleSurAxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
+### plt.plot(inhaleSurAxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
 plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
-plt.plot(inhaleShiftXAxis, inhaleShiftXList, 'ro') 
+### plt.plot(inhaleShiftXAxis, inhaleShiftXList, 'ro') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Inhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 # x-axis, exhale
+### 
+'''
 plt.figure() 
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, exhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(exhaleSurAxis, exhaleSurSignal, 'go', label = 'Exhale') 
@@ -135,6 +141,8 @@ plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
 plt.plot(exhaleShiftXAxis, exhaleShiftXList, 'go') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Exhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
+'''
+### 
 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
@@ -152,8 +160,8 @@ for iFrame in range(nFrames):
 
 # Plot sinogram of time frame 0 with and without noise  
 plt.figure() 
-plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
-plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
+plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
+plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
