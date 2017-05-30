@@ -29,10 +29,10 @@ figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 nIt = 10 
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
-trueSlopeInhale = 1.5 # x-axis
-trueSlopeExhale = 1.5 # x-axis
-trueSquareSlopeInhale = -0.1 # x-axis
-trueSquareSlopeExhale = +0.06 # x-axis
+trueSlopeInhale = 1.0 # x-axis
+trueSlopeExhale = trueSlopeInhale # x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
+trueSquareSlopeInhale = +0.1 # x-axis
+trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 36

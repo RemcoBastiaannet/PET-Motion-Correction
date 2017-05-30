@@ -73,7 +73,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
             if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
                 shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
             else: # Inhale 
-                shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + trueSquareSlopeInhale*trueShiftAmplitude**2 - trueSquareSlopeExhale*trueShiftAmplitude**2      
+                shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + (trueSquareSlopeInhale-trueSquareSlopeExhale)*trueShiftAmplitude**2
 
         # Step function 
         elif 'Step' in motion: 
