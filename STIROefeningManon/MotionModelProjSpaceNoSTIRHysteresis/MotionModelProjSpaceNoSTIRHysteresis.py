@@ -28,11 +28,11 @@ figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 # Parameters that do not influence the saving directory 
 nIt = 10 
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
-trueSlope = 0.5 
-trueSlopeInhale = 1.0 
-trueSlopeExhale = 1.0 
-trueSquareSlopeInhale = 0.06 
-trueSquareSlopeExhale = -0.06 
+trueSlope = 0.5 # y-axis 
+trueSlopeInhale = 1.5 # x-axis
+trueSlopeExhale = 1.5 # x-axis
+trueSquareSlopeInhale = -0.1 # x-axis
+trueSquareSlopeExhale = +0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 36
@@ -86,40 +86,43 @@ for iFrame in range(nFrames):
 #_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
 surSignalDiff = np.diff(np.array(surSignal))
 inhaleSurSignal = [] 
-inhaleSurSignalXaxis = []
+inhaleShiftXList = []
+inhaleXaxis = []
 exhaleSurSignal = [] 
-exhaleSurSignalXaxis = [] 
+exhaleShiftXList = [] 
+exhaleXaxis = [] 
 for i in range(len(surSignalDiff)): 
     if (surSignalDiff[i] > 0): 
         inhaleSurSignal.append(surSignal[i])
-        inhaleSurSignalXaxis.append(i)
+        inhaleShiftXList.append(shiftXList[i]) 
+        inhaleXaxis.append(i)
         print surSignalDiff[i], 'inhale'
     else: 
         exhaleSurSignal.append(surSignal[i]) 
-        exhaleSurSignalXaxis.append(i)
+        exhaleShiftXList.append(shiftXList[i]) 
+        exhaleXaxis.append(i)
         print surSignalDiff[i], 'exhale'
 
 # Plot surrogate signal and internal motion 
-# x-axis 
-plt.figure()
-plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (x-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(range(nFrames), shiftXList, label = 'True motion x-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftXList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-numFigures += 1 
 # y-axis
 plt.figure()
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
-# Inhale
+# x-axis, inhale
 plt.figure() 
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Inhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(inhaleSurSignalXaxis, inhaleSurSignal, 'ro', label = 'Inhale') 
+plt.plot(inhaleXaxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
+plt.plot(range(nFrames), shiftXList, label = 'Int. motion (x-axis)')
+plt.plot(inhaleXaxis, inhaleShiftXList, 'ro') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Inhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
-# Exhale
+# x-axis, exhale
 plt.figure() 
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Exhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(exhaleSurSignalXaxis, exhaleSurSignal, 'go', label = 'Exhale') 
+plt.plot(exhaleXaxis, exhaleSurSignal, 'go', label = 'Exhale') 
+plt.plot(range(nFrames), shiftXList, label = 'Int. motion (x-axis)')
+plt.plot(exhaleXaxis, exhaleShiftXList, 'go') 
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Exhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
