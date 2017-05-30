@@ -74,11 +74,6 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
             ### shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
             ### else: # Exhale 
                 ### shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + (trueSquareSlopeInhale-trueSquareSlopeExhale)*trueShiftAmplitude**2
-
-        # Step function 
-        elif 'Step' in motion: 
-            sur = iFrame*trueShiftAmplitude # Surrogate signal 
-            shift = trueSlope*sur # Image shift (using the motion model) 
        
         # Shift image in the y-direction
         tmp = np.zeros((1, Ny, Nx))
@@ -87,16 +82,21 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
         tmp[tmp < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
         # Shift image in the x-direction
+        ###
+        '''
         tmpX = np.zeros((1, Ny, Nx))
         tmpX[0] = tmp       
         tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
         tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
+        '''
+        ### 
 
         # Store the data in lists
         shiftList.append(shift) 
-        shiftXList.append(shiftX)
+        ### shiftXList.append(shiftX)
         surSignal.append(sur) 
-        phantomList.append(copy.deepcopy(tmpX))
+        ### phantomList.append(copy.deepcopy(tmpX))
+        phantomList.append(copy.deepcopy(tmp)) ### deze weer weghalen als je de bovenstaande regel weer toevoegt! 
 
     return (phantomList, surSignal, shiftList, shiftXList) 
 

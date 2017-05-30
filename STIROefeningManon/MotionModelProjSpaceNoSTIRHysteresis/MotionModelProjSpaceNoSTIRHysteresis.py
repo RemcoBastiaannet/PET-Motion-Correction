@@ -61,11 +61,15 @@ phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames,
 originalImage = phantomList[0]
 
 # Plot hysteresis on x-axis
+### 
+''' 
 plt.figure() 
 plt.plot(surSignal, shiftXList, 'bo', markersize = 4.0), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 plt.show()
 numFigures += 1 
+'''
+### 
 
 # Plot hysteresis on y-axis
 plt.figure() 
@@ -124,6 +128,8 @@ plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Moti
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 # x-axis, inhale
+###
+'''
 plt.figure() 
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, inhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 ### plt.plot(inhaleSurAxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
@@ -132,6 +138,8 @@ plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Inhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 # x-axis, exhale
+'''
+###
 ### 
 '''
 plt.figure() 
