@@ -8,6 +8,8 @@ import pyvpx
 import copy
 from scipy.optimize import curve_fit
 from scipy.signal import argrelextrema
+from heapq import merge
+
 
 #_________________________PARAMETER SETTINGS_______________________________
 # Parameters that influence the figure saving directory 
@@ -16,8 +18,8 @@ phantom = 'Shepp-Logan'
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = False # False is only possible for sinusoidal motion! 
+stationary = True 
+#stationary = False # False is only possible for sinusoidal motion! 
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
@@ -27,15 +29,18 @@ figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 nIt = 10 
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 
-trueSlopeX = 1.0 
-trueSquareSlopeX = 0.06 
+trueSlopeInhale = 1.0 
+trueSlopeExhale = 1.0 
+trueSquareSlopeInhale = 0.06 
+trueSquareSlopeExhale = -0.06 
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 4*36
+else: nFrames = 36
 noiseLevel = 10 
 
 # Store all settings in a text file 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSquareSlopeX, nFrames)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames)
+
 
 #_________________________MAKE PHANTOM_______________________________
 # Make phantom 
@@ -49,9 +54,10 @@ image2DTMP = np.zeros((1,) + np.shape(image2D) )
 image2DTMP[0,:,:] = image2D
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'OriginalImage.vpx') 
  
+
 #_________________________ADD MOTION_______________________________ 
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSquareSlopeX, image2D, stationary)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary)
 originalImage = phantomList[0]
 
 # Plot hysteresis on x-axis
@@ -76,25 +82,47 @@ for iFrame in range(nFrames):
     numFigures += 1 
 '''
 
+
+#_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
+surSignalDiff = np.diff(np.array(surSignal))
+inhaleSurSignal = [] 
+inhaleSurSignalXaxis = []
+exhaleSurSignal = [] 
+exhaleSurSignalXaxis = [] 
+for i in range(len(surSignalDiff)): 
+    if (surSignalDiff[i] > 0): 
+        inhaleSurSignal.append(surSignal[i])
+        inhaleSurSignalXaxis.append(i)
+        print surSignalDiff[i], 'inhale'
+    else: 
+        exhaleSurSignal.append(surSignal[i]) 
+        exhaleSurSignalXaxis.append(i)
+        print surSignalDiff[i], 'exhale'
+
 # Plot surrogate signal and internal motion 
 # x-axis 
 plt.figure()
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (x-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(nFrames), shiftXList, label = 'True motion x-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftXList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
-
-minima = argrelextrema(np.array(surSignal), np.less)
-maxima = argrelextrema(np.array(surSignal), np.greater)
-
 # y-axis
 plt.figure()
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-plt.plot(minima[0].tolist(), [surSignal[i] for i in minima[0].tolist()], 'go', label = 'Minima')
-plt.plot(maxima[0].tolist(), [surSignal[i] for i in maxima[0].tolist()], 'ro', label = 'Maxima')
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_shiftList.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
+# Inhale
+plt.figure() 
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Inhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(inhaleSurSignalXaxis, inhaleSurSignal, 'ro', label = 'Inhale') 
+plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Inhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+numFigures += 1 
+# Exhale
+plt.figure() 
+plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Exhale'), plt.xlabel('Time frame'), plt.ylabel('Shift')
+plt.plot(exhaleSurSignalXaxis, exhaleSurSignal, 'go', label = 'Exhale') 
+plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Exhale.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+numFigures += 1 
 
-#_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
 iAngles = np.linspace(0, 360, 120)[:-1]
@@ -119,6 +147,7 @@ numFigures += 1
 guessTMP = np.zeros((1,) + np.shape(image2D))
 guessTMP[0,:,:] = guess
 pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx') 
+
 
 #_________________________NESTED EM LOOP_______________________________
 slopeFoundList = []

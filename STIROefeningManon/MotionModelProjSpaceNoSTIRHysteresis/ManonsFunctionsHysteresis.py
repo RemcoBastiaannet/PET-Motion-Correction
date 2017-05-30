@@ -71,9 +71,9 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
             # Create shift in the x-direction (using motion model), shift depends on the phase of the surrogate signal (inhale or exhale) 
             phaseMod = phase % (2*math.pi)
             if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
-                shiftX = trueSlopeX*sur + trueSquareSlopeX*sur**2  
+                shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
             else: # Inhale 
-                shiftX = trueSlopeX*sur - trueSquareSlopeX*sur**2 + 2*trueSquareSlopeX*trueShiftAmplitude**2   
+                shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + trueSquareSlopeInhale*trueShiftAmplitude**2 + trueSquareSlopeExhale*trueShiftAmplitude**2      
 
         # Step function 
         elif 'Step' in motion: 
