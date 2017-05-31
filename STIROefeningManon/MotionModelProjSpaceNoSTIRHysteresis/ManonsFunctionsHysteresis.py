@@ -43,7 +43,7 @@ def make_Phantom(phantom, noiseLevel):
     return image 
 
 # Creates a surrogate signal and shifts the phantom in the x- and y-direction according to some motion model 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image, stationary): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image, stationary, hysteresis): 
     # Lists for data storage 
     shiftList = [] # y-axis 
     shiftXList = [] # x-axis
@@ -69,11 +69,12 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
             shift = trueSlope*sur 
 
             # Create shift in the x-direction (using motion model), shift depends on the phase of the surrogate signal (inhale or exhale) 
-            ### phaseMod = phase % (2*math.pi)
-            ### if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
-            ### shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
-            ### else: # Exhale 
-                ### shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + (trueSquareSlopeInhale-trueSquareSlopeExhale)*trueShiftAmplitude**2
+            if (hysteresis): 
+                phaseMod = phase % (2*math.pi)
+                if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
+                    shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
+                else: # Exhale 
+                    shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + (trueSquareSlopeInhale-trueSquareSlopeExhale)*trueShiftAmplitude**2
        
         # Shift image in the y-direction
         tmp = np.zeros((1, Ny, Nx))
@@ -82,26 +83,23 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
         tmp[tmp < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
         # Shift image in the x-direction
-        ###
-        '''
-        tmpX = np.zeros((1, Ny, Nx))
-        tmpX[0] = tmp       
-        tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
-        tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
-        '''
-        ### 
+        if (hysteresis): 
+            tmpX = np.zeros((1, Ny, Nx))
+            tmpX[0] = tmp       
+            tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
+            tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
         # Store the data in lists
         shiftList.append(shift) 
-        ### shiftXList.append(shiftX)
+        if (hysteresis): shiftXList.append(shiftX)
         surSignal.append(sur) 
-        ### phantomList.append(copy.deepcopy(tmpX))
-        phantomList.append(copy.deepcopy(tmp)) ### deze weer weghalen als je de bovenstaande regel weer toevoegt! 
+        if (hysteresis): phantomList.append(copy.deepcopy(tmpX))
+        if (not hysteresis): phantomList.append(copy.deepcopy(tmp)) 
 
     return (phantomList, surSignal, shiftList, shiftXList) 
 
 # Writes all parameters that can be specified for a simulation to a text file for storage 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -115,6 +113,7 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("True suare slope inhale (motion model): {}\n".format(trueSquareSlopeInhale))
     file.write("True suare slope exhale (motion model): {}\n".format(trueSquareSlopeExhale))
     file.write("Number of time frames: {}\n".format(nFrames))
+    file.write("Hysteresis: {}\n".format(hysteresis))
     file.close()
 
 # Takes the data, keeps only the data between gateMin and gateMax and returns the new gated data 
