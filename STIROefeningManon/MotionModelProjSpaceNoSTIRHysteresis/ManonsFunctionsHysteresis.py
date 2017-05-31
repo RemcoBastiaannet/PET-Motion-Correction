@@ -26,7 +26,7 @@ def make_Phantom(phantom, noiseLevel):
     elif phantom == 'Shepp-Logan': 
         # Read in and scale the image size 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-        imageSmall = rescale(imageSmall, scale=0.2)
+        imageSmall = rescale(imageSmall, scale=0.4)
 
         # Add zeros around the image to avoid problems with activity moving out of the FOV 
         tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
@@ -58,7 +58,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
         # Sinusoidal motion 
         if 'Sine' in motion:
             # Create surrogate signal 
-            phase = 2*math.pi*iFrame/19
+            phase = 2*math.pi*iFrame/5
             sur = trueShiftAmplitude * math.sin(phase) 
             
             # Add non-stationarity (upwards shift) half-way through the signal 

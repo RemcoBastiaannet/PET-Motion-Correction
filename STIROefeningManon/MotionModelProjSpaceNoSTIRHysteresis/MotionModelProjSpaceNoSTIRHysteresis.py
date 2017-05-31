@@ -6,7 +6,7 @@ import ManonsFunctionsHysteresis as mf
 import scipy as sp
 import pyvpx
 import copy
-from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit, minimize, brute
 from scipy.signal import argrelextrema
 from heapq import merge
 
@@ -26,7 +26,7 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 10 
+nIt = 7
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
 trueSlopeInhale = 1.0 # x-axis
@@ -35,7 +35,7 @@ trueSquareSlopeInhale = +0.1 # x-axis
 trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 36
+else: nFrames = 6
 noiseLevel = 500
 
 # Store all settings in a text file 
@@ -192,57 +192,67 @@ quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
 
-# Initial guess - model 
-slopeFound = 0.0 
+def computeQuadError(x, nFrames, guess, surSignal, iAngles):    
+    quadErrorSum = 0.0
 
-def computeQuadError():    
-    
+    for iFrame in range(nFrames): 
+        guessMoved = np.zeros(np.shape(guess))
+        guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], 0)) 
+        guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
+        quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
 
-x0 = np.array([1.3, 0.7, 0.8, 1.9, 1.2])
-res = minimize(computeQuadError, x0, method='BFGS', options={'disp': True})
+    return quadErrorSum
 
+x0 = np.array([2.0])
+
+slopeFound = 0.0
 for iIt in range(nIt): 
     # Motion model optimization
-    if (iIt >= 4):
-        quadErrorSumList = []   
+    if (iIt >= 4): 
+        args = (nFrames, guess, surSignal, iAngles)
+        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'eps': 1e-10})
+        print 'Slope found: {}'.format(res.x[0])
+        slopeFound = res.x[0]
+
+    ''' 
+    quadErrorSumList = []   
         
-        # For each slope in slopeList, compute the quadratic error 
-        slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
-        for slope in slopeList: 
-            quadErrorSum = 0 
-            for iFrame in range(nFrames): 
-                guessMoved = np.zeros(np.shape(guess))
-                guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) 
-                guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-                quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
+    # For each slope in slopeList, compute the quadratic error 
+    slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
+    for slope in slopeList: 
+        quadErrorSum = 0 
+        for iFrame in range(nFrames): 
+            guessMoved = np.zeros(np.shape(guess))
+            guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) 
+            guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
+            quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
             
-            quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
-            print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
+        quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
+        print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
 
-        # Find the slope in slopeList that gives the minimum quadratic error 
-        quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-        index = quadErrorSums.index(np.min(quadErrorSums))
-        slopeFound = quadErrorSumList[index]['slope']
-        quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
+    # Find the slope in slopeList that gives the minimum quadratic error 
+    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
+    index = quadErrorSums.index(np.min(quadErrorSums))
+    slopeFound = quadErrorSumList[index]['slope']
+    quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
 
-        # Store stuff 
-        quadErrorSumListList.append(quadErrorSums)
-        slopeFoundList.append(slopeFound)
-        quadErrorSumFoundList.append(quadErrorSumFound) 
+    # Store stuff 
+    quadErrorSumListList.append(quadErrorSums)
+    slopeFoundList.append(slopeFound)
+    quadErrorSumFoundList.append(quadErrorSumFound) 
 
-        # Fit quadratic function to the quadratic error 
-        '''
-        def func(x, a, b, c): 
-            return a * (x-b)**2 + c
-        popt, pcov = curve_fit(func, slopeList, quadErrorSums)
-        plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
-        '''
+    # Fit quadratic function to the quadratic error 
+    def func(x, a, b, c): 
+        return a * (x-b)**2 + c
+    popt, pcov = curve_fit(func, slopeList, quadErrorSums)
+    plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
 
-        # Plot 
-        plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-        numFigures += 1 
-        plt.close()
+    # Plot 
+    plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
+    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+    numFigures += 1 
+    plt.close()
+    '''
 
     totalError = 0 
     # MLEM with motion compensation 
