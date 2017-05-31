@@ -102,7 +102,7 @@ for iIt in range(nIt):
                 guessMoved = np.zeros(np.shape(guess))
                 guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) # Je bent als het ware de correctie op het surrogaat signaal aan het zoeken
                 guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-                quadErrorSum += np.sum(abs(guessMovedProj - measList[iFrame]))
+                quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
             quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
             print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
 
