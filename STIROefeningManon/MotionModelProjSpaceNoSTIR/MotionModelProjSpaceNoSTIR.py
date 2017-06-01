@@ -167,9 +167,9 @@ plt.close()
 for i in range(len(quadErrorSumListList)): 
     if (i == 0): plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro', label = 'Estimated value') 
     else: plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
-    plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
     if (i == 0): plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct value')
     else: plt.axvline(trueSlope, color='k', linestyle='--')
+    plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
