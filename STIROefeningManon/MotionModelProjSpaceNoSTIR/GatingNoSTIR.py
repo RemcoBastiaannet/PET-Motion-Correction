@@ -86,13 +86,9 @@ plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None
 numFigures += 1
 
 
-#_________________________NORMALIZATION_______________________________
-normSino = np.ones(np.shape(measList[0]))
-norm = iradon(normSino, iAngles, filter = None) # We willen nu geen ramp filter
-
-
 #_________________________NESTED EM LOOP_______________________________
 for iIt in range(nIt): 
+    totalError = 0.0
     for iFrame in range(len(surSignal)): 
         guessSinogram = radon(guess, iAngles)
         error = measList[iFrame]/guessSinogram 
@@ -101,8 +97,10 @@ for iIt in range(nIt):
         error[error > 1E10] = 0;
         error[error < 1E-10] = 0
         errorBck = iradon(error, iAngles, filter = None) 
-        guess *= errorBck 
-    guess /= norm 
+        totalError += errorBck 
+    guess *= totalError/nFrames
+    guess /= np.sum(guess) 
+    guess *= np.sum(measList[-1])/np.shape(measList[-1])[1]  
     countIt = iIt+1 
 
     plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D)), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
