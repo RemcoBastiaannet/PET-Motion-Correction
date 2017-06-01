@@ -17,23 +17,22 @@ motion = 'Sine'
 #stationary = True 
 stationary = False # Only possible for sinusoidal motion 
 
-nIt = 10 
+nIt = 7 
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueSlope = 0.5 
 numFigures = 0 
-duration = 60 # in seconds 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 36
-noiseLevel = 10 
+else: nFrames = 18
+noiseLevel = 600 
 gating = False 
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, duration, nFrames, gating)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, gating)
 
 #_________________________MAKE PHANTOM_______________________________
-image2D = mf.make_Phantom(phantom, duration, noiseLevel)
+image2D = mf.make_Phantom(phantom, noiseLevel)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
 image2DTMP = np.zeros((1,) + np.shape(image2D) )
@@ -72,8 +71,8 @@ plt.suptitle('Measurements'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measur
 numFigures += 1 
 
 plt.figure() 
-plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
-plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = noiseLevel, cmap=plt.cm.Greys_r)
+plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
+plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1 
 
@@ -91,11 +90,11 @@ quadErrorSumListList = []
 guessSum = []
 guessSum.append(np.sum(guess))
 slopeFound = 0.0 # Initial guess  
+slopeList = np.linspace(trueSlope-0.25, trueSlope+0.25, 15)
 for iIt in range(nIt): 
-    if (iIt >= 4):
+    if (iIt >= 3):
         # Motion model optimization
         quadErrorSumList = []   
-        slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
         for slope in slopeList: 
             quadErrorSum = 0 
             for iFrame in range(nFrames): 
@@ -121,7 +120,10 @@ for iIt in range(nIt):
         plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
         '''
 
-        plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
+        plt.plot(slopeList, quadErrorSums, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
+        plt.plot(slopeFound, quadErrorSumFound, 'ro', label = 'Estimated value')
+        plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct  value')
+        plt.legend()
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
         numFigures += 1 
         plt.close()
@@ -163,9 +165,11 @@ numFigures += 1
 plt.close() 
 
 for i in range(len(quadErrorSumListList)): 
-    plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
+    if (i == 0): plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro', label = 'Estimated value') 
+    else: plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
     plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
-    plt.axvline(trueSlope, color='k', linestyle='--')
+    if (i == 0): plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct value')
+    else: plt.axvline(trueSlope, color='k', linestyle='--')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 

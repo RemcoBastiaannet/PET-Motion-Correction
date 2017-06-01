@@ -14,7 +14,7 @@ import math
 import scipy.ndimage as spim
 import copy
 
-def make_Phantom(phantom, duration, noiseLevel): 
+def make_Phantom(phantom, noiseLevel): 
     if phantom == 'Block': 
         image = np.zeros((160,160))
         image[65:95, 65:95] = 1 
@@ -30,38 +30,48 @@ def make_Phantom(phantom, duration, noiseLevel):
         image = np.concatenate((tmpX, image), axis = 1)
         image = np.concatenate((image, tmpX), axis = 1)
 
-    image *= noiseLevel*duration/np.sum(image) # number of total counts per second times duration divided by the sum of the image 
+    image *= noiseLevel/np.sum(image) # number of total counts per second times duration divided by the sum of the image 
 
     return image 
 
 def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, image, stationary): 
+    # Lists for data storage 
+    shiftList = [] # y-axis 
+    surSignal = [] 
     phantomList = [] 
-    shiftList = []
+
+    # Get image shapes 
     Nx = np.shape(image)[1] 
     Ny = np.shape(image)[0]
 
     for iFrame in range(nFrames): 
+        # Sinusoidal motion 
         if 'Sine' in motion:
-            shift = trueShiftAmplitude * math.sin(2*math.pi*iFrame/9)
+            # Create surrogate signal 
+            phase = 2*math.pi*iFrame/9
+            sur = trueShiftAmplitude * math.sin(phase) 
+            
+            # Add non-stationarity (upwards shift) half-way through the signal 
             if ((not stationary) and (iFrame > nFrames/2)): 
-                shift += 2*trueShiftAmplitude
-        elif 'Step' in motion: 
-                shift = iFrame*trueShiftAmplitude
-    
-        shiftList.append(shift) 
+                sur += 2*trueShiftAmplitude
 
+            # Create shift in the y-direction (using motion model) 
+            shift = trueSlope*sur 
+       
+        # Shift image in the y-direction
         tmp = np.zeros((1, Ny, Nx))
         tmp[0] = image      
-        tmp = spim.shift(tmp, [0, shift, 0], cval = 0.0)
-        tmp[tmp < 1E-10] = 0
+        tmp = spim.shift(tmp, [0.0, shift, 0.0], cval = 0.0)
+        tmp[tmp < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
-        phantomList.append(copy.deepcopy(tmp))
-    
-    surSignal = [elem/trueSlope for elem in shiftList]
+        # Store the data in lists
+        shiftList.append(shift) 
+        surSignal.append(sur) 
+        phantomList.append(copy.deepcopy(tmp)) 
 
     return (phantomList, surSignal, shiftList) 
 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, duration, nFrames, gating): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, gating): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -70,7 +80,6 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("Number of iterations: {}\n".format(nIt))
     file.write("True shift amplitude: {}\n".format(trueShiftAmplitude))
     file.write("True slope (motion model): {}\n".format(trueSlope))
-    file.write("Scan duration: {}\n".format(duration))
     file.write("Number of time frames: {}\n".format(nFrames))
     file.write("Gating: {}\n".format(gating))
     file.close()
