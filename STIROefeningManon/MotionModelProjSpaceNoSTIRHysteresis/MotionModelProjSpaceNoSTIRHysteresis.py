@@ -28,8 +28,8 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 7
-trueShiftAmplitude = 20 # Make sure this is not too large, activity moving out of the FOV will cause problems 
+nIt = 10
+trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
 trueSlopeInhale = 1.0 # x-axis
 trueSlopeExhale = trueSlopeInhale # x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
@@ -37,11 +37,12 @@ trueSquareSlopeInhale = +0.1 # x-axis
 trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 11
-noiseLevel = 200
+else: nFrames = 36
+noiseLevel = 600
+x0 = np.array([1.0]) # initial guess for the optimization function 
 
 # Store all settings in a text file 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -194,63 +195,39 @@ def computeQuadError(x, nFrames, guess, surSignal, iAngles):
 
     return quadErrorSum
 
-# Initial guesses 
-x0 = np.array([2.0]) # initial guess for the optimization function 
 slopeFound = 0.0 # the first MLEM iterations are regular (image is not shifted/corrected) 
 
 parFile = open(figSaveDir + "Parameters.txt", "w")
 
+quadErrorsList = []
+slopeFoundList = []
+quadErrorFoundList = []
+slopeList = np.linspace(trueSlope-1, trueSlope+1, 29)
 for iIt in range(nIt): 
     # Motion model optimization
-    if (iIt >= 4): 
+    if (iIt >= 3): 
+        quadErrors = [computeQuadError(np.array([i]), nFrames, guess, surSignal, iAngles) for i in slopeList]
+        quadErrorsList.append(quadErrors)
+
         args = (nFrames, guess, surSignal, iAngles)
-        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'eps': 1e-10, 'maxiter': 2})
+        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'gtol' : 1e-10, 'eps': 1e-10})
         slopeFound = res.x[0]        
+        slopeFoundList.append(slopeFound)
+        quadErrorFound = res.fun
+        quadErrorFoundList.append(quadErrorFound)
 
         print 'Slope found: {}'.format(res.x[0])
         parFile.write('Iteration {}\n'.format(iIt+1))
         parFile.write('objective function: {}\n'.format(res.fun))
-        parFile.write('slope: {}\n'.format(slopeFound)) 
+        parFile.write('slope: {}\n\n'.format(slopeFound)) 
 
-    ''' 
-    quadErrorSumList = []   
-        
-    # For each slope in slopeList, compute the quadratic error 
-    slopeList = np.linspace(trueSlope-1., trueSlope+1., 9)
-    for slope in slopeList: 
-        quadErrorSum = 0 
-        for iFrame in range(nFrames): 
-            guessMoved = np.zeros(np.shape(guess))
-            guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slope, 0)) 
-            guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-            quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
-            
-        quadErrorSumList.append({'slope' : slope, 'quadErrorSum' : quadErrorSum})
-        print 'Slope: {}'.format(slope), 'Quadratic error: {}'.format(quadErrorSum)
-
-    # Find the slope in slopeList that gives the minimum quadratic error 
-    quadErrorSums = [x['quadErrorSum'] for x in quadErrorSumList]
-    index = quadErrorSums.index(np.min(quadErrorSums))
-    slopeFound = quadErrorSumList[index]['slope']
-    quadErrorSumFound = quadErrorSumList[index]['quadErrorSum']
-
-    # Store stuff 
-    quadErrorSumListList.append(quadErrorSums)
-    slopeFoundList.append(slopeFound)
-    quadErrorSumFoundList.append(quadErrorSumFound) 
-
-    # Fit quadratic function to the quadratic error 
-    def func(x, a, b, c): 
-        return a * (x-b)**2 + c
-    popt, pcov = curve_fit(func, slopeList, quadErrorSums)
-    plt.plot(slopeList, func(slopeList, *popt), 'g-', label = 'fit')
-
-    # Plot 
-    plt.plot(slopeList, quadErrorSums, 'b-', slopeFound, quadErrorSumFound, 'ro'), plt.title('Quadratic error vs. slope')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-    numFigures += 1 
-    plt.close()
-    '''
+        plt.plot(slopeList, quadErrors, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
+        plt.plot(slopeFound, quadErrorFound, 'ro', label = 'Estimated value')
+        plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct  value')
+        plt.legend()
+        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
+        numFigures += 1 
+        plt.close()
 
     totalError = 0 
     # MLEM with motion compensation 
@@ -306,10 +283,12 @@ numFigures += 1
 plt.close() 
 
 # Plot quadratic errors of all iterations
-for i in range(len(quadErrorSumListList)): 
-    plt.plot(slopeFoundList, quadErrorSumFoundList, 'ro') 
-    plt.plot(slopeList, quadErrorSumListList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
-    plt.axvline(trueSlope, color='k', linestyle='--')
+for i in range(len(quadErrorsList)): 
+    if (i == 0): plt.plot(slopeFoundList, quadErrorFoundList, 'ro', label = 'Estimated value') 
+    else: plt.plot(slopeFoundList, quadErrorFoundList, 'ro') 
+    if (i == 0): plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct value')
+    else: plt.axvline(trueSlope, color='k', linestyle='--')
+    plt.plot(slopeList, quadErrorsList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 

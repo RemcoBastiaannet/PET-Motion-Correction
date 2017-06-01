@@ -58,7 +58,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
         # Sinusoidal motion 
         if 'Sine' in motion:
             # Create surrogate signal 
-            phase = 2*math.pi*iFrame/5
+            phase = 2*math.pi*iFrame/9
             sur = trueShiftAmplitude * math.sin(phase) 
             
             # Add non-stationarity (upwards shift) half-way through the signal 
@@ -99,7 +99,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
     return (phantomList, surSignal, shiftList, shiftXList) 
 
 # Writes all parameters that can be specified for a simulation to a text file for storage 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -114,6 +114,7 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("True suare slope exhale (motion model): {}\n".format(trueSquareSlopeExhale))
     file.write("Number of time frames: {}\n".format(nFrames))
     file.write("Hysteresis: {}\n".format(hysteresis))
+    file.write("Starting parameters BFGS: {}".format(x0))
     file.close()
 
 # Takes the data, keeps only the data between gateMin and gateMax and returns the new gated data 
