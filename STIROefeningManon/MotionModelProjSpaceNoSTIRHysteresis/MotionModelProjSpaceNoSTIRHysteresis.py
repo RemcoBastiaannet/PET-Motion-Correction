@@ -28,7 +28,7 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 10
+nIt = 25
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
 trueSlopeInhale = 1.0 # x-axis
@@ -37,7 +37,7 @@ trueSquareSlopeInhale = +0.1 # x-axis
 trueSquareSlopeExhale = -0.06 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 36
+else: nFrames = 18
 noiseLevel = 600
 x0 = np.array([1.0]) # initial guess for the optimization function 
 
@@ -199,18 +199,18 @@ slopeFound = 0.0 # the first MLEM iterations are regular (image is not shifted/c
 
 parFile = open(figSaveDir + "Parameters.txt", "w")
 
-quadErrorsList = []
+#quadErrorsList = []
 slopeFoundList = []
 quadErrorFoundList = []
-slopeList = np.linspace(trueSlope-1, trueSlope+1, 29)
+slopeList = np.linspace(-1, 2, 19)
 for iIt in range(nIt): 
     # Motion model optimization
     if (iIt >= 3): 
-        quadErrors = [computeQuadError(np.array([i]), nFrames, guess, surSignal, iAngles) for i in slopeList]
-        quadErrorsList.append(quadErrors)
+        #quadErrors = [computeQuadError(np.array([i]), nFrames, guess, surSignal, iAngles) for i in slopeList]
+        #quadErrorsList.append(quadErrors)
 
         args = (nFrames, guess, surSignal, iAngles)
-        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'gtol' : 1e-10, 'eps': 1e-10})
+        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'gtol' : 1e-10, 'eps' : 1e-10, 'maxiter' : 10})
         slopeFound = res.x[0]        
         slopeFoundList.append(slopeFound)
         quadErrorFound = res.fun
@@ -221,7 +221,7 @@ for iIt in range(nIt):
         parFile.write('objective function: {}\n'.format(res.fun))
         parFile.write('slope: {}\n\n'.format(slopeFound)) 
 
-        plt.plot(slopeList, quadErrors, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
+        #plt.plot(slopeList, quadErrors, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
         plt.plot(slopeFound, quadErrorFound, 'ro', label = 'Estimated value')
         plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct  value')
         plt.legend()
@@ -283,12 +283,12 @@ numFigures += 1
 plt.close() 
 
 # Plot quadratic errors of all iterations
-for i in range(len(quadErrorsList)): 
+for i in range(len(slopeFoundList)): 
     if (i == 0): plt.plot(slopeFoundList, quadErrorFoundList, 'ro', label = 'Estimated value') 
     else: plt.plot(slopeFoundList, quadErrorFoundList, 'ro') 
     if (i == 0): plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct value')
     else: plt.axvline(trueSlope, color='k', linestyle='--')
-    plt.plot(slopeList, quadErrorsList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
+   # plt.plot(slopeList, quadErrorsList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
 plt.legend()
 plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
