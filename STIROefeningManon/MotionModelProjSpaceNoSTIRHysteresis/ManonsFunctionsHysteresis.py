@@ -26,7 +26,7 @@ def make_Phantom(phantom, noiseLevel):
     elif phantom == 'Shepp-Logan': 
         # Read in and scale the image size 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-        imageSmall = rescale(imageSmall, scale=0.4)
+        imageSmall = rescale(imageSmall, scale=0.2)
 
         # Add zeros around the image to avoid problems with activity moving out of the FOV 
         tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
