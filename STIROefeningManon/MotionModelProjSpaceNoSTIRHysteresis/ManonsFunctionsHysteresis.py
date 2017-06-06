@@ -43,7 +43,7 @@ def make_Phantom(phantom, noiseLevel):
     return image 
 
 # Creates a surrogate signal and shifts the phantom in the x- and y-direction according to some motion model 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image, stationary, hysteresis): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image, stationary, hysteresis): 
     # Lists for data storage 
     shiftList = [] # y-axis 
     shiftXList = [] # x-axis
@@ -68,7 +68,10 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
             # Create shift in the y-direction (using motion model) 
             shift = trueSlope*sur 
 
-            # Create shift in the x-direction (using motion model), shift depends on the phase of the surrogate signal (inhale or exhale) 
+            # Create shift in the x-direction 
+            if (not hysteresis): 
+                shiftX = trueSlopeX *sur                 
+
             if (hysteresis): 
                 phaseMod = phase % (2*math.pi)
                 if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
@@ -83,18 +86,16 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale
         tmp[tmp < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
         # Shift image in the x-direction
-        if (hysteresis): 
-            tmpX = np.zeros((1, Ny, Nx))
-            tmpX[0] = tmp       
-            tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
-            tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
+        tmpX = np.zeros((1, Ny, Nx))
+        tmpX[0] = tmp       
+        tmpX = spim.shift(tmp, [0.0, 0.0, shiftX], cval = 0.0)
+        tmpX[tmpX < 1E-10] = 0 # Because of problems with the spim.shift function that sometimes returns small negative values rather than 0, but radon can't handle negative values...
 
         # Store the data in lists
         shiftList.append(shift) 
-        if (hysteresis): shiftXList.append(shiftX)
+        shiftXList.append(shiftX)
         surSignal.append(sur) 
-        if (hysteresis): phantomList.append(copy.deepcopy(tmpX))
-        if (not hysteresis): phantomList.append(copy.deepcopy(tmp)) 
+        phantomList.append(copy.deepcopy(tmpX))
 
     return (phantomList, surSignal, shiftList, shiftXList) 
 

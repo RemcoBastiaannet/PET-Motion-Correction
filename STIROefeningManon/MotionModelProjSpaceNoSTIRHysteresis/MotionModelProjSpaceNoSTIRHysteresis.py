@@ -28,18 +28,19 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 25
+nIt = 5
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
-trueSlopeInhale = 1.0 # x-axis
-trueSlopeExhale = trueSlopeInhale # x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
-trueSquareSlopeInhale = +0.1 # x-axis
-trueSquareSlopeExhale = -0.06 # x-axis
+trueSlopeX = 0.0 # x-axis 
+trueSlopeInhale = 1.0 # hysteresis, x-axis
+trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
+trueSquareSlopeInhale = +0.1 # hysteresis, x-axis
+trueSquareSlopeExhale = -0.06 # hysteresis, x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 18
+else: nFrames = 19
 noiseLevel = 600
-x0 = np.array([1.0]) # initial guess for the optimization function 
+x0 = np.array([1.0, 1.0]) # initial guess for the optimization function 
 
 # Store all settings in a text file 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0)
@@ -60,16 +61,15 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'OriginalImage.vpx')
 
 #_________________________ADD MOTION_______________________________ 
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis)
 originalImage = phantomList[0]
 
 # Plot hysteresis on x-axis
-if (hysteresis): 
-    plt.figure() 
-    plt.plot(surSignal, shiftXList, 'bo', markersize = 4.0), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-    plt.show()
-    numFigures += 1 
+plt.figure() 
+plt.plot(surSignal, shiftXList, 'bo', markersize = 4.0), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.show()
+numFigures += 1 
 
 # Plot hysteresis on y-axis
 plt.figure() 
@@ -78,14 +78,13 @@ plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, t
 plt.show()
 numFigures += 1 
 
-# Plot a time series of the phantom 
 '''
+# Plot a time series of the phantom 
 for iFrame in range(nFrames):    
     plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
     plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom_TF{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
     numFigures += 1 
-'''
-
+''' 
 
 #_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
 # Derivatives, the sign of which distinguishes between inhale and exhale 
@@ -176,12 +175,6 @@ pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx')
     
 
 #_________________________NESTED EM LOOP_______________________________
-# Lists for storage 
-slopeFoundList = []
-quadErrorSumFoundList = []
-quadErrorSumListList = []
-guessSum = []
-guessSum.append(np.sum(guess))
 
 # Objective function for model optimization 
 def computeQuadError(x, nFrames, guess, surSignal, iAngles):    
@@ -190,37 +183,49 @@ def computeQuadError(x, nFrames, guess, surSignal, iAngles):
     for iFrame in range(nFrames): 
         guessMoved = np.zeros(np.shape(guess))
         guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], 0)) 
+        guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (0, surSignal[iFrame] * x[1])) 
         guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
         quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
 
     return quadErrorSum
 
 slopeFound = 0.0 # the first MLEM iterations are regular (image is not shifted/corrected) 
+slopeXFound = 0.0 
+
+slopeList = np.linspace(-1, 2, 9)
 
 parFile = open(figSaveDir + "Parameters.txt", "w")
 
-#quadErrorsList = []
+# Lists for storage 
+quadErrorsList = []
 slopeFoundList = []
+slopeXFoundList = []
 quadErrorFoundList = []
-slopeList = np.linspace(-1, 2, 19)
+guessSum = []
+guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
     # Motion model optimization
     if (iIt >= 3): 
-        #quadErrors = [computeQuadError(np.array([i]), nFrames, guess, surSignal, iAngles) for i in slopeList]
-        #quadErrorsList.append(quadErrors)
+        quadErrors = [computeQuadError(np.array([i, trueSlopeX]), nFrames, guess, surSignal, iAngles) for i in slopeList]
+        quadErrorsList.append(quadErrors)
 
-        args = (nFrames, guess, surSignal, iAngles)
-        res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'gtol' : 1e-10, 'eps' : 1e-10, 'maxiter' : 10})
-        slopeFound = res.x[0]        
-        slopeFoundList.append(slopeFound)
-        quadErrorFound = res.fun
-        quadErrorFoundList.append(quadErrorFound)
+        #args = (nFrames, guess, surSignal, iAngles)
+        #res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'gtol' : 1e-10, 'eps' : 1e-10, 'maxiter' : 10})
+        #slopeFound = res.x[0]        
+        #slopeFoundList.append(slopeFound)
+        #slopeXFound = res.x[1]  
+        #slopeXFoundList.append(slopeXFound) 
+        #quadErrorFound = res.fun
+        #quadErrorFoundList.append(quadErrorFound)
 
-        print 'Slope found: {}'.format(res.x[0])
+        print 'Slope found: {}'.format(slopeFound)
+        print 'SlopeX found: {}'.format(slopeXFound)
         parFile.write('Iteration {}\n'.format(iIt+1))
         parFile.write('objective function: {}\n'.format(res.fun))
-        parFile.write('slope: {}\n\n'.format(slopeFound)) 
+        parFile.write('slope: {}\n'.format(slopeFound)) 
+        parFile.write('slopeX: {}\n\n'.format(slopeXFound)) 
 
+        '''
         #plt.plot(slopeList, quadErrors, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
         plt.plot(slopeFound, quadErrorFound, 'ro', label = 'Estimated value')
         plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct  value')
@@ -228,6 +233,7 @@ for iIt in range(nIt):
         plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
         numFigures += 1 
         plt.close()
+        '''
 
     totalError = 0 
     # MLEM with motion compensation 
@@ -235,6 +241,7 @@ for iIt in range(nIt):
         # Shift guess for the current model, in time frame iFrame, and forward project it 
         shiftedGuess = np.zeros(np.shape(guess)) 
         shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slopeFound, 0)) 
+        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (0, surSignal[iFrame] * slopeXFound)) 
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
 
         # Compute error between measured sinogram and guess
@@ -247,7 +254,8 @@ for iIt in range(nIt):
         # Backproject error and shift back 
         errorBck = iradon(error, iAngles, filter = None) 
         errorBckShifted = np.zeros(np.shape(errorBck)) 
-        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, 0)) 
+        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, 0))
+        errorBckShifted = sp.ndimage.shift(errorBck, (0, -surSignal[iFrame] * slopeXFound))
 
         # Update total error 
         totalError += errorBckShifted   
@@ -288,8 +296,21 @@ for i in range(len(slopeFoundList)):
     else: plt.plot(slopeFoundList, quadErrorFoundList, 'ro') 
     if (i == 0): plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct value')
     else: plt.axvline(trueSlope, color='k', linestyle='--')
+    plt.title('Quadratic error vs. slope (y-axis)'), plt.xlabel('Quadratic error'), plt.ylabel('Slope')
    # plt.plot(slopeList, quadErrorsList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
 plt.legend()
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError.png'.format(numFigures, trueShiftAmplitude))
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticErrorY.png'.format(numFigures, trueShiftAmplitude))
+numFigures += 1 
+plt.close()
+
+for i in range(len(slopeXFoundList)): 
+    if (i == 0): plt.plot(slopeXFoundList, quadErrorFoundList, 'ro', label = 'Estimated value') 
+    else: plt.plot(slopeXFoundList, quadErrorFoundList, 'ro') 
+    if (i == 0): plt.axvline(trueSlopeX, color='k', linestyle='--', label = 'Correct value')
+    else: plt.axvline(trueSlopeX, color='k', linestyle='--')
+    plt.title('Quadratic error vs. slope (x-axis)'), plt.xlabel('Quadratic error'), plt.ylabel('Slope')
+   # plt.plot(slopeXList, quadErrorsList[i], label = 'Iteration {}'.format(i+1)), plt.title('Quadratic error vs. slope')
+plt.legend()
+plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticErrorX.png'.format(numFigures, trueShiftAmplitude))
 numFigures += 1 
 plt.close()
