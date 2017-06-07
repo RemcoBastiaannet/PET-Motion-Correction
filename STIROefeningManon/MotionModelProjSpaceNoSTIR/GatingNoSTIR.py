@@ -46,7 +46,7 @@ nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList = mf.move_Phantom(moti
 maxSurSignal = np.max(nonGatedSurSignal) 
 minSurSignal = np.min(nonGatedSurSignal)
 gateMin = minSurSignal
-gateMax = minSurSignal + 0.35*(maxSurSignal - minSurSignal)
+gateMax = minSurSignal + 0.2*(maxSurSignal - minSurSignal)
 surSignal, phantomList, shiftList = mf.gating(nonGatedSurSignal, nonGatedPhantomList, nonGatedShiftList, gateMin, gateMax)
 
 # Visualization of gating 
