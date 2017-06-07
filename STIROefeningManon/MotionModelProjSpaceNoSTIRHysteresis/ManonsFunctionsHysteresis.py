@@ -58,7 +58,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
         # Sinusoidal motion 
         if 'Sine' in motion:
             # Create surrogate signal 
-            phase = 2*math.pi*iFrame/9
+            phase = 2*math.pi*iFrame/5
             sur = trueShiftAmplitude * math.sin(phase) 
             
             # Add non-stationarity (upwards shift) half-way through the signal 
