@@ -22,13 +22,15 @@ motion = 'Sine'
 stationary = False # False is only possible for sinusoidal motion! 
 hysteresis = False 
 #hysteresis = True
+drift = True
+#drift = False
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 7
+nIt = 13
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
@@ -38,7 +40,7 @@ trueSquareSlopeInhale = +0.1 # hysteresis, x-axis
 trueSquareSlopeExhale = -0.06 # hysteresis, x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
-else: nFrames = 11
+else: nFrames = 36
 noiseLevel = 600
 x0 = np.array([1.0, 1.0]) # initial guess for the optimization function 
 
@@ -175,19 +177,22 @@ pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx')
     
 
 #_________________________NESTED EM LOOP_______________________________
-
-# Objective function for model optimization 
-def computeQuadError(x, nFrames, guess, surSignal, iAngles):    
+# Objective function for model optimization
+def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple):    
     quadErrorSum = 0.0
-
+    quadErrorSumList = []
+    
     for iFrame in range(nFrames): 
         guessMoved = np.zeros(np.shape(guess))
         guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], 0)) 
         guessMoved = sp.ndimage.shift(copy.deepcopy(guessMoved), (0, surSignal[iFrame] * x[1])) 
         guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-        quadErrorSum += np.sum((guessMovedProj - measList[iFrame])**2)
+        quadError = np.sum((guessMovedProj/np.sum(guessMovedProj) - measList[iFrame]/np.sum(measList[iFrame]))**2)
+        quadErrorSum += quadError
+        quadErrorSumList.append(quadError)
 
-    return quadErrorSum
+    if (returnTuple): return quadErrorSumList 
+    else: return quadErrorSum
 
 slopeFound = 0.0 # the first MLEM iterations are regular (image is not shifted/corrected) 
 slopeXFound = 0.0 
@@ -209,7 +214,8 @@ for iIt in range(nIt):
         #quadErrors = [computeQuadError(np.array([i, trueSlopeX]), nFrames, guess, surSignal, iAngles) for i in slopeList]
         #quadErrorsList.append(quadErrors)
 
-        args = (nFrames, guess, surSignal, iAngles)
+        '''
+        args = (nFrames, guess, surSignal, iAngles, False)
         res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'maxiter' : 10})
         slopeFound = res.x[0]        
         slopeFoundList.append(slopeFound)
@@ -217,6 +223,23 @@ for iIt in range(nIt):
         slopeXFoundList.append(slopeXFound) 
         quadErrorFound = res.fun
         quadErrorFoundList.append(quadErrorFound)
+        '''    
+
+        quadErrorSumList = computeQuadError((0, 0), nFrames, guess, surSignal, iAngles, True)   
+        # Moving average window 
+        windowLength = 10 
+        window = np.ones(windowLength,'d')
+        quadErrorSumListAVG = np.convolve(window/window.sum(), quadErrorSumList, mode='same')
+
+        plt.figure() 
+        plt.plot(quadErrorSumList), plt.title('Quadratic error vs. time, iteration {}'.format(iIt+1))
+        plt.plot(quadErrorSumListAVG, label = 'Moving average'), 
+        diffTMP = np.max(quadErrorSumList) - np.min(quadErrorSumList)
+        plt.axis([0, nFrames, np.min(quadErrorSumList) - 0.1*diffTMP, np.max(quadErrorSumList) + 0.1*diffTMP])
+        plt.legend() 
+        plt.savefig(figSaveDir + 'Fig{}_QuadraticError_Time.png'.format(numFigures))
+        numFigures += 1 
+        plt.close() 
 
         print 'Slope found: {}'.format(slopeFound)
         print 'SlopeX found: {}'.format(slopeXFound)
