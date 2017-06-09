@@ -20,7 +20,7 @@ def make_Phantom(phantom, noiseLevel):
         image[65:95, 65:95] = 1 
     elif phantom == 'Shepp-Logan': 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-        imageSmall = rescale(imageSmall, scale=0.2)
+        imageSmall = rescale(imageSmall, scale=0.4)
 
         tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
         image = np.concatenate((tmpY, imageSmall), axis = 0)
