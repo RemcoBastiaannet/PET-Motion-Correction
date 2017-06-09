@@ -5,7 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a1832c91-eab8-411f-a923-2712bc698754</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GatingNoSTIR.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -23,6 +24,9 @@
   <ItemGroup>
     <Compile Include="GatingNoSTIR.py" />
     <Compile Include="ManonsFunctions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NoMotion.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MotionModelProjSpaceNoSTIR.py" />
