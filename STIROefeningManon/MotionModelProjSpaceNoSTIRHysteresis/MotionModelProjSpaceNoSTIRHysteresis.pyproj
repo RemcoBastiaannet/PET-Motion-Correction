@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GatingNoSTIR.py" />
     <Compile Include="ManonsFunctionsHysteresis.py">
       <SubType>Code</SubType>
     </Compile>
