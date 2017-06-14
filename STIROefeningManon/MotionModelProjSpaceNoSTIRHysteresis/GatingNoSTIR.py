@@ -51,8 +51,8 @@ nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList, nonGatedShiftListX = 
 #_________________________GATING_______________________________ 
 maxSurSignal = np.max(nonGatedSurSignal) 
 minSurSignal = np.min(nonGatedSurSignal)
-gateMin = minSurSignal
-gateMax = minSurSignal + 0.2*(maxSurSignal - minSurSignal)
+gateMin = minSurSignal + 0.8*(maxSurSignal - minSurSignal)
+gateMax = minSurSignal + 1.0*(maxSurSignal - minSurSignal)
 surSignal, phantomList, shiftList = mf.gating(nonGatedSurSignal, nonGatedPhantomList, nonGatedShiftList, gateMin, gateMax)
 
 # Visualization of gating 
@@ -115,3 +115,27 @@ for iIt in range(nIt):
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
+
+
+# Saving the last guess as mhd 
+guessTMP = np.zeros((1,) + np.shape(image2D) ) # Make it 3D 
+guessTMP[0,:,:] = guess
+
+from vtk.util import vtkImageImportFromArray as viifa
+import time
+import vtk
+
+T2 = viifa.vtkImageImportFromArray()
+T2.SetArray(guessTMP)
+T2.SetDataSpacing([1,1,1]) # Is dit wat je wil? De voxel spacing... 
+FineDensiteDims=np.shape(guessTMP)
+T2.SetDataExtent([0,FineDensiteDims[0]-1,0,FineDensiteDims[1]-1,0,FineDensiteDims[2]-1])
+T2.Update()
+DensiteSurEchan = T2.GetOutput()
+
+#Ecriture
+imageWriter = vtk.vtkMetaImageWriter()
+imageWriter.SetCompression(False)
+imageWriter.SetFileName(figSaveDir + 'Gate5.mhd')
+imageWriter.SetInputData(DensiteSurEchan)
+imageWriter.Write()
