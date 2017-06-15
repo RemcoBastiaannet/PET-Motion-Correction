@@ -3,14 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>7e2d676d-24c9-4fed-a2c7-be7c6001b85f</ProjectGuid>
+    <ProjectGuid>ba365263-b690-4acb-8ed5-93298ce14116</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GatingNoSTIR.py</StartupFile>
-    <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
+    <StartupFile>CoregistrationReadMHD.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>MotionModelProjSpaceNoSTIRHysteresis</Name>
-    <RootNamespace>MotionModelProjSpaceNoSTIRHysteresis</RootNamespace>
+    <Name>CoregistrationReadMHD</Name>
+    <RootNamespace>CoregistrationReadMHD</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,12 +23,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CoregistrationReadMHD.py" />
-    <Compile Include="GatingNoSTIR.py" />
-    <Compile Include="ManonsFunctionsHysteresis.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MotionModelProjSpaceNoSTIRHysteresis.py" />
-    <Compile Include="NoCorrection.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

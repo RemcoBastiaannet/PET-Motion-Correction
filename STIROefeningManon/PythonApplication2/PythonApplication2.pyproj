@@ -3,14 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>7e2d676d-24c9-4fed-a2c7-be7c6001b85f</ProjectGuid>
+    <ProjectGuid>94bb2973-f38a-4a62-ae0a-ca32427bb564</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GatingNoSTIR.py</StartupFile>
-    <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
+    <StartupFile>PythonApplication2.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>MotionModelProjSpaceNoSTIRHysteresis</Name>
-    <RootNamespace>MotionModelProjSpaceNoSTIRHysteresis</RootNamespace>
+    <Name>PythonApplication2</Name>
+    <RootNamespace>PythonApplication2</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,13 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CoregistrationReadMHD.py" />
-    <Compile Include="GatingNoSTIR.py" />
-    <Compile Include="ManonsFunctionsHysteresis.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MotionModelProjSpaceNoSTIRHysteresis.py" />
-    <Compile Include="NoCorrection.py" />
+    <Compile Include="PythonApplication2.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -9,8 +9,8 @@ import copy
 # Creates a string with the directory for storing images 
 def make_figSaveDir(dir, motion, phantom, noise, stationary):
     # Make sure all possible directories exist! (or at least the ones that you actually intend to use) 
-    dir += '{}/'.format(motion)
-    dir += '{}/'.format(phantom)
+    #dir += '{}/'.format(motion)
+    #dir += '{}/'.format(phantom)
     dir += 'Noise_{}/'.format(noise)
     dir += 'Stationary_{}/'.format(stationary)
     return dir 
@@ -26,7 +26,7 @@ def make_Phantom(phantom, noiseLevel):
     elif phantom == 'Shepp-Logan': 
         # Read in and scale the image size 
         imageSmall = imread(data_dir + "/phantom.png", as_grey=True)
-        imageSmall = rescale(imageSmall, scale=0.4)
+        imageSmall = rescale(imageSmall, scale=0.2)
 
         # Add zeros around the image to avoid problems with activity moving out of the FOV 
         tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
@@ -60,13 +60,17 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
             # Create surrogate signal 
             phase = 2*math.pi*iFrame/9
             sur = trueShiftAmplitude * math.sin(phase) 
-            
+
             # Add non-stationarity (upwards shift) half-way through the signal 
             if ((not stationary) and (iFrame > nFrames/2)): 
                 sur += 2*trueShiftAmplitude
 
             # Create shift in the y-direction (using motion model) 
             shift = trueSlope*sur 
+
+            # TIJDELIJK, VERPEST HET MODEL
+            if ((iFrame > nFrames/2)): 
+                shift /= trueSlope  
 
             # Create shift in the x-direction 
             if (not hysteresis): 
@@ -133,3 +137,38 @@ def gating(nonGatedSurSignal, nonGatedPhantomList, nonGatedShiftList, gateMin, g
             shiftList.append(nonGatedShiftList[i])
     
     return (surSignal, phantomList, shiftList) 
+
+def load_itk(filename):
+    import SimpleITK as sitk    
+    # Reads the image using SimpleITK
+    itkimage = sitk.ReadImage(filename)
+
+    # Convert the image to a  numpy array first and then shuffle the dimensions to get axis in the order z,y,x
+    ct_scan = sitk.GetArrayFromImage(itkimage)
+
+    return ct_scan
+
+def writeMhdFile(array, filePath):  
+    from vtk.util import vtkImageImportFromArray as viifa
+    import time
+    import vtk
+
+    if (array.ndim == 2): 
+        arrayTMP = np.zeros((1,) + np.shape(array) ) # Make it 3D 
+        arrayTMP[0,:,:] = array
+        array = arrayTMP
+
+    T2 = viifa.vtkImageImportFromArray()
+    T2.SetArray(array)
+    T2.SetDataSpacing([1,1,1]) # Is dit wat je wil? De voxel spacing... 
+    FineDensiteDims=np.shape(array)
+    T2.SetDataExtent([0,FineDensiteDims[0]-1,0,FineDensiteDims[1]-1,0,FineDensiteDims[2]-1])
+    T2.Update()
+    DensiteSurEchan = T2.GetOutput()
+
+    #Ecriture
+    imageWriter = vtk.vtkMetaImageWriter()
+    imageWriter.SetCompression(False)
+    imageWriter.SetFileName(filePath)
+    imageWriter.SetInputData(DensiteSurEchan)
+    imageWriter.Write()
