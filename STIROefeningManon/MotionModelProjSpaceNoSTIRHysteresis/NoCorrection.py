@@ -13,14 +13,14 @@ phantom = 'Shepp-Logan'
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = False # Only possible for sinusoidal motion 
+stationary = True 
+#stationary = False # Only possible for sinusoidal motion 
 gating = False
 hysteresis = False 
 
-nIt = 10
-trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueSlope = 0.5 # y-axis trueSlope = 0.5 # y-axis 
+nIt = 25
+trueShiftAmplitude = 20 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueSlope = 2.0 # y-axis trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
 trueSlopeInhale = 1.0 # hysteresis, x-axis
 trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
@@ -99,3 +99,13 @@ for iIt in range(nIt):
 plt.figure(), plt.subplot(1,2,1), plt.title('Phantom'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
+
+mf.writeMhdFile(guess, figSaveDir + 'finalImage.mhd')
+
+qualityFile = open(figSaveDir + "Quality.txt", "w")
+qualityFile.write('Phantom:')
+qualityFile.write('Maximum value: {}\n\n'.format(np.max(image2D))) 
+qualityFile.write('Simulations:\n')
+qualityFile.write('Maximum value: {}\n\n'.format(np.max(guess))) 
+qualityFile.write('Quadratic difference of simulation and phantom: {}\n'.format(np.sum( (guess - image2D)**2 )))
+qualityFile.close() 
