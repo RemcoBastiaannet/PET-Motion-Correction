@@ -69,8 +69,8 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
             shift = trueSlope*sur 
 
             # TIJDELIJK, VERPEST HET MODEL
-            if ((iFrame > nFrames/2)): 
-                shift /= (0.9*trueSlope)
+            #if ((iFrame > nFrames/2)): 
+                #shift /= (0.5*trueSlope)
 
             # Create shift in the x-direction 
             if (not hysteresis): 

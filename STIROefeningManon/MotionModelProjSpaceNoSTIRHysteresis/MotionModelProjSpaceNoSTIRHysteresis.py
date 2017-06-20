@@ -28,7 +28,7 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
 
 # Parameters that do not influence the saving directory 
-nIt = 25
+nIt = 15
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.0 # x-axis 
@@ -185,12 +185,13 @@ def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple):
         guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], 0)) # shift in y-direction 
         guessMoved = sp.ndimage.shift(copy.deepcopy(guessMoved), (0, surSignal[iFrame] * x[1])) # shift in x-direction 
         guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
-        #diff = guessMovedProj/np.sum(guessMovedProj) - measList[iFrame]/np.sum(measList[iFrame])
-        diff = guessMovedProj - measList[iFrame]
-        diffTMP = np.zeros((1,) + np.shape(diff))
+        diff = guessMovedProj.astype(np.float)/np.sum(guessMovedProj).astype(np.float) - measList[iFrame].astype(np.float)/np.sum(measList[iFrame]).astype(np.float)
+        
+        #diff = guessMovedProj - measList[iFrame]
+        #diffTMP = np.zeros((1,) + np.shape(diff))
         #diffTMP[0,:,:] = diff
         #pyvpx.numpy2vpx(diffTMP, figSaveDir + 'difference_Frame{}.vpx'.format(iFrame)) 
-        quadError = np.sum((diff)**2)
+        quadError = np.sum(np.abs(diff))
         quadErrorSum += quadError
         quadErrorSumList.append(quadError)
 
@@ -213,10 +214,7 @@ guessSum = []
 guessSum.append(np.sum(guess))
 for iIt in range(nIt): 
     # Motion model optimization
-    if (iIt >= 3): 
-        quadErrors = [computeQuadError(np.array([i, trueSlopeX]), nFrames, guess, surSignal, iAngles, False) for i in slopeList]
-        quadErrorsList.append(quadErrors)
-
+    if (iIt >= 3):
         args = (nFrames, guess, surSignal, iAngles, False)
         res = minimize(computeQuadError, x0, args, method = 'BFGS', options = {'disp': True, 'maxiter' : 10})
         slopeFound = res.x[0]        
@@ -226,7 +224,10 @@ for iIt in range(nIt):
         quadErrorFound = res.fun
         quadErrorFoundList.append(quadErrorFound)  
 
-        quadErrorSumList = computeQuadError((3*trueSlope, 3*trueSlopeX), nFrames, guess, surSignal, iAngles, True)   
+        #quadErrors = [computeQuadError(np.array([i, slopeXFound]), nFrames, guess, surSignal, iAngles, False) for i in slopeList]
+        #quadErrorsList.append(quadErrors)
+
+        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)   
         # Moving average window 
         windowLength = 10 
         window = np.ones(windowLength,'d')
@@ -236,7 +237,7 @@ for iIt in range(nIt):
         plt.plot(quadErrorSumList), plt.title('Quadratic error vs. time, iteration {}'.format(iIt+1))
         plt.plot(quadErrorSumListAVG, label = 'Moving average'), 
         diffTMP = np.max(quadErrorSumList) - np.min(quadErrorSumList)
-        plt.axis([0, nFrames, np.min(quadErrorSumList) - 0.1*diffTMP, np.max(quadErrorSumList) + 0.1*diffTMP])
+        plt.axis([0, nFrames, 0, 1])
         plt.legend() 
         plt.savefig(figSaveDir + 'Fig{}_QuadraticError_Time.png'.format(numFigures))
         numFigures += 1 
