@@ -13,14 +13,15 @@ phantom = 'Shepp-Logan'
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
-stationary = True 
+stationary = False 
 #stationary = False # Only possible for sinusoidal motion 
 gating = False
 hysteresis = False 
+modelBroken = False
 
-nIt = 25
-trueShiftAmplitude = 20 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueSlope = 2.0 # y-axis trueSlope = 0.5 # y-axis 
+nIt = 15
+trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+trueSlope = 1.4 # y-axis trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
 trueSlopeInhale = 1.0 # hysteresis, x-axis
 trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
@@ -33,10 +34,10 @@ noiseLevel = 600
 x0 = np.array([1.0,1.0])
 
 dir = './Figures/'
-figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
+figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 figSaveDir += 'No_Correction/'
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0, modelBroken)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -47,7 +48,7 @@ numFigures += 1
 
 #_________________________ADD MOTION_______________________________
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis, modelBroken)
 originalImage = phantomList[0]
 
 

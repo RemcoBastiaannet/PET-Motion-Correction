@@ -14,12 +14,13 @@ noise = True
 #motion = 'Step' 
 motion = 'Sine'
 #stationary = True 
-stationary = False # Only possible for sinusoidal motion 
+stationary = True # Only possible for sinusoidal motion 
 hysteresis = False
+modelBroken = False 
 
-nIt = 25
+nIt = 15
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
-trueSlope = 2.0 # y-axis trueSlope = 0.5 # y-axis 
+trueSlope = 1.4 # y-axis trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
 trueSlopeInhale = 1.0 # hysteresis, x-axis
 trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
@@ -31,13 +32,13 @@ else: nFrames = 18
 noiseLevel = 600
 x0 = np.array([1.0,1.0])
 
-gateNumber = 4 # possible values: 1-5
+gateNumber = 1 # possible values: 1-5
 
 dir = './Figures/'
-figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary)
+figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 figSaveDir += 'Gating/'
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0, modelBroken)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -47,7 +48,7 @@ numFigures += 1
 
 
 #_________________________ADD MOTION_______________________________ 
-nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList, nonGatedShiftListX = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis)
+nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList, nonGatedShiftListX = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis, modelBroken)
 
 
 #_________________________GATING_______________________________ 
