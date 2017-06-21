@@ -250,3 +250,5 @@ ModelManifest.xml
 *.s 
 *.hs
 *.txt
+*.mhd
+*.raw
