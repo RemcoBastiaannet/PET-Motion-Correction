@@ -22,14 +22,15 @@ motion = 'Sine'
 stationary = False # False is only possible for sinusoidal motion! 
 hysteresis = False 
 #hysteresis = True
-modelBroken = True  
+#modelBroken = True  
+modelBroken = False  
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 
 # Parameters that do not influence the saving directory 
-nIt = 6
+nIt = 15
 nModelSkip = 3
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 0.5 # y-axis 
@@ -234,8 +235,8 @@ for iIt in range(nIt):
         #quadErrorsList.append(quadErrors)
 
         # Time-resolved quadratic error 
-        #quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)   
-        quadErrorSumList = computeQuadError((trueSlope, trueSlopeX), nFrames, guess, surSignal, iAngles, True)   
+        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)   
+        #quadErrorSumList = computeQuadError((trueSlope, trueSlopeX), nFrames, guess, surSignal, iAngles, True)   
     
         # Moving average window for time-resolved quadratic error 
         #windowLength = 10 

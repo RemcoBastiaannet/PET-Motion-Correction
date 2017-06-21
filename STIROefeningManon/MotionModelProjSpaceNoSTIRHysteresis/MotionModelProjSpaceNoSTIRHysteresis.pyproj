@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7e2d676d-24c9-4fed-a2c7-be7c6001b85f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MotionModelProjSpaceNoSTIRHysteresis.py</StartupFile>
+    <StartupFile>GatingNoSTIR.py</StartupFile>
     <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
