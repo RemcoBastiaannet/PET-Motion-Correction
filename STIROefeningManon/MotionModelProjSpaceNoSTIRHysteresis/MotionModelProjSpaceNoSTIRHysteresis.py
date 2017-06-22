@@ -19,18 +19,18 @@ noise = True
 #motion = 'Step' 
 motion = 'Sine'
 #stationary = True 
-stationary = False # False is only possible for sinusoidal motion! 
+stationary = True # False is only possible for sinusoidal motion! 
 hysteresis = False 
 #hysteresis = True
 #modelBroken = True  
-modelBroken = False  
+modelBroken = True  
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 
 # Parameters that do not influence the saving directory 
-nIt = 15
+nIt = 5
 nModelSkip = 3
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 1.4 # y-axis 
@@ -244,7 +244,7 @@ for iIt in range(nIt):
         #quadErrorSumListAVG = np.convolve(window/window.sum(), quadErrorSumList, mode='same')
 
         plt.figure() 
-        plt.plot(quadErrorSumList), plt.title('Quadratic error vs. time, iteration {}'.format(iIt+1))
+        plt.plot(quadErrorSumList), plt.title('Normalized error vs. time, iteration {}'.format(iIt+1))
         plt.axis([0.0, nFrames, 0.0, 1.0])
         plt.savefig(figSaveDir + 'Fig{}_QuadraticError_Time.png'.format(numFigures))
         numFigures += 1 
@@ -328,7 +328,11 @@ plt.close()
 # y-axis
 ax = plt.figure().gca()
 ax.xaxis.set_major_locator(MaxNLocator(integer=True)) # to get integer values on the x-axis
-plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value')
+if (not modelBroken): 
+    plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value')
+else: 
+    plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value 1st half')
+    plt.axhline(0.4, color = 'k', linestyle = '--', label = 'Correct value 2nd half')
 plt.plot(range(nModelSkip+1, nIt+1), slopeFoundList, 'ro', label = 'Estimated value') 
 plt.title('Parameter optimization (y-axis)'), plt.xlabel('Iteration number'), plt.ylabel('Slope')
 plt.legend(), plt.savefig(figSaveDir + 'Fig{}_SlopesFoundY.png'.format(numFigures))
@@ -350,5 +354,4 @@ qualityFile.write('Phantom:\n')
 qualityFile.write('Maximum value: {}\n\n'.format(np.max(image2D))) 
 qualityFile.write('Simulations:\n')
 qualityFile.write('Maximum value: {}\n\n'.format(np.max(guess))) 
-qualityFile.write('Quadratic difference of simulation and phantom: {}\n'.format(np.sum( (guess - image2D)**2 )))
 qualityFile.close() 
