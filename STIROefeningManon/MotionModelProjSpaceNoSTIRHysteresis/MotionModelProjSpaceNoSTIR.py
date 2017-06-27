@@ -2,7 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.transform import iradon, radon
-import ManonsFunctionsHysteresis as mf 
+import ManonsFunctions as mf 
 import scipy as sp
 import pyvpx
 import copy
@@ -10,6 +10,7 @@ from scipy.optimize import curve_fit, minimize, brute
 from scipy.signal import argrelextrema
 from heapq import merge
 from matplotlib.ticker import MaxNLocator
+
 
 #_________________________PARAMETER SETTINGS_______________________________
 # Parameters that influence the figure saving directory 
@@ -19,26 +20,20 @@ noise = True
 #motion = 'Step' 
 motion = 'Sine'
 #stationary = True 
-stationary = True # False is only possible for sinusoidal motion! 
-hysteresis = False 
-#hysteresis = True
-#modelBroken = True  
+stationary = False # False is only possible for sinusoidal motion! 
 modelBroken = True  
+#modelBroken = False  
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 
 # Parameters that do not influence the saving directory 
-nIt = 5
+nIt = 15
 nModelSkip = 3
 trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 1.4 # y-axis 
 trueSlopeX = 0.2 # x-axis 
-trueSlopeInhale = 1.0 # hysteresis, x-axis
-trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
-trueSquareSlopeInhale = +0.1 # hysteresis, x-axis
-trueSquareSlopeExhale = -0.06 # hysteresis, x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 18
@@ -46,7 +41,7 @@ noiseLevel = 600
 x0 = np.array([1.0, 1.0]) # initial guess for the optimization function 
 
 # Store all settings in a text file 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0, modelBroken)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, x0, modelBroken)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -60,67 +55,12 @@ numFigures += 1
 image2DTMP = np.zeros((1,) + np.shape(image2D) )
 image2DTMP[0,:,:] = image2D
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'OriginalImage.vpx') 
- 
+
 
 #_________________________ADD MOTION_______________________________ 
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis, modelBroken)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, image2D, stationary, modelBroken)
 originalImage = phantomList[0]
-
-'''
-# Plot hysteresis on x-axis
-plt.figure() 
-plt.plot(surSignal, shiftXList, 'bo', markersize = 4.0), plt.title('Hysteresis (x-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion x-axis')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-plt.show()
-numFigures += 1 
-
-# Plot hysteresis on y-axis
-plt.figure() 
-plt.plot(surSignal, shiftList, 'bo', markersize = 4.0), plt.title('Hysteresis (y-axis)'), plt.xlabel('Surrogate signal (external motion)'), plt.ylabel('Internal motion y-axis')
-plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_Hysteresis.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-plt.show()
-numFigures += 1 
-'''
-
-'''
-# Plot a time series of the phantom 
-for iFrame in range(nFrames):    
-    plt.title('Time frame {0}'.format(iFrame)), plt.imshow(phantomList[iFrame][0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
-    plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_phantom_TF{}.png'.format(numFigures, trueShiftAmplitude, iFrame)), plt.close()
-    numFigures += 1 
-''' 
-
-#_________________________DISTINGUISH INHALE AND EXHALE PHASES_______________________________ 
-# Derivatives, the sign of which distinguishes between inhale and exhale 
-if (hysteresis): 
-    surSignalDiff = np.diff(np.array(surSignal))
-    shiftXListDiff = np.diff(np.array(shiftXList))
-
-    # Lists for storage 
-    inhaleSurSignal = [] 
-    inhaleShiftXList = []
-    inhaleSurAxis = []
-    inhaleShiftXAxis = [] 
-    exhaleSurSignal = [] 
-    exhaleShiftXList = [] 
-    exhaleSurAxis = [] 
-    exhaleShiftXAxis = [] 
-
-    # Distinguish inhale and exhale phases 
-    for i in range(len(surSignalDiff)): 
-        if (surSignalDiff[i] > 0): 
-            inhaleSurSignal.append(surSignal[i])
-            inhaleSurAxis.append(i)
-        else: 
-            exhaleSurSignal.append(surSignal[i]) 
-            exhaleSurAxis.append(i)
-        if (shiftXListDiff[i] > 0): 
-            inhaleShiftXList.append(shiftXList[i])          
-            inhaleShiftXAxis.append(i)
-        else: 
-            exhaleShiftXList.append(shiftXList[i]) 
-            exhaleShiftXAxis.append(i)
 
 # Plot surrogate signal and internal motion 
 # y-axis
@@ -128,24 +68,6 @@ plt.figure()
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_shiftList.png'.format(numFigures)), plt.close()
 numFigures += 1 
-
-if (hysteresis): 
-    # x-axis, inhale
-    plt.figure() 
-    plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, inhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-    plt.plot(inhaleSurAxis, inhaleSurSignal, 'ro', label = 'Inhale surrogate') 
-    plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
-    plt.plot(inhaleShiftXAxis, inhaleShiftXList, 'ro') 
-    plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_Inhale.png'.format(numFigures)), plt.close()
-    numFigures += 1 
-    # x-axis, exhale
-    plt.figure() 
-    plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis, exhale)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
-    plt.plot(exhaleSurAxis, exhaleSurSignal, 'go', label = 'Exhale') 
-    plt.plot(range(nFrames), shiftXList, label = 'Internal motion')
-    plt.plot(exhaleShiftXAxis, exhaleShiftXList, 'go') 
-    plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_Exhale.png'.format(numFigures)), plt.close()
-    numFigures += 1 
 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
@@ -171,13 +93,6 @@ numFigures += 1
 # Initial guess - image 
 guess = np.ones(np.shape(image2D)) # Fills it with floats, not ints 
 
-# Plot and save initial guess 
-#plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(guess), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close()
-#numFigures += 1 
-guessTMP = np.zeros((1,) + np.shape(image2D))
-guessTMP[0,:,:] = guess
-pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess.vpx') 
-    
 # Objective function for model optimization
 def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple):    
     quadErrorSum = 0.0
@@ -208,7 +123,6 @@ slopeList = np.linspace(-1, 2, 9)
 parFile = open(figSaveDir + "Parameters.txt", "w")
 
 # Lists for storage 
-quadErrorsList = []
 slopeFoundList = []
 slopeXFoundList = []
 quadErrorFoundList = []
@@ -220,8 +134,8 @@ for iIt in range(nIt):
         args = (nFrames, guess, surSignal, iAngles, False)
         myOptions = {'disp': True, 'maxiter' : 10}
         if (iIt <= (nIt-4)): # The first iterations are less accurate in terms of tolerance value and step size 
-            myOptions['gtol'] = 1e-02
-            myOptions['eps'] = 1e-04
+            myOptions['gtol'] = 1e-05
+            myOptions['eps'] = 1e-05
         res = minimize(computeQuadError, x0, args, method = 'BFGS', options = myOptions)
         slopeFound = res.x[0]        
         slopeFoundList.append(slopeFound)
@@ -230,18 +144,9 @@ for iIt in range(nIt):
         quadErrorFound = res.fun
         quadErrorFoundList.append(quadErrorFound)  
 
-        # Rough estimate of the variation in quadratic error as a function of the slope (of the y-axis) 
-        #quadErrors = [computeQuadError(np.array([i, slopeXFound]), nFrames, guess, surSignal, iAngles, False) for i in slopeList]
-        #quadErrorsList.append(quadErrors)
-
         # Time-resolved quadratic error 
-        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)   
-        #quadErrorSumList = computeQuadError((trueSlope, trueSlopeX), nFrames, guess, surSignal, iAngles, True)   
-    
-        # Moving average window for time-resolved quadratic error 
-        #windowLength = 10 
-        #window = np.ones(windowLength,'d')
-        #quadErrorSumListAVG = np.convolve(window/window.sum(), quadErrorSumList, mode='same')
+        #quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, np.max(guess)*np.ones(np.shape(guess))-guess, surSignal, iAngles, True)   
+        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)     
 
         plt.figure() 
         plt.plot(quadErrorSumList), plt.title('Normalized error vs. time, iteration {}'.format(iIt+1))
@@ -256,16 +161,6 @@ for iIt in range(nIt):
         parFile.write('objective function: {}\n'.format(res.fun))
         parFile.write('slope: {}\n'.format(slopeFound)) 
         parFile.write('slopeX: {}\n\n'.format(slopeXFound)) 
-
-        '''
-        plt.plot(slopeList, quadErrors, 'b-', label = ''), plt.title('Quadratic error vs. slope, iteration {}'.format(iIt+1))
-        plt.plot(slopeFound, quadErrorFound, 'ro', label = 'Estimated value')
-        plt.axvline(trueSlope, color='k', linestyle='--', label = 'Correct  value')
-        plt.legend()
-        plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_QuadraticError_Iteration{}.png'.format(numFigures, trueShiftAmplitude, iIt))
-        numFigures += 1 
-        plt.close()
-        ''' 
 
     totalError = 0 
     # MLEM with motion compensation 
@@ -302,27 +197,19 @@ for iIt in range(nIt):
     guessSum.append(np.sum(guess))
     countIt = iIt+1 
 
-    # Save and plot current guess 
-    #guessTMP = np.zeros((1,) + np.shape(image2D))
-    #guessTMP[0,:,:] = guess
-    #pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
+    # Plot current guess 
     plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures)), plt.close()
     numFigures += 1  
 
 parFile.close() 
 
-# Plot original image and reconstructed image 
+# Plot and save original image and reconstructed image 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures)), plt.close() 
 numFigures += 1 
-
-# Plot some of guess as a function of iteration number 
-'''
-plt.figure() 
-plt.plot(guessSum), plt.title('Sum of guess'), plt.savefig(figSaveDir + 'Fig{}_TrueShift{}_guessSum.png'.format(numFigures, trueShiftAmplitude))
-numFigures += 1 
-plt.close() 
-'''
+guessTMP = np.zeros((1,) + np.shape(guess))
+guessTMP[0,:,:] = guess
+pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
 
 # Plot quadratic errors of all iteqrations
 # y-axis
@@ -348,10 +235,3 @@ plt.title('Parameter optimization (x-axis)'), plt.xlabel('Iteration number'), pl
 plt.legend(), plt.savefig(figSaveDir + 'Fig{}_SlopesFoundX.png'.format(numFigures))
 numFigures += 1 
 plt.close()
-
-qualityFile = open(figSaveDir + "Quality.txt", "w")
-qualityFile.write('Phantom:\n')
-qualityFile.write('Maximum value: {}\n\n'.format(np.max(image2D))) 
-qualityFile.write('Simulations:\n')
-qualityFile.write('Maximum value: {}\n\n'.format(np.max(guess))) 
-qualityFile.close() 

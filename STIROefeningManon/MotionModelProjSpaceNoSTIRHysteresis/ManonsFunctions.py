@@ -44,7 +44,7 @@ def make_Phantom(phantom, noiseLevel):
     return image 
 
 # Creates a surrogate signal and shifts the phantom in the x- and y-direction according to some motion model 
-def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image, stationary, hysteresis, modelBroken): 
+def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, image, stationary, modelBroken): 
     # Lists for data storage 
     shiftList = [] # y-axis 
     shiftXList = [] # x-axis
@@ -75,15 +75,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
                 shift *= 0.3 # New slope 
 
             # Create shift in the x-direction 
-            if (not hysteresis): 
-                shiftX = trueSlopeX*sur
-
-            if (hysteresis): 
-                phaseMod = phase % (2*math.pi)
-                if (phaseMod >= math.pi/2.0 and phaseMod < 3.0*math.pi/2.0): # Inhale 
-                    shiftX = trueSlopeInhale*sur + trueSquareSlopeInhale*sur**2  
-                else: # Exhale 
-                    shiftX = trueSlopeExhale*sur + trueSquareSlopeExhale*sur**2 + (trueSquareSlopeInhale-trueSquareSlopeExhale)*trueShiftAmplitude**2
+            shiftX = trueSlopeX*sur
        
         # Shift image in the y-direction
         tmp = np.zeros((1, Ny, Nx))
@@ -106,7 +98,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, tru
     return (phantomList, surSignal, shiftList, shiftXList) 
 
 # Writes all parameters that can be specified for a simulation to a text file for storage 
-def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0, modelBroken): 
+def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, x0, modelBroken): 
     file = open(figSaveDir + "Configuratie.txt", "w")
     file.write("Phantom: {}\n".format(phantom))
     file.write("Noise: {}\n".format(noise))
@@ -115,12 +107,7 @@ def write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, tru
     file.write("Number of iterations: {}\n".format(nIt))
     file.write("True shift amplitude: {}\n".format(trueShiftAmplitude))
     file.write("True slope (motion model): {}\n".format(trueSlope))
-    file.write("True slope inhale (motion model): {}\n".format(trueSlopeInhale))
-    file.write("True slope exhale (motion model): {}\n".format(trueSlopeExhale))
-    file.write("True suare slope inhale (motion model): {}\n".format(trueSquareSlopeInhale))
-    file.write("True suare slope exhale (motion model): {}\n".format(trueSquareSlopeExhale))
     file.write("Number of time frames: {}\n".format(nFrames))
-    file.write("Hysteresis: {}\n".format(hysteresis))
     file.write("Starting parameters BFGS: {}".format(x0))
     file.write("Model broken: {}".format(modelBroken))
     file.close()

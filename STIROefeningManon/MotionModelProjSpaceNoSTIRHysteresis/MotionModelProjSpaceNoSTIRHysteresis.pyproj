@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7e2d676d-24c9-4fed-a2c7-be7c6001b85f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MotionModelProjSpaceNoSTIRHysteresis.py</StartupFile>
+    <StartupFile>MotionModelProjSpaceNoSTIR.py</StartupFile>
     <SearchPath>..\..\pythonwrapper\;..\..\STIRTest\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -23,13 +23,13 @@
   <ItemGroup>
     <Compile Include="CoregistrationReadMHD.py" />
     <Compile Include="GatingNoSTIR.py" />
-    <Compile Include="ManonsFunctionsHysteresis.py">
+    <Compile Include="ManonsFunctions.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Difference.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MotionModelProjSpaceNoSTIRHysteresis.py" />
+    <Compile Include="MotionModelProjSpaceNoSTIR.py" />
     <Compile Include="NoCorrection.py" />
   </ItemGroup>
   <PropertyGroup>
