@@ -2,7 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.transform import iradon, radon
-import ManonsFunctionsHysteresis as mf 
+import ManonsFunctions as mf 
 import scipy as sp
 
 
