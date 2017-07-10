@@ -26,9 +26,6 @@
     <Compile Include="ManonsFunctions.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Difference.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MotionModelProjSpaceNoSTIR.py" />
     <Compile Include="NoCorrection.py" />
   </ItemGroup>
