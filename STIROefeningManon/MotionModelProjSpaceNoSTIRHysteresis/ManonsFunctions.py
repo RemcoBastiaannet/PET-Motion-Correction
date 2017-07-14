@@ -17,11 +17,12 @@ def make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken):
     return dir 
 
 # Creates a phantom 
+from scipy import misc
 def make_Phantom(phantom, noiseLevel): 
     # Block phantom 
     if phantom == 'Block': 
-        image = np.zeros((160,160))
-        image[65:95, 65:95] = 1 
+        image = np.zeros((21,21))
+        image[8:13, 8:13] = 1 
 
     # Shepp-Logan phantom 
     elif phantom == 'Shepp-Logan': 
@@ -32,6 +33,18 @@ def make_Phantom(phantom, noiseLevel):
         # Add zeros around the image to avoid problems with activity moving out of the FOV 
         tmpY = np.zeros((80, np.shape(imageSmall)[1])) 
         image = np.concatenate((tmpY, imageSmall), axis = 0)
+        image = np.concatenate((image, tmpY), axis = 0)
+
+        tmpX = np.zeros((np.shape(image)[0], 80))
+        image = np.concatenate((tmpX, image), axis = 1)
+        image = np.concatenate((image, tmpX), axis = 1)
+
+    elif phantom == 'Liver': 
+        image = imread("E:/Manon/LiverPhantom.png", as_grey=True)
+
+        # Add zeros around the image to avoid problems with activity moving out of the FOV 
+        tmpY = np.zeros((80, np.shape(image)[1])) 
+        image = np.concatenate((tmpY, image), axis = 0)
         image = np.concatenate((image, tmpY), axis = 0)
 
         tmpX = np.zeros((np.shape(image)[0], 80))
@@ -72,7 +85,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, ima
             # Ruin motion model half-way 
             if (modelBroken and (iFrame > nFrames/2)): 
                 shift /= trueSlope
-                shift *= 0.3 # New slope 
+                shift *= 0.6 # New slope 
 
             # Create shift in the x-direction 
             shiftX = trueSlopeX*sur

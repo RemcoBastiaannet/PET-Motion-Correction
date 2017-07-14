@@ -1,7 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-from skimage.transform import iradon, radon
+from skimage.transform import iradon, radon, rescale
 import ManonsFunctions as mf 
 import scipy as sp
 import pyvpx
@@ -14,15 +14,16 @@ from matplotlib.ticker import MaxNLocator
 
 #_________________________PARAMETER SETTINGS_______________________________
 # Parameters that influence the figure saving directory 
-phantom = 'Shepp-Logan'
+phantom = 'Liver'
+#phantom = 'Block'
 #noise = False
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
 
-stationary = False 
+stationary = True 
 #stationary = False # False is only possible for sinusoidal motion! 
-modelBroken = True  
+modelBroken = False  
 #modelBroken = False  
 
 
@@ -31,16 +32,19 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 
 # Parameters that do not influence the saving directory 
-nIt = 8
+nIt = 10
 nModelSkip = 3
-trueShiftAmplitude = 10 # Make sure this is not too large, activity moving out of the FOV will cause problems 
+trueShiftAmplitude = 5 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 1.4 # y-axis 
 trueSlopeX = 0.2 # x-axis 
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 18
-noiseLevel = 600
+noiseLevel = 200
 x0 = np.array([1.0, 1.0]) # initial guess for the optimization function 
+mu = 9.687E-2 # water 
+
+iAngles = np.linspace(0, 180, 60)[:-1]
 
 # Store all settings in a text file 
 mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, x0, modelBroken)
@@ -49,6 +53,20 @@ mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, true
 #_________________________MAKE PHANTOM_______________________________
 # Make phantom 
 image2D = mf.make_Phantom(phantom, noiseLevel)
+
+nX = int(np.shape(image2D)[0]) # Not sure if x and y are actually x and y 
+nY = int(np.shape(image2D)[1])
+imageMuBinary = copy.deepcopy(image2D)
+for iX in range(nX): 
+    for iY in range(nY): 
+        if imageMuBinary[iX, iY] == 0: continue 
+        else: imageMuBinary[iX, iY] /= image2D[iX, iY] 
+imageMu = imageMuBinary*mu
+sinoMu = radon(copy.deepcopy(imageMu), iAngles) 
+expSinoMu = np.zeros(np.shape(sinoMu))
+for i in range(np.shape(sinoMu)[0]):
+    for j in range(np.shape(sinoMu)[1]):
+        expSinoMu[i,j] = math.exp(-sinoMu[i,j])
 
 # Plot phantom and store as vpx image 
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures)), plt.close()
@@ -69,19 +87,17 @@ originalImage = phantomList[0]
 plt.figure()
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis')
-plt.plot(range(nFrames), [1.4*i for i in surSignal], label = '1.4')
-plt.plot(range(nFrames), [0.3*i for i in surSignal], label = '0.4'), plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_shiftList.png'.format(numFigures)), plt.close()
+plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_shiftList.png'.format(numFigures)), plt.close()
 numFigures += 1 
 
 
 #_________________________MEASUREMENT, INITIAL GUESS, NORMALIZATION_______________________________
-# Angles for randon
-iAngles = np.linspace(0, 180, 60)[:-1]
 
 # Create sinograms of each frame and add Poisson noise to them 
 measList = []
 for iFrame in range(nFrames):
     meas = radon(copy.deepcopy(phantomList[iFrame])[0,:,:], iAngles) 
+    meas *= expSinoMu 
     if (iFrame == 0): measNoNoise = meas
     if (noise): meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
@@ -98,14 +114,14 @@ numFigures += 1
 guess = np.ones(np.shape(image2D)) # Fills it with floats, not ints 
 
 # Objective function for model optimization
-def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple):    
+def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple, negNumFile):    
     quadErrorSum = 0.0
     quadErrorSumList = []
     
     for iFrame in range(nFrames): 
         guessMoved = np.zeros(np.shape(guess))
-        guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], 0)) # shift in y-direction 
-        guessMoved = sp.ndimage.shift(copy.deepcopy(guessMoved), (0, surSignal[iFrame] * x[1])) # shift in x-direction 
+        guessMoved = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * x[0], surSignal[iFrame] * x[1])) 
+        if (np.min(guessMoved) < 0): negNumFile.write('computeQuadError, guessMoved {}\n'.format(np.min(guessMoved)))
         guessMovedProj = radon(copy.deepcopy(guessMoved), iAngles)
         diff = guessMovedProj/np.sum(guessMovedProj) - measList[iFrame]/np.sum(measList[iFrame])
         quadError = np.sum(np.abs(diff)) 
@@ -123,9 +139,10 @@ def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple):
 slopeFound = 0.0 # the first MLEM iterations are regular (image is not shifted/corrected) 
 slopeXFound = 0.0 
 
-slopeList = np.linspace(0, 1.5, 9)
+slopeList = np.linspace(1, 2, 9)
 
 parFile = open(figSaveDir + "Parameters.txt", "w")
+negNumFile = open(figSaveDir + "NegativeNumbers.txt", "w")
 
 # Lists for storage 
 quadErrorsList = [] ### 
@@ -138,7 +155,7 @@ for iIt in range(nIt):
     # Motion model optimization
     if (iIt >= nModelSkip):
         # Rough estimate of the variation in quadratic error as a function of the slope (of the y-axis) ### 
-        quadErrors = [computeQuadError(np.array([i, slopeXFound]), nFrames, guess, surSignal, iAngles, False) for i in slopeList] ### 
+        quadErrors = [computeQuadError(np.array([i, slopeXFound]), nFrames, guess, surSignal, iAngles, False, negNumFile) for i in slopeList] ### 
         quadErrorsList.append(quadErrors) ### 
 
         plt.figure()         
@@ -147,7 +164,7 @@ for iIt in range(nIt):
         numFigures += 1 
         plt.close() 
 
-        args = (nFrames, guess, surSignal, iAngles, False)
+        args = (nFrames, guess, surSignal, iAngles, False, negNumFile)
         myOptions = {'disp': True, 'maxiter' : 10}
         res = minimize(computeQuadError, x0, args, method = 'Powell', options = myOptions)
         slopeFound = res.x[0]        
@@ -158,7 +175,7 @@ for iIt in range(nIt):
         quadErrorFoundList.append(quadErrorFound)  
 
         # Time-resolved quadratic error 
-        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True)     
+        quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True, negNumFile)     
 
         plt.figure() 
         plt.plot(quadErrorSumList), plt.title('Normalized error vs. time, iteration {}'.format(iIt+1))
@@ -180,8 +197,8 @@ for iIt in range(nIt):
     for iFrame in range(nFrames): 
         # Shift guess for the current model, in time frame iFrame, and forward project it 
         shiftedGuess = np.zeros(np.shape(guess)) 
-        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slopeFound, 0)) 
-        shiftedGuess = sp.ndimage.shift(copy.deepcopy(shiftedGuess), (0, surSignal[iFrame] * slopeXFound)) 
+        shiftedGuess = sp.ndimage.shift(copy.deepcopy(guess), (surSignal[iFrame] * slopeFound, surSignal[iFrame] * slopeXFound)) 
+        if (np.min(shiftedGuess) < 0): negNumFile.write('MLEM, shiftedGuess: {}\n'.format(np.min(shiftedGuess)))
         shiftedGuessSinogram = radon(shiftedGuess, iAngles) 
 
         # Compute error between measured sinogram and guess
@@ -194,8 +211,8 @@ for iIt in range(nIt):
         # Backproject error and shift back 
         errorBck = iradon(error, iAngles, filter = None) 
         errorBckShifted = np.zeros(np.shape(errorBck)) 
-        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, 0))
-        errorBckShifted = sp.ndimage.shift(errorBckShifted, (0, -surSignal[iFrame] * slopeXFound))
+        errorBckShifted = sp.ndimage.shift(errorBck, (-surSignal[iFrame] * slopeFound, -surSignal[iFrame] * slopeXFound))
+        if (np.min(errorBckShifted) < 0): negNumFile.write('MLEM, errorBckShifted: {}\n'.format(np.min(errorBckShifted)))
 
         # Update total error 
         totalError += errorBckShifted   
@@ -215,6 +232,7 @@ for iIt in range(nIt):
     numFigures += 1  
 
 parFile.close() 
+negNumFile.close() 
 
 # Plot and save original image and reconstructed image 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
@@ -232,7 +250,7 @@ if (not modelBroken):
     plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value')
 else: 
     plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value 1st half')
-    plt.axhline(0.3, color = 'k', linestyle = '-.', label = 'Correct value 2nd half')
+    plt.axhline(0.6, color = 'k', linestyle = '-.', label = 'Correct value 2nd half')
 plt.plot(range(nModelSkip+1, nIt+1), slopeFoundList, 'ro', label = 'Estimated value') 
 plt.title('Parameter optimization (y-axis)'), plt.xlabel('Iteration number'), plt.ylabel('Slope')
 plt.legend(), plt.savefig(figSaveDir + 'Fig{}_SlopesFoundY.png'.format(numFigures))
