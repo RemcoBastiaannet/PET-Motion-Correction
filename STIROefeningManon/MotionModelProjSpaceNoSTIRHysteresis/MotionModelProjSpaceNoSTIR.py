@@ -26,7 +26,6 @@ stationary = True
 modelBroken = False  
 #modelBroken = False  
 
-
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
@@ -40,9 +39,11 @@ trueSlopeX = 0.2 # x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2 
 else: nFrames = 18
-noiseLevel = 200
+noiseLevel = 1000
 x0 = np.array([1.0, 1.0]) # initial guess for the optimization function 
-mu = 9.687E-2 # water 
+mu = 9.687E-2 # water, cm^-1
+mu /= 5 # number of pixels in 1 cm if one pixel is 2 mm 
+mu = 0
 
 iAngles = np.linspace(0, 180, 60)[:-1]
 
@@ -96,17 +97,19 @@ numFigures += 1
 # Create sinograms of each frame and add Poisson noise to them 
 measList = []
 for iFrame in range(nFrames):
-    meas = radon(copy.deepcopy(phantomList[iFrame])[0,:,:], iAngles) 
-    meas *= expSinoMu 
+    meas = radon(copy.deepcopy(phantomList[iFrame])[0,:,:], iAngles)
     if (iFrame == 0): measNoNoise = meas
     if (noise): meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
+    meas = meas.astype(np.float) * expSinoMu 
+    if (iFrame == 0): measAC = meas 
     measList.append(meas.astype(np.float)) 
 
 # Plot sinogram of time frame 0 with and without noise  
 plt.figure() 
-plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
-plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
+plt.subplot(1,3,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
+plt.subplot(1,3,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
+plt.subplot(1,3,3), plt.title('With AC'), plt.imshow(measAC, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_measurementsWithWithoutNoise.png'.format(numFigures)), plt.close()
 numFigures += 1 
 
@@ -230,6 +233,9 @@ for iIt in range(nIt):
     # Plot current guess 
     plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures)), plt.close()
     numFigures += 1  
+    guessTMP = np.zeros((1,) + np.shape(guess))
+    guessTMP[0,:,:] = guess
+    pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_Iteration{}.vpx'.format(iIt)) 
 
 parFile.close() 
 negNumFile.close() 
@@ -238,9 +244,6 @@ negNumFile.close()
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures)), plt.close() 
 numFigures += 1 
-guessTMP = np.zeros((1,) + np.shape(guess))
-guessTMP[0,:,:] = guess
-pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_{}.vpx'.format(iIt)) 
 
 # Plot quadratic errors of all iteqrations
 # y-axis
