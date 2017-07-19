@@ -19,14 +19,10 @@ gating = False
 hysteresis = False 
 modelBroken = False
 
-nIt = 15
+nIt = 5
 trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueSlope = 1.4 # y-axis trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
-trueSlopeInhale = 1.0 # hysteresis, x-axis
-trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
-trueSquareSlopeInhale = +0.1 # hysteresis, x-axis
-trueSquareSlopeExhale = -0.06 # hysteresis, x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 18
@@ -48,7 +44,7 @@ numFigures += 1
 
 #_________________________ADD MOTION_______________________________
 # Create surrogate signal and add motion to the phantom  
-phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis, modelBroken)
+phantomList, surSignal, shiftList, shiftXList = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, image2D, stationary, modelBroken)
 originalImage = phantomList[0]
 
 

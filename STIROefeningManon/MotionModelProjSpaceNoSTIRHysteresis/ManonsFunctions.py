@@ -85,7 +85,7 @@ def move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, ima
             # Ruin motion model half-way 
             if (modelBroken and (iFrame > nFrames/2)): 
                 shift /= trueSlope
-                shift *= 0.6 # New slope 
+                shift *= 0.4 # New slope 
 
             # Create shift in the x-direction 
             shiftX = trueSlopeX*sur

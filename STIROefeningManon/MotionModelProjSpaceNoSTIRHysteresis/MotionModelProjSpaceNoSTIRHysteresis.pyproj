@@ -28,6 +28,9 @@
     </Compile>
     <Compile Include="MotionModelProjSpaceNoSTIR.py" />
     <Compile Include="NoCorrection.py" />
+    <Compile Include="QualityAssessment.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
