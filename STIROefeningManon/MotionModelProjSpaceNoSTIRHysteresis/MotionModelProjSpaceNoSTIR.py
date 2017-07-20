@@ -16,7 +16,7 @@ from skimage.measure import find_contours, points_in_poly
 
 stationary = True 
 #stationary = False # False is only possible for sinusoidal motion! 
-modelBroken = False  
+modelBroken = True  
 #modelBroken = False  
 
 # Parameters that influence the figure saving directory 
@@ -33,7 +33,7 @@ figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBr
 
 # Parameters that do not influence the saving directory 
 nIt = 10
-nModelSkip = 10
+nModelSkip = 3
 trueShiftAmplitude = 5 # Make sure this is not too large, activity moving out of the FOV will cause problems 
 trueSlope = 1.4 # y-axis 
 trueSlopeX = 0.2 # x-axis 
@@ -293,7 +293,7 @@ if (not modelBroken):
     plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value')
 else: 
     plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value 1st half')
-    plt.axhline(0.3, color = 'k', linestyle = '-.', label = 'Correct value 2nd half')
+    plt.axhline(0.8, color = 'k', linestyle = '-.', label = 'Correct value 2nd half')
 plt.plot(range(nModelSkip+1, nIt+1), slopeFoundList, 'ro', label = 'Estimated value') 
 plt.title('Parameter optimization (y-axis)'), plt.xlabel('Iteration number'), plt.ylabel('Slope')
 plt.legend(), plt.savefig(figSaveDir + 'Fig{}_SlopesFoundY.png'.format(numFigures))
