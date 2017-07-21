@@ -16,16 +16,11 @@ from skimage.measure import find_contours, points_in_poly
 # Pas ook het bestandspad aan waar guess vandaan wordt gehaald 
 
 stationary = True 
-#stationary = False # False is only possible for sinusoidal motion! 
-modelBroken = False 
-#modelBroken = False  
+modelBroken = False  
 
 # Parameters that influence the figure saving directory 
 phantom = 'Liver'
-#phantom = 'Block'
-#noise = False
 noise = True
-#motion = 'Step' 
 motion = 'Sine'
 
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
@@ -247,11 +242,23 @@ bckVolumeSum = np.sum(bckBinMaskMatrix)
 bckStd = np.std(bckVolume[bckVolume != 0])
 
 # CNR 
-largeCNR = abs(largeMean - bckMean)/bckStd
+tmpSmallBckCnrTarget = copy.deepcopy(guess[115:175, 150:220])
+tmpSmallBckCnrTarget *= (1-smallBinMaskMatrix)
+tmpLargeBckCnrTarget = copy.deepcopy(guess[125:185, 100:170])
+tmpLargeBckCnrTarget *= (1-largeBinMaskMatrix )
 
-#smallBckVolume = guess[123:183, 125:195]*smallBinMaskMatrix 
-smallBckVolume = guess[150:210, 100:170]*smallBinMaskMatrix 
-smallCNR = abs(smallMean - bckMean)/bckStd
+smallBckCNRTarget = copy.deepcopy(tmpSmallBckCnrTarget[10:50, 13:53])
+largeBckCNRTarget = copy.deepcopy(tmpLargeBckCnrTarget[7:48, 17:58])
+
+bckLargeMean = np.mean(largeBckCNRTarget[largeBckCNRTarget != 0 ])
+bckSmallMean = np.mean(smallBckCNRTarget[smallBckCNRTarget != 0 ])
+
+bckLargeStd = np.std(largeBckCNRTarget[largeBckCNRTarget != 0 ])
+bckSmallStd = np.std(smallBckCNRTarget[smallBckCNRTarget != 0 ])
+
+largeCNR = abs(largeMean - bckLargeMean)/bckLargeStd
+
+smallCNR = abs(smallMean - bckSmallMean)/bckSmallStd
 
 # Write results 
 qualityFile.write('SUV max L: {}\n'.format(largeMax))
