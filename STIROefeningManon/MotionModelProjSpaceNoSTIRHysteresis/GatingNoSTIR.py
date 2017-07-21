@@ -4,33 +4,33 @@ import numpy as np
 from skimage.transform import iradon, radon
 import ManonsFunctions as mf 
 import scipy as sp
+import copy 
+import pyvpx 
 
 
 #_________________________CONFIGURATION_______________________________
 #phantom = 'Block'
-phantom = 'Shepp-Logan' 
+phantom = 'Liver' 
 #noise = False
 noise = True
 #motion = 'Step' 
 motion = 'Sine'
-#stationary = True 
-stationary = True # Only possible for sinusoidal motion 
-hysteresis = False
+stationary = True 
 modelBroken = False 
 
-nIt = 15
-trueShiftAmplitude = 10 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
+nIt = 10
+trueShiftAmplitude = 5 # Kan niet alle waardes aannemen (niet alle shifts worden geprobeerd) + LET OP: kan niet groter zijn dan de lengte van het plaatje (kan de code niet aan) 
 trueSlope = 1.4 # y-axis trueSlope = 0.5 # y-axis 
 trueSlopeX = 0.2 # x-axis 
-trueSlopeInhale = 1.0 # hysteresis, x-axis
-trueSlopeExhale = trueSlopeInhale # hysteresis, x-axis, must be the same as trueSlopeInhale, otherwise the two functions do are not equal at the endpoints
-trueSquareSlopeInhale = +0.1 # hysteresis, x-axis
-trueSquareSlopeExhale = -0.06 # hysteresis, x-axis
 numFigures = 0 
 if (motion == 'Step'): nFrames = 2
 else: nFrames = 18
-noiseLevel = 600
+noiseLevel = 200
 x0 = np.array([1.0,1.0])
+mu = 9.687E-2 # water, cm^-1
+mu /= 5 # number of pixels in 1 cm if one pixel is 2 mm 
+
+iAngles = np.linspace(0, 360, 120)[:-1]
 
 gateNumber = 1 # possible values: 1-5
 
@@ -38,7 +38,7 @@ dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
 figSaveDir += 'Gating/'
 
-mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, nFrames, hysteresis, x0, modelBroken)
+mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, trueShiftAmplitude, trueSlope, nFrames, x0, modelBroken)
 
 
 #_________________________MAKE PHANTOM_______________________________
@@ -46,9 +46,23 @@ image2D = mf.make_Phantom(phantom, noiseLevel)
 plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
 
+nX = int(np.shape(image2D)[0]) # Not sure if x and y are actually x and y 
+nY = int(np.shape(image2D)[1])
+imageMuBinary = copy.deepcopy(image2D)
+for iX in range(nX): 
+    for iY in range(nY): 
+        if imageMuBinary[iX, iY] == 0: continue 
+        else: imageMuBinary[iX, iY] /= image2D[iX, iY] 
+imageMu = imageMuBinary*mu
+sinoMu = radon(copy.deepcopy(imageMu), iAngles) 
+expSinoMu = np.zeros(np.shape(sinoMu))
+for i in range(np.shape(sinoMu)[0]):
+    for j in range(np.shape(sinoMu)[1]):
+        expSinoMu[i,j] = math.exp(-sinoMu[i,j])
+
 
 #_________________________ADD MOTION_______________________________ 
-nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList, nonGatedShiftListX = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, trueSlopeInhale, trueSlopeExhale, trueSquareSlopeInhale, trueSquareSlopeExhale, image2D, stationary, hysteresis, modelBroken)
+nonGatedPhantomList, nonGatedSurSignal, nonGatedShiftList, nonGatedShiftListX = mf.move_Phantom(motion, nFrames, trueShiftAmplitude, trueSlope, trueSlopeX, image2D, stationary, modelBroken)
 
 
 #_________________________GATING_______________________________ 
@@ -71,8 +85,6 @@ numFigures += 1
 
 
 #_________________________MEASUREMENT_______________________________
-iAngles = np.linspace(0, 360, 120)[:-1]
-
 measList = []
 for iFrame in range(len(phantomList)):
     meas = radon(phantomList[iFrame][0,:,:], iAngles) 
@@ -80,6 +92,7 @@ for iFrame in range(len(phantomList)):
     if (noise): 
         meas = sp.random.poisson(meas)
     if (iFrame == 0): measWithNoise = meas
+    meas = meas.astype(np.float) * expSinoMu 
     measList.append(meas) 
 
 plt.figure() 
@@ -114,6 +127,10 @@ for iIt in range(nIt):
 
     plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
+    image2DTMP = np.zeros((1,) + np.shape(guess) )
+    image2DTMP[0,:,:] = guess
+    pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'guess_Iteration{}.vpx'.format(iIt)) 
+
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
