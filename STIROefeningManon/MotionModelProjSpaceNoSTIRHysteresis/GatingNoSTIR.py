@@ -9,13 +9,10 @@ import pyvpx
 
 
 #_________________________CONFIGURATION_______________________________
-#phantom = 'Block'
 phantom = 'Liver' 
-#noise = False
 noise = True
-#motion = 'Step' 
 motion = 'Sine'
-stationary = True 
+stationary = False 
 modelBroken = False 
 
 nIt = 10
@@ -32,7 +29,7 @@ mu /= 5 # number of pixels in 1 cm if one pixel is 2 mm
 
 iAngles = np.linspace(0, 360, 120)[:-1]
 
-gateNumber = 1 # possible values: 1-5
+gateNumber = 5 # possible values: 1-5
 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
@@ -130,7 +127,6 @@ for iIt in range(nIt):
     image2DTMP = np.zeros((1,) + np.shape(guess) )
     image2DTMP[0,:,:] = guess
     pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'guess_Iteration{}.vpx'.format(iIt)) 
-
 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
