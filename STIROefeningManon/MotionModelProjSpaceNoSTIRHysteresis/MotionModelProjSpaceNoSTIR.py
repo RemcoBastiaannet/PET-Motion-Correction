@@ -14,7 +14,7 @@ from skimage.measure import find_contours, points_in_poly
 
 #_________________________PARAMETER SETTINGS_______________________________
 
-stationary = True 
+stationary = False 
 #stationary = False # False is only possible for sinusoidal motion! 
 modelBroken = True  
 #modelBroken = False  
@@ -114,9 +114,7 @@ plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_measurementsWithWi
 numFigures += 1 
 
 # Initial guess - image 
-#guess = np.ones(np.shape(image2D)) # Fills it with floats, not ints 
-guess = pyvpx.vpx2numpy('E:/Manon/guess_Iteration9.vpx')
-guess = guess[0,:,:]
+guess = np.ones(np.shape(image2D)) # Fills it with floats, not ints 
 
 # Objective function for model optimization
 def computeQuadError(x, nFrames, guess, surSignal, iAngles, returnTuple, negNumFile):    
@@ -148,7 +146,6 @@ slopeList = np.linspace(1, 2, 9)
 
 parFile = open(figSaveDir + "Parameters.txt", "w")
 negNumFile = open(figSaveDir + "NegativeNumbers.txt", "w")
-qualityFile = open(figSaveDir + "QualityAssessment.txt", "w")
 
 # Lists for storage 
 quadErrorsList = [] ### 
@@ -240,45 +237,8 @@ for iIt in range(nIt):
     guessTMP[0,:,:] = guess
     pyvpx.numpy2vpx(guessTMP, figSaveDir + 'guess_Iteration{}.vpx'.format(iIt)) 
 
-    #___________Quantitative analyses____________
-    # Target volumes 
-    largeTarget = guess[125:185, 100:170]
-    smallTarget = guess[115:175, 150:220]
-    
-    # SUV max 
-    largeMax = np.max(largeTarget)
-    smallMax = np.max(smallTarget)
-
-    # Volumes 
-    largeVolume = np.zeros(np.shape(largeTarget))
-    for i in range(np.shape(largeTarget)[0]):
-        for j in range(np.shape(largeTarget)[1]):
-            if (largeTarget[i,j] > 0.5*largeMax): 
-                largeVolume[i,j] = largeTarget[i,j]
-    largeVolumeSum = np.sum(np.count_nonzero(largeVolume))
-
-    smallVolume = np.zeros(np.shape(smallTarget))
-    for i in range(np.shape(smallTarget)[0]):
-        for j in range(np.shape(smallTarget)[1]):
-            if (smallTarget[i,j] > 0.5*smallMax):
-                smallVolume[i,j] = smallTarget[i,j]
-    smallVolumeSum = np.sum(np.count_nonzero(smallVolume))
-
-    # SUV mean 
-    largeMean = np.mean(largeVolume)
-    smallMean = np.mean(smallVolume)
-
-    qualityFile.write('Iteration: {}\n'.format(iIt+1))
-    qualityFile.write('SUV max L: {}\n'.format(largeMax))
-    qualityFile.write('SUV max S: {}\n'.format(smallMax))
-    qualityFile.write('SUV mean L: {}\n'.format(largeMean))
-    qualityFile.write('SUV mean S: {}\n'.format(smallMean))
-    qualityFile.write('Volume sum L: {}\n'.format(largeVolumeSum))
-    qualityFile.write('Volume sum S: {}\n\n'.format(smallVolumeSum))
-
 parFile.close() 
 negNumFile.close() 
-qualityFile.close()
 
 # Plot and save original image and reconstructed image 
 plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
