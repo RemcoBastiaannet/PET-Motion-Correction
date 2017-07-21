@@ -137,11 +137,3 @@ plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpol
 numFigures += 1 
 
 mf.writeMhdFile(guess, figSaveDir + 'Gate{}.mhd'.format(gateNumber))
-
-qualityFile = open(figSaveDir + "Quality.txt", "w")
-qualityFile.write('Phantom:')
-qualityFile.write('Maximum value: {}\n\n'.format(np.max(image2D))) 
-qualityFile.write('Simulations:\n')
-qualityFile.write('Maximum value: {}\n\n'.format(np.max(guess))) 
-qualityFile.write('Quadratic difference of simulation and phantom: {}\n'.format(np.sum( (guess - image2D)**2 )))
-qualityFile.close() 
