@@ -17,7 +17,7 @@ from skimage.measure import find_contours, points_in_poly
 
 stationary = True 
 #stationary = False # False is only possible for sinusoidal motion! 
-modelBroken = True 
+modelBroken = False 
 #modelBroken = False  
 
 # Parameters that influence the figure saving directory 
@@ -31,13 +31,14 @@ motion = 'Sine'
 # Create a direcotory for figure storage (just the string, make sure  the folder already exists!) 
 dir = './Figures/'
 figSaveDir = mf.make_figSaveDir(dir, motion, phantom, noise, stationary, modelBroken)
+figSaveDir += 'Kwantitatief/'
 numFigures = 0 
 
 #___________Quantitative analyses____________
 
-qualityFile = open(figSaveDir + "Kwantitatief/QualityAssessment.txt", "w")
+qualityFile = open(figSaveDir + 'QualityAssessment.txt', "w")
 
-guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/5_Onze_methode/Stationair/Model_Broken/guess_Iteration9.vpx') 
+guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/1_Geen_beweging_(referentie)/guess_Iteration9.vpx') 
 guess = guess[0,:,:]
 
 # Target volumes 
@@ -246,8 +247,6 @@ bckVolumeSum = np.sum(bckBinMaskMatrix)
 bckStd = np.std(bckVolume[bckVolume != 0])
 
 # CNR 
-#largeBckVolume = guess[123:183, 125:195]*largeBinMaskMatrix
-largeBckVolume = guess[150:210, 100:170]*largeBinMaskMatrix
 largeCNR = abs(largeMean - bckMean)/bckStd
 
 #smallBckVolume = guess[123:183, 125:195]*smallBinMaskMatrix 
