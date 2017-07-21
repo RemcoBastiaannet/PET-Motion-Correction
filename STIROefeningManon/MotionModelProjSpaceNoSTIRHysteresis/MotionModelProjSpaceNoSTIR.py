@@ -70,7 +70,7 @@ for i in range(np.shape(sinoMu)[0]):
         expSinoMu[i,j] = math.exp(-sinoMu[i,j])
 
 # Plot phantom and store as vpx image 
-plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures)), plt.close()
 numFigures += 1
 
 image2DTMP = np.zeros((1,) + np.shape(image2D) )
@@ -85,7 +85,7 @@ originalImage = phantomList[0]
 
 # Plot surrogate signal and internal motion 
 # y-axis
-plt.figure()
+plt.figure(), plt.axis('off')
 plt.plot(range(nFrames), surSignal, label = 'Surrogate signal'), plt.title('Motion (y-axis)'), plt.xlabel('Time frame'), plt.ylabel('Shift')
 plt.plot(range(nFrames), shiftList, label = 'True motion y-axis')
 plt.legend(loc = 4), plt.savefig(figSaveDir + 'Fig{}_shiftList.png'.format(numFigures)), plt.close()
@@ -106,7 +106,7 @@ for iFrame in range(nFrames):
     measList.append(meas.astype(np.float)) 
 
 # Plot sinogram of time frame 0 with and without noise  
-plt.figure() 
+plt.figure(), plt.axis('off')
 plt.subplot(1,3,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.subplot(1,3,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.subplot(1,3,3), plt.title('With AC'), plt.imshow(measAC, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
@@ -161,7 +161,7 @@ for iIt in range(nIt):
         quadErrors = [computeQuadError(np.array([i, slopeXFound]), nFrames, guess, surSignal, iAngles, False, negNumFile) for i in slopeList] ### 
         quadErrorsList.append(quadErrors) ### 
 
-        plt.figure()         
+        plt.figure(), plt.axis('off')     
         plt.plot(slopeList, quadErrors), plt.title('Parameter space iteration {}'.format(iIt+1))
         plt.savefig(figSaveDir + 'Fig{}_ParSpaceSampling.png'.format(numFigures))
         numFigures += 1 
@@ -180,7 +180,7 @@ for iIt in range(nIt):
         # Time-resolved quadratic error 
         quadErrorSumList = computeQuadError((slopeFound, slopeXFound), nFrames, guess, surSignal, iAngles, True, negNumFile)     
 
-        plt.figure() 
+        plt.figure(), plt.axis('off')
         plt.plot(quadErrorSumList), plt.title('Normalized error vs. time, iteration {}'.format(iIt+1))
         plt.axis([0.0, nFrames, 0.0, 1.0])
         plt.savefig(figSaveDir + 'Fig{}_QuadraticError_Time.png'.format(numFigures))
@@ -231,7 +231,7 @@ for iIt in range(nIt):
     countIt = iIt+1 
 
     # Plot current guess 
-    plt.figure(), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures)), plt.close()
+    plt.figure(), plt.axis('off'), plt.title('Guess after {} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures)), plt.close()
     numFigures += 1  
     guessTMP = np.zeros((1,) + np.shape(guess))
     guessTMP[0,:,:] = guess
@@ -241,13 +241,14 @@ parFile.close()
 negNumFile.close() 
 
 # Plot and save original image and reconstructed image 
-plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(originalImage[0,:,:], interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures)), plt.close() 
 numFigures += 1 
 
 # Plot quadratic errors of all iteqrations
 # y-axis
 ax = plt.figure().gca()
+plt.axis('off') 
 ax.xaxis.set_major_locator(MaxNLocator(integer=True)) # to get integer values on the x-axis
 if (not modelBroken): 
     plt.axhline(trueSlope, color = 'k', linestyle = '--', label = 'Correct value')
@@ -262,6 +263,7 @@ plt.close()
 
 # x-axis
 ax = plt.figure().gca()
+plt.axis('off')
 ax.xaxis.set_major_locator(MaxNLocator(integer=True)) # to get integer values on the x-axis
 plt.axhline(trueSlopeX, color = 'k', linestyle = '--', label = 'Correct value')
 plt.plot(range(nModelSkip+1, nIt+1), slopeXFoundList, 'ro', label = 'Estimated value') 

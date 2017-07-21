@@ -30,23 +30,21 @@ figSaveDir += 'Kwantitatief/'
 numFigures = 0 
 
 #___________Quantitative analyses____________
-
-qualityFile = open(figSaveDir + 'QualityAssessment.txt', "w")
-
-guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/1_Geen_beweging_(referentie)/guess_Iteration9.vpx') 
+#guess = mf.load_itk('E:/Manon/Resultaten_Simulaties/4_Coregistratie/Niet-stationair/MeanRegistered.mhd')
+guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/5_Onze_methode/Niet-stationair/guess_Iteration9.vpx') 
 guess = guess[0,:,:]
 
 # Target volumes 
 largeTarget = guess[125:185, 100:170]
 smallTarget = guess[115:175, 150:220]
 
-plt.figure(), plt.title('Target volume (large lesion)'), plt.imshow(largeTarget, interpolation = None, vmin = 0, vmax = np.max(largeTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_largeTarget'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Target volume (large lesion)'), plt.imshow(largeTarget, interpolation = None, vmin = 0, vmax = np.max(largeTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_largeTarget'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(largeTarget) )
 image2DTMP[0,:,:] = largeTarget
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'largeTarget.vpx') 
 
-plt.figure(), plt.title('Target volume (snall lesion)'), plt.imshow(smallTarget, interpolation = None, vmin = 0, vmax = np.max(smallTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_smallTarget'.format(numFigures)), plt.close() 
+plt.figure(), plt.axis('off'), plt.title('Target volume (snall lesion)'), plt.imshow(smallTarget, interpolation = None, vmin = 0, vmax = np.max(smallTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_smallTarget'.format(numFigures)), plt.close() 
 numFigures += 1 
 image2DTMP = np.zeros((1,) + np.shape(smallTarget) )
 image2DTMP[0,:,:] = smallTarget
@@ -100,19 +98,19 @@ for i in range(len(smallContourReversed)):
 smallContour = [(i[1], i[0]) for i in smallMaxContour] 
 smallContourX, smallContourY = np.array(smallContour).T 
 
-plt.figure(), plt.title('Thresholded volume with contour (large lesion)'), plt.imshow(largeThresVolume, interpolation = None, vmin = 0, vmax = np.max(largeThresVolume), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Thresholded volume with contour (large lesion)'), plt.imshow(largeThresVolume, interpolation = None, vmin = 0, vmax = np.max(largeThresVolume), cmap=plt.cm.Greys_r)
 plt.scatter(largeContourX, largeContourY), plt.savefig(figSaveDir + 'QFig{}_largeThresholdedVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1  
 
-plt.figure(), plt.title('Target volume with contour (large lesion)'), plt.imshow(largeTarget, interpolation = None, vmin = 0, vmax = np.max(largeTarget), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Target volume with contour (large lesion)'), plt.imshow(largeTarget, interpolation = None, vmin = 0, vmax = np.max(largeTarget), cmap=plt.cm.Greys_r)
 plt.scatter(largeContourX, largeContourY), plt.savefig(figSaveDir + 'QFig{}_largeTargetVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1  
 
-plt.figure(), plt.title('Thresholded volume with contour (small lesion)'), plt.imshow(smallThresVolume, interpolation = None, vmin = 0, vmax = np.max(smallThresVolume), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Thresholded volume with contour (small lesion)'), plt.imshow(smallThresVolume, interpolation = None, vmin = 0, vmax = np.max(smallThresVolume), cmap=plt.cm.Greys_r)
 plt.scatter(smallContourX, smallContourY), plt.savefig(figSaveDir + 'QFig{}_smallThresholdedVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1 
 
-plt.figure(), plt.title('Target volume with contour (small lesion)'), plt.imshow(smallTarget, interpolation = None, vmin = 0, vmax = np.max(smallTarget), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Target volume with contour (small lesion)'), plt.imshow(smallTarget, interpolation = None, vmin = 0, vmax = np.max(smallTarget), cmap=plt.cm.Greys_r)
 plt.scatter(smallContourX, smallContourY), plt.savefig(figSaveDir + 'QFig{}_smallTargetVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1   
 
@@ -140,13 +138,13 @@ largeBinMaskMatrix = np.array(largeBinMaskVec).reshape(largeNx, largeNy)
 largeBinMaskMatrix = np.array(largeBinMaskMatrix).astype(int)
 largeVolume = largeBinMaskMatrix*largeTarget
 
-plt.figure(), plt.title('Binary mask (small lesion)'), plt.imshow(smallBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(smallBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_smallBinaryMask'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Binary mask (small lesion)'), plt.imshow(smallBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(smallBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_smallBinaryMask'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(smallBinMaskMatrix) )
 image2DTMP[0,:,:] = smallBinMaskMatrix
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'smallBinaryMask.vpx') 
 
-plt.figure(), plt.title('Binary mask (large lesion)'), plt.imshow(largeBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(largeBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_largeBinaryMask'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Binary mask (large lesion)'), plt.imshow(largeBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(largeBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_largeBinaryMask'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(largeBinMaskMatrix) )
 image2DTMP[0,:,:] = largeBinMaskMatrix
@@ -169,7 +167,7 @@ extendedSmallBinMaskMatrix[115:175, 150:220] = smallBinMaskMatrix
 
 totalBinMaskMatrix = extendedLargeBinMaskMatrix + extendedSmallBinMaskMatrix
 
-plt.figure(), plt.title('Binary mask both lesions'), plt.imshow(totalBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(totalBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_totalBinMask'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Binary mask both lesions'), plt.imshow(totalBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(totalBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_totalBinMask'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(totalBinMaskMatrix) )
 image2DTMP[0,:,:] = totalBinMaskMatrix
@@ -177,7 +175,7 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'totalBinaryMask.vpx')
 
 bckTarget = guess*(1-totalBinMaskMatrix) 
 
-plt.figure(), plt.title('Target volume (background)'), plt.imshow(bckTarget, interpolation = None, vmin = 0, vmax = np.max(bckTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundTarget'.format(numFigures)), plt.close() 
+plt.figure(), plt.axis('off'), plt.title('Target volume (background)'), plt.imshow(bckTarget, interpolation = None, vmin = 0, vmax = np.max(bckTarget), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundTarget'.format(numFigures)), plt.close() 
 numFigures += 1 
 image2DTMP = np.zeros((1,) + np.shape(bckTarget) )
 image2DTMP[0,:,:] = bckTarget
@@ -191,7 +189,7 @@ for i in range(np.shape(bckTarget)[0]):
         if (bckTarget[i,j] > 0.1*bckMax): 
             bckThresVolume[i,j] = bckTarget[i,j]
 
-plt.figure(), plt.title('Thresholded volume (background)'), plt.imshow(bckThresVolume, interpolation = None, vmin = 0, vmax = np.max(bckThresVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_bckThresholdedVolume'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Thresholded volume (background)'), plt.imshow(bckThresVolume, interpolation = None, vmin = 0, vmax = np.max(bckThresVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_bckThresholdedVolume'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(bckThresVolume) )
 image2DTMP[0,:,:] = bckThresVolume
@@ -206,11 +204,11 @@ for i in range(len(bckContourReversed)):
 bckContour = [(i[1], i[0]) for i in bckMaxContour] 
 bckContourX, bckContourY = np.array(bckContour).T 
 
-plt.figure(), plt.title('Thresholded volume with contour (background)'), plt.imshow(bckThresVolume, interpolation = None, vmin = 0, vmax = np.max(bckThresVolume), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Thresholded volume with contour (background)'), plt.imshow(bckThresVolume, interpolation = None, vmin = 0, vmax = np.max(bckThresVolume), cmap=plt.cm.Greys_r)
 plt.scatter(bckContourX, bckContourY), plt.savefig(figSaveDir + 'QFig{}_bckThresholdedVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1  
 
-plt.figure(), plt.title('Target volume with contour (background)'), plt.imshow(bckTarget, interpolation = None, vmin = 0, vmax = np.max(bckTarget), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.title('Target volume with contour (background)'), plt.imshow(bckTarget, interpolation = None, vmin = 0, vmax = np.max(bckTarget), cmap=plt.cm.Greys_r)
 plt.scatter(bckContourX, bckContourY), plt.savefig(figSaveDir + 'QFig{}_bckTargetVolumeContour'.format(numFigures)), plt.close()
 numFigures += 1 
 
@@ -225,13 +223,13 @@ bckBinMaskMatrix = np.array(bckBinMaskVec).reshape(bckNx, bckNy)
 bckBinMaskMatrix = np.array(bckBinMaskMatrix).astype(int)
 bckVolume = bckBinMaskMatrix*bckTarget 
 
-plt.figure(), plt.title('Binary mask (background)'), plt.imshow(bckBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(bckBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_bckBinaryMask'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Binary mask (background)'), plt.imshow(bckBinMaskMatrix, interpolation = None, vmin = 0, vmax = np.max(bckBinMaskMatrix), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_bckBinaryMask'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(bckBinMaskMatrix) )
 image2DTMP[0,:,:] = bckBinMaskMatrix
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'bckBinaryMask.vpx') 
 
-plt.figure(), plt.title('Background'), plt.imshow(bckVolume, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundVolume'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Background'), plt.imshow(bckVolume, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundVolume'.format(numFigures)), plt.close()
 numFigures += 1  
 image2DTMP = np.zeros((1,) + np.shape(bckVolume) )
 image2DTMP[0,:,:] = bckVolume
@@ -244,23 +242,35 @@ bckStd = np.std(bckVolume[bckVolume != 0])
 # CNR 
 tmpSmallBckCnrTarget = copy.deepcopy(guess[115:175, 150:220])
 tmpSmallBckCnrTarget *= (1-smallBinMaskMatrix)
-tmpLargeBckCnrTarget = copy.deepcopy(guess[125:185, 100:170])
-tmpLargeBckCnrTarget *= (1-largeBinMaskMatrix )
+smallBckCNRTarget = copy.deepcopy(tmpSmallBckCnrTarget[8:52, 13:53])
 
-smallBckCNRTarget = copy.deepcopy(tmpSmallBckCnrTarget[10:50, 13:53])
-largeBckCNRTarget = copy.deepcopy(tmpLargeBckCnrTarget[7:48, 17:58])
+plt.figure(), plt.axis('off'), plt.title('Background for CNR (small lesion)'), plt.imshow(smallBckCNRTarget, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRSmall'.format(numFigures)), plt.close()
+numFigures += 1  
+image2DTMP = np.zeros((1,) + np.shape(smallBckCNRTarget) )
+image2DTMP[0,:,:] = smallBckCNRTarget
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'backgroundCNRSmall.vpx') 
 
-bckLargeMean = np.mean(largeBckCNRTarget[largeBckCNRTarget != 0 ])
 bckSmallMean = np.mean(smallBckCNRTarget[smallBckCNRTarget != 0 ])
-
-bckLargeStd = np.std(largeBckCNRTarget[largeBckCNRTarget != 0 ])
 bckSmallStd = np.std(smallBckCNRTarget[smallBckCNRTarget != 0 ])
-
-largeCNR = abs(largeMean - bckLargeMean)/bckLargeStd
-
 smallCNR = abs(smallMean - bckSmallMean)/bckSmallStd
 
+tmpLargeBckCnrTarget = copy.deepcopy(guess[125:185, 100:170])
+tmpLargeBckCnrTarget *= (1-largeBinMaskMatrix )
+largeBckCNRTarget = copy.deepcopy(tmpLargeBckCnrTarget[:, 17:58])
+
+plt.figure(), plt.axis('off'), plt.title('Background for CNR (large lesion)'), plt.imshow(largeBckCNRTarget, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRLarge'.format(numFigures)), plt.close()
+numFigures += 1  
+image2DTMP = np.zeros((1,) + np.shape(largeBckCNRTarget) )
+image2DTMP[0,:,:] = largeBckCNRTarget
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'backgroundCNRLarge.vpx') 
+
+bckLargeMean = np.mean(largeBckCNRTarget[largeBckCNRTarget != 0 ])
+bckLargeStd = np.std(largeBckCNRTarget[largeBckCNRTarget != 0 ])
+largeCNR = abs(largeMean - bckLargeMean)/bckLargeStd
+
 # Write results 
+qualityFile = open(figSaveDir + 'QualityAssessment.txt', "w")
+
 qualityFile.write('SUV max L: {}\n'.format(largeMax))
 qualityFile.write('SUV mean L: {}\n'.format(largeMean))
 qualityFile.write('Volume sum L: {}\n'.format(largeVolumeSum))

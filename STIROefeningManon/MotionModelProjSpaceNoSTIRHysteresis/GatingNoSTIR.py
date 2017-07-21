@@ -40,7 +40,7 @@ mf.write_Configuration(figSaveDir, phantom, noise, motion, stationary, nIt, true
 
 #_________________________MAKE PHANTOM_______________________________
 image2D = mf.make_Phantom(phantom, noiseLevel)
-plt.figure(), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Original image'), plt.imshow(image2D, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_phantom.png'.format(numFigures, trueShiftAmplitude)), plt.close()
 numFigures += 1
 
 nX = int(np.shape(image2D)[0]) # Not sure if x and y are actually x and y 
@@ -92,7 +92,7 @@ for iFrame in range(len(phantomList)):
     meas = meas.astype(np.float) * expSinoMu 
     measList.append(meas) 
 
-plt.figure() 
+plt.figure(), plt.axis('off')
 plt.subplot(1,2,1), plt.title('Without noise'), plt.imshow(measNoNoise, interpolation=None, vmin = 0, vmax = np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('With noise'), plt.imshow(measWithNoise, interpolation=None, vmin = 0, vmax =  np.max(measWithNoise), cmap=plt.cm.Greys_r)
 plt.suptitle('Time Frame 1'), plt.savefig(figSaveDir + 'Fig{}_measurementsWithWithoutNoise.png'.format(numFigures, trueShiftAmplitude)), plt.close()
@@ -101,7 +101,7 @@ numFigures += 1
 
 #_________________________INITIAL GUESS_______________________________
 guess = np.ones(np.shape(phantomList[0]))[0,:,:]
-plt.figure(), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
+plt.figure(), plt.axis('off'), plt.title('Initial guess'), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_InitialGuess.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1
 
 
@@ -122,13 +122,13 @@ for iIt in range(nIt):
     guess *= np.sum(measList[-1])/np.shape(measList[-1])[1]  
     countIt = iIt+1 
 
-    plt.figure(), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
+    plt.figure(), plt.axis('off'), plt.title('Guess after {0} iteration(s)'.format(iIt+1)), plt.imshow(guess, interpolation = None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_finalImage.png'.format(numFigures, trueShiftAmplitude)), plt.close()
     numFigures += 1  
     image2DTMP = np.zeros((1,) + np.shape(guess) )
     image2DTMP[0,:,:] = guess
     pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'guess_Iteration{}.vpx'.format(iIt)) 
 
-plt.figure(), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
+plt.figure(), plt.axis('off'), plt.subplot(1,2,1), plt.title('Original Image'), plt.imshow(image2D, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r)
 plt.subplot(1,2,2), plt.title('Reconstructed Image'), plt.imshow(guess, interpolation=None, vmin = 0, vmax = np.max(image2D), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'Fig{}_originalAndRecon.png'.format(numFigures, trueShiftAmplitude)), plt.close() 
 numFigures += 1 
 
