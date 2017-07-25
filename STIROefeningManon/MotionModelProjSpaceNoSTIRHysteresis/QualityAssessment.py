@@ -14,7 +14,6 @@ from skimage.measure import find_contours, points_in_poly
 
 ### _______ LET OP !! _______
 # Pas ook het bestandspad aan waar guess vandaan wordt gehaald 
-
 stationary = True 
 modelBroken = False  
 
@@ -30,8 +29,8 @@ figSaveDir += 'Kwantitatief/'
 numFigures = 0 
 
 #___________Quantitative analyses____________
-#guess = mf.load_itk('E:/Manon/Resultaten_Simulaties/4_Coregistratie/Niet-stationair/MeanRegistered.mhd')
-guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/5_Onze_methode/Niet-stationair/guess_Iteration9.vpx') 
+#guess = mf.load_itk('E:/Manon/Resultaten_Simulaties/4_Coregistratie/Stationair/MeanRegistered.mhd')
+guess = pyvpx.vpx2numpy('E:/Manon/Resultaten_Simulaties/5_Onze_methode/Stationair/guess_Iteration9.vpx') 
 guess = guess[0,:,:]
 
 # Target volumes 
@@ -54,17 +53,93 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'smallTarget.vpx')
 largeMax = np.max(largeTarget)
 smallMax = np.max(smallTarget)
 
+# SUV peak 
+'''
+largeSUVPeakThres = np.zeros(np.shape(largeTarget))
+for i in range(np.shape(largeTarget)[0]):
+    for j in range(np.shape(largeTarget)[1]):
+        if (largeTarget[i,j] > 0.8*largeMax):
+            largeSUVPeakThres[i,j] = largeTarget[i,j]
+largestLarge = np.argsort(largeSUVPeakThres.flatten())[-10:]
+largeSUVPeakVolume = np.zeros(np.shape(largeTarget))
+for i in largestLarge:
+    Nx =  np.shape(largeTarget)[1]
+    largeSUVPeakVolume[i/Nx, i%Nx] = largeSUVPeakThres[i/Nx, i%Nx]
+meanSUVPeakLarge = np.mean(largeSUVPeakVolume[largeSUVPeakVolume != 0])
+'''
+
+largeMaxCoords = np.where(largeTarget == largeMax) 
+largeMaxX = largeMaxCoords[0][0]
+largeMaxY = largeMaxCoords[1][0]
+
+'''
+smallSUVPeakThres = np.zeros(np.shape(smallTarget))
+for i in range(np.shape(smallTarget)[0]):
+    for j in range(np.shape(smallTarget)[1]):
+        if (smallTarget[i,j] > 0.8*smallMax): 
+            smallSUVPeakThres[i,j] = smallTarget[i,j]
+largestSmall = np.argsort(smallSUVPeakThres.flatten())[-10:]
+smallSUVPeakVolume = np.zeros(np.shape(smallTarget))
+for i in largestSmall: 
+    Nx =  np.shape(smallTarget)[1]
+    smallSUVPeakVolume[i/Nx, i%Nx] = smallSUVPeakThres[i/Nx, i%Nx]
+meanSUVPeakSmall = np.mean(smallSUVPeakVolume[smallSUVPeakVolume != 0])
+'''
+
+smallMaxCoords = np.where(smallTarget == smallMax) 
+smallMaxX = smallMaxCoords[0][0]
+smallMaxY = smallMaxCoords[1][0]
+
+smallX = [] 
+smallY = [] 
+largeX = [] 
+largeY = [] 
+smallSUVPeakVolume = np.zeros(np.shape(smallTarget))
+largeSUVPeakVolume = np.zeros(np.shape(largeTarget))
+for i in [-1,0,1]:
+    for j in [-1,0,1]:        
+        smallCoordX = smallMaxX + i
+        smallCoordY = smallMaxY + j
+        smallSUVPeakVolume[smallCoordX, smallCoordY] = smallTarget[smallCoordX, smallCoordY]
+        smallX.append(smallCoordX) 
+        smallY.append(smallCoordY)
+
+        largeCoordX = largeMaxX + i
+        largeCoordY = largeMaxY + j
+        largeSUVPeakVolume[largeCoordX, largeCoordY] = largeTarget[largeCoordX, largeCoordY]
+        largeX.append(largeCoordX) 
+        largeY.append(largeCoordY)
+
+meanSUVPeakLarge = np.mean(largeSUVPeakVolume[largeSUVPeakVolume != 0])
+meanSUVPeakSmall = np.mean(smallSUVPeakVolume[smallSUVPeakVolume != 0]) 
+
+plt.figure(), plt.axis('off'), plt.title('SUV peak (large lesion)'), plt.imshow(largeTarget, interpolation = None, vmin = 0, vmax = np.max(largeTarget), cmap=plt.cm.Greys_r)
+plt.scatter(largeY, largeX)
+plt.savefig(figSaveDir + 'QFig{}_SUVPeakLarge'.format(numFigures)), plt.close() 
+numFigures += 1 
+image2DTMP = np.zeros((1,) + np.shape(largeSUVPeakVolume) )
+image2DTMP[0,:,:] = largeSUVPeakVolume
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'SUVPeakLarge.vpx') 
+
+plt.figure(), plt.axis('off'), plt.title('SUV peak (small lesion)'), plt.imshow(smallTarget, interpolation = None, vmin = 0, vmax = np.max(smallTarget), cmap=plt.cm.Greys_r)
+plt.scatter(smallY, smallX)
+plt.savefig(figSaveDir + 'QFig{}_SUVPeakSmall'.format(numFigures)), plt.close() 
+numFigures += 1 
+image2DTMP = np.zeros((1,) + np.shape(smallSUVPeakVolume) )
+image2DTMP[0,:,:] = smallSUVPeakVolume
+pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'SUVPeakSmall.vpx') 
+
 # 2D Thresholded volumes 
 largeThresVolume = np.zeros(np.shape(largeTarget))
 for i in range(np.shape(largeTarget)[0]):
     for j in range(np.shape(largeTarget)[1]):
-        if (largeTarget[i,j] > 0.5*largeMax): 
+        if (largeTarget[i,j] > 0.4*meanSUVPeakLarge): 
             largeThresVolume[i,j] = largeTarget[i,j]
 
 smallThresVolume = np.zeros(np.shape(smallTarget))
 for i in range(np.shape(smallTarget)[0]):
     for j in range(np.shape(smallTarget)[1]):
-        if (smallTarget[i,j] > 0.5*smallMax):
+        if (smallTarget[i,j] > 0.4*meanSUVPeakSmall):
             smallThresVolume[i,j] = smallTarget[i,j]
 
 plt.figure(), plt.title('Thresholded volume (large lesion)'), plt.imshow(largeThresVolume, interpolation = None, vmin = 0, vmax = np.max(largeThresVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_largeThresholdedVolume'.format(numFigures)), plt.close()
@@ -95,6 +170,7 @@ for i in range(len(smallContourReversed)):
     if(np.shape(smallContourReversed[i]) > maxLength): 
         maxLength = np.shape(smallContourReversed[i])
         smallMaxContour = smallContourReversed[i]
+#smallMaxContour = smallContourReversed[14]
 smallContour = [(i[1], i[0]) for i in smallMaxContour] 
 smallContourX, smallContourY = np.array(smallContour).T 
 
@@ -183,10 +259,23 @@ pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'backgroundTarget.vpx')
 
 bckMax = np.max(bckTarget)
 
+bckSUVPeakThres = np.zeros(np.shape(bckTarget))
+for i in range(np.shape(bckTarget)[0]):
+    for j in range(np.shape(bckTarget)[1]):
+        if (bckTarget[i,j] > 0.8*bckMax): 
+            bckSUVPeakThres[i,j] = bckTarget[i,j]
+largestBck = np.argsort(bckSUVPeakThres.flatten())[-10:]
+bckSUVPeakVolume = np.zeros(np.shape(bckTarget))
+for i in largestBck: 
+    Nx =  np.shape(bckTarget)[1]
+    bckSUVPeakVolume[i/Nx, i%Nx] = bckSUVPeakThres[i/Nx, i%Nx]
+bckSUVPeakMean = np.mean(bckSUVPeakVolume[bckSUVPeakVolume != 0])
+meanSUVPeakBck = np.mean(bckSUVPeakVolume[bckSUVPeakVolume != 0])
+
 bckThresVolume = np.zeros(np.shape(bckTarget))
 for i in range(np.shape(bckTarget)[0]):
     for j in range(np.shape(bckTarget)[1]):
-        if (bckTarget[i,j] > 0.1*bckMax): 
+        if (bckTarget[i,j] > 0.1*meanSUVPeakBck): 
             bckThresVolume[i,j] = bckTarget[i,j]
 
 plt.figure(), plt.axis('off'), plt.title('Thresholded volume (background)'), plt.imshow(bckThresVolume, interpolation = None, vmin = 0, vmax = np.max(bckThresVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_bckThresholdedVolume'.format(numFigures)), plt.close()
@@ -240,32 +329,38 @@ bckVolumeSum = np.sum(bckBinMaskMatrix)
 bckStd = np.std(bckVolume[bckVolume != 0])
 
 # CNR 
-tmpSmallBckCnrTarget = copy.deepcopy(guess[115:175, 150:220])
-tmpSmallBckCnrTarget *= (1-smallBinMaskMatrix)
-smallBckCNRTarget = copy.deepcopy(tmpSmallBckCnrTarget[8:52, 13:53])
+tmpSmallBckCNRTarget = copy.deepcopy(guess[115:175, 150:220])
+smallBckCNRMask = copy.deepcopy(smallBinMaskMatrix) 
+for i in range(10): smallBckCNRMask = sp.ndimage.binary_dilation(smallBckCNRMask)
+smallBckCNRMask = np.logical_xor(smallBckCNRMask, smallBinMaskMatrix)
+smallBckCNR = tmpSmallBckCNRTarget * smallBckCNRMask
+smallBckCNRVolume = np.count_nonzero(smallBckCNR)
 
-plt.figure(), plt.axis('off'), plt.title('Background for CNR (small lesion)'), plt.imshow(smallBckCNRTarget, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRSmall'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Background for CNR (small lesion)'), plt.imshow(smallBckCNR, interpolation = None, vmin = 0, vmax = np.max(smallBckCNR), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRSmall'.format(numFigures)), plt.close()
 numFigures += 1  
-image2DTMP = np.zeros((1,) + np.shape(smallBckCNRTarget) )
-image2DTMP[0,:,:] = smallBckCNRTarget
+image2DTMP = np.zeros((1,) + np.shape(smallBckCNR) )
+image2DTMP[0,:,:] = smallBckCNR
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'backgroundCNRSmall.vpx') 
 
-bckSmallMean = np.mean(smallBckCNRTarget[smallBckCNRTarget != 0 ])
-bckSmallStd = np.std(smallBckCNRTarget[smallBckCNRTarget != 0 ])
+bckSmallMean = np.mean(smallBckCNR[smallBckCNR != 0 ])
+bckSmallStd = np.std(smallBckCNR[smallBckCNR != 0 ])
 smallCNR = abs(smallMean - bckSmallMean)/bckSmallStd
 
-tmpLargeBckCnrTarget = copy.deepcopy(guess[125:185, 100:170])
-tmpLargeBckCnrTarget *= (1-largeBinMaskMatrix )
-largeBckCNRTarget = copy.deepcopy(tmpLargeBckCnrTarget[:, 17:58])
+tmpLargeBckCNRTarget = copy.deepcopy(guess[115:175, 150:220])
+largeBckCNRMask = copy.deepcopy(largeBinMaskMatrix) 
+for i in range(10): largeBckCNRMask = sp.ndimage.binary_dilation(largeBckCNRMask)
+largeBckCNRMask = np.logical_xor(largeBckCNRMask, largeBinMaskMatrix)
+largeBckCNR = tmpLargeBckCNRTarget * largeBckCNRMask
+largeBckCNRVolume = np.count_nonzero(largeBckCNR)
 
-plt.figure(), plt.axis('off'), plt.title('Background for CNR (large lesion)'), plt.imshow(largeBckCNRTarget, interpolation = None, vmin = 0, vmax = np.max(bckVolume), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRLarge'.format(numFigures)), plt.close()
+plt.figure(), plt.axis('off'), plt.title('Background for CNR (large lesion)'), plt.imshow(largeBckCNR, interpolation = None, vmin = 0, vmax = np.max(largeBckCNR), cmap=plt.cm.Greys_r), plt.savefig(figSaveDir + 'QFig{}_backgroundCNRLarge'.format(numFigures)), plt.close()
 numFigures += 1  
-image2DTMP = np.zeros((1,) + np.shape(largeBckCNRTarget) )
-image2DTMP[0,:,:] = largeBckCNRTarget
+image2DTMP = np.zeros((1,) + np.shape(largeBckCNR) )
+image2DTMP[0,:,:] = largeBckCNR
 pyvpx.numpy2vpx(image2DTMP, figSaveDir + 'backgroundCNRLarge.vpx') 
 
-bckLargeMean = np.mean(largeBckCNRTarget[largeBckCNRTarget != 0 ])
-bckLargeStd = np.std(largeBckCNRTarget[largeBckCNRTarget != 0 ])
+bckLargeMean = np.mean(largeBckCNR[largeBckCNR != 0 ])
+bckLargeStd = np.std(largeBckCNR[largeBckCNR != 0 ])
 largeCNR = abs(largeMean - bckLargeMean)/bckLargeStd
 
 # Write results 
@@ -284,6 +379,9 @@ qualityFile.write('CNR S: {}\n\n'.format(smallCNR))
 qualityFile.write('SUV max B: {}\n'.format(bckMax))
 qualityFile.write('SUV mean B: {}\n'.format(bckMean))
 qualityFile.write('Volume sum B: {}\n\n'.format(bckVolumeSum))
+
+qualityFile.write('CNR background volume L: {}\n'.format(largeBckCNRVolume))
+qualityFile.write('CNR background volume S: {}\n\n'.format(smallBckCNRVolume))
 
 qualityFile.close()  
 
