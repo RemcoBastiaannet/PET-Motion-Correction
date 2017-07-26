@@ -331,7 +331,13 @@ bckStd = np.std(bckVolume[bckVolume != 0])
 # CNR 
 tmpSmallBckCNRTarget = copy.deepcopy(guess[115:175, 150:220])
 smallBckCNRMask = copy.deepcopy(smallBinMaskMatrix) 
-for i in range(10): smallBckCNRMask = sp.ndimage.binary_dilation(smallBckCNRMask)
+
+struct = np.zeros((20,20))
+for i in range(20): 
+    for j in range(20): 
+        if ((i-10)**2 + (j-10)**2 < 50): struct[i,j] = 1 
+
+for i in range(1): smallBckCNRMask = sp.ndimage.binary_dilation(smallBckCNRMask, structure = struct)
 smallBckCNRMask = np.logical_xor(smallBckCNRMask, smallBinMaskMatrix)
 smallBckCNR = tmpSmallBckCNRTarget * smallBckCNRMask
 smallBckCNRVolume = np.count_nonzero(smallBckCNR)
@@ -348,7 +354,7 @@ smallCNR = abs(smallMean - bckSmallMean)/bckSmallStd
 
 tmpLargeBckCNRTarget = copy.deepcopy(guess[115:175, 150:220])
 largeBckCNRMask = copy.deepcopy(largeBinMaskMatrix) 
-for i in range(10): largeBckCNRMask = sp.ndimage.binary_dilation(largeBckCNRMask)
+largeBckCNRMask = sp.ndimage.binary_dilation(largeBckCNRMask, structure = struct)
 largeBckCNRMask = np.logical_xor(largeBckCNRMask, largeBinMaskMatrix)
 largeBckCNR = tmpLargeBckCNRTarget * largeBckCNRMask
 largeBckCNRVolume = np.count_nonzero(largeBckCNR)
